@@ -1,0 +1,309 @@
+/* --- Imports & Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* --- Variables --- */
+:root {
+    /* Brand Colors (Inherited) */
+    --primary-gold: #bf9225;
+    --primary-gold-dark: #a37b1f; 
+    --bg-white: #ffffff;
+    --bg-light: #f0f2f5; 
+    --text-black: #000000;
+    --text-white: #ffffff;
+    --text-gray: #666666;
+    
+    /* Layout Variables */
+    --radius: 15px; 
+    --shadow: 0px 4px 10px rgba(0, 0, 0, 0.08);
+
+    /* Packages Page Specific Colors */
+    --bg-header-cream: #fffbf0; 
+    --border-color: #e5e7eb;
+    --notification-bg: #fffef9;
+    --notification-border: #ebdcb2;
+}
+
+/* --- Base Styles --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body.packages-page-body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-light); 
+    color: var(--text-black);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+a { text-decoration: none; color: inherit; transition: 0.3s; }
+ul { list-style: none; }
+
+/* --- Fixed Top Navigation (The Fix) --- */
+.top-nav {
+    position: fixed; /* Fixes header to the top */
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--bg-white); /* White background for the bar */
+    padding: 15px 40px; /* Spacing for the link */
+    z-index: 1000; /* Ensures it stays on top of content */
+    border-bottom: 1px solid rgba(0,0,0,0.05); /* Subtle separator line */
+    display: flex;
+    align-items: center;
+}
+
+.back-home {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--primary-gold);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.back-home i {
+    color: var(--primary-gold);
+    font-size: 14px;
+}
+
+.back-home:hover {
+    color: var(--primary-gold);
+    opacity: 1;
+}
+
+.back-home:hover i {
+    color: var(--primary-gold);
+    transform: none;
+}
+@media (max-width: 768px) {
+    .back-home {
+        font-size: 13px;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .back-home {
+        font-size: 13px;
+        gap: 6px;
+    }
+
+    .back-home i {
+        font-size: 13px;
+    }
+}
+
+/* --- Header Section (Cream Background) --- */
+.header-details {
+    background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+                url('../images/package.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    padding: 80px 0 70px 0;
+    margin-top: 50px;
+    margin-bottom: 40px;
+
+    border-bottom: none;
+    color: #fff;
+}
+
+.header-content {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 0 20px;
+}
+
+.header-content h1 {
+    color: #fff;
+    font-size: 2.5rem; 
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.header-desc {
+    color: rgba(255,255,255,0.9);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 35px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Notification Box */
+.notification-box {
+   
+    border-radius: 6px;
+    padding: 15px 30px;
+    font-size: 0.85rem;
+    
+    display: inline-block;
+    max-width: 100%;
+
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
+}
+
+/* --- Layout Container --- */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 80px 20px;
+}
+
+/* --- Main Grid Content --- */
+.package-count {
+    color: var(--text-gray);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+
+.packages-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 30px;
+}
+
+/* --- Card Styling --- */
+.card-detail {
+    background-color: var(--bg-white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-detail:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.card-image {
+    width: 100%;
+    height: 280px;
+    position: relative;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+/* Card Header */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    gap: 15px;
+}
+
+.card-header h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-black);
+}
+
+.price-detail {
+    font-weight: 700;
+    color: var(--primary-gold);
+    font-size: 1rem;
+    white-space: nowrap; 
+}
+
+.card-desc {
+    font-size: 0.9rem;
+    color: var(--text-gray);
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+/* Features List */
+.features-list {
+    margin-bottom: 35px;
+    flex-grow: 1; 
+}
+
+.features-list li {
+    font-size: 0.9rem;
+    color: var(--text-black);
+    margin-bottom: 12px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.features-list li::before {
+    content: "•"; 
+    position: absolute;
+    left: 0;
+    top: -1px;
+    font-size: 1.2rem;
+    line-height: 1;
+    color: var(--text-black);
+}
+
+/* Button */
+.btn-details {
+    background-color: var(--primary-gold);
+    color: var(--text-white);
+    border: none;
+    width: 100%;
+    padding: 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: 'Inter', sans-serif;
+}
+
+.btn-details:hover {
+    background-color: var(--primary-gold-dark);
+}
+
+.btn-details i {
+    font-size: 0.85rem;
+}
+
+/* --- Responsive Styling --- */
+@media (max-width: 900px) {
+    .packages-grid {
+        grid-template-columns: 1fr; 
+    }
+
+    .header-content h1 {
+        font-size: 2rem;
+    }
+    
+    .card-image {
+        height: 240px;
+    }
+    
+    .top-nav {
+        padding: 15px 20px;
+    }
+}

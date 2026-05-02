@@ -1,0 +1,73 @@
+/* Layout & Grid */
+.packages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.package-item {
+    background: #fff;
+    border: 1px solid #E0E0E0; /* Fixed Stroke */
+    border-radius: 12px;
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.package-item:hover {
+    border-color: #BF9225;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.package-item img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.pkg-info { padding: 20px; }
+.pkg-info h3 { font-size: 18px; margin-bottom: 5px; }
+.pkg-info .price { color: #BF9225; font-weight: 700; font-size: 18px; }
+.pkg-info .desc { font-size: 13px; color: #666; margin: 10px 0; height: 40px; }
+.pkg-info .note { font-size: 11px; color: #999; font-style: italic; }
+
+/* Buttons */
+.pkg-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+.btn-view {
+    background: #fff;
+    border: 1px solid #BF9225;
+    color: #333;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.btn-select {
+    background: #BF9225;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Scrollable Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    overflow-y: auto; /* Enable scroll */
+}
+
+.modal-content {
+    background: #f9f9f9;
+    margin: 30px auto;
+    padding: 0;
+    width: 90%;
+    max-width: 450px;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+}

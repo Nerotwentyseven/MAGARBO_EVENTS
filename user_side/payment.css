@@ -1,0 +1,349 @@
+:root {
+    --gold: #B28926;
+    --border: #e2e2e2;
+}
+
+body {
+    background-color: #f7f8f9;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.payment-wrapper {
+    width: 100%;
+    max-width: 420px; /* Eksaktong lapad para sa mobile-view card */
+    padding: 20px;
+}
+
+.payment-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.header-section {
+    padding: 20px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.back-btn {
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.content-body {
+    padding: 20px 25px;
+}
+
+.section-title {
+    font-weight: 700;
+    margin-bottom: 15px;
+    font-size: 1rem;
+}
+
+.methods-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.method-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.method-item.selected {
+    border-color: var(--gold);
+    background: #fefaf0;
+}
+
+.method-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.icon-box img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.method-text .name {
+    display: block;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.method-text .status {
+    font-size: 0.75rem;
+    color: #999;
+}
+
+.scan-badge {
+    background: #e6f4ea;
+    color: #1e7e34;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.65rem;
+    font-weight: 700;
+}
+
+.summary-box {
+    background: #fafafa;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+}
+
+.summary-row.highlight {
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.divider { border: 0; border-top: 1px dashed #ccc; margin: 12px 0; }
+
+.note { font-size: 0.75rem; color: #777; text-align: center; line-height: 1.4; }
+
+.policy-box {
+    background: #fff1f1;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ffe4e4;
+}
+
+.policy-header {
+    color: #d32f2f;
+    font-weight: 700;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 3px;
+}
+
+.policy-box p { font-size: 0.75rem; color: #666; margin: 0; }
+
+.btn-continue {
+    width: 100%;
+    padding: 14px;
+    background: #ccc;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: not-allowed;
+    transition: 0.3s;
+}
+
+.btn-continue.active {
+    background: var(--gold);
+    cursor: pointer;
+}
+
+/* ===== Downpayment Section ===== */
+.amount-row {
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.price-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #bf9225;
+    background: #fff6db;
+    padding: 5px 9px;
+    border-radius: 7px;
+}
+
+.amount-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    border: 1px solid #e5d7b0;
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    transition: all 0.2s ease;
+}
+
+.amount-input-wrap:hover {
+    border-color: #d4b05a;
+}
+
+.amount-input-wrap:focus-within {
+    border-color: #bf9225;
+    box-shadow: 0 0 0 3px rgba(191, 146, 37, 0.12);
+}
+
+.peso-sign {
+    font-size: 18px;
+    font-weight: 800;
+    color: #bf9225;
+    flex-shrink: 0;
+}
+
+.amount-input-wrap input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 20px;
+    font-weight: 800;
+    color: #222;
+    background: transparent;
+    min-width: 0;
+}
+
+.amount-input-wrap input::-webkit-outer-spin-button,
+.amount-input-wrap input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox fix for number input arrows */
+.amount-input-wrap input[type=number] {
+    appearance: textfield;
+}
+
+.summary-box .note {
+    font-size: 13px;
+    color: #777;
+    line-height: 1.6;
+}
+
+/* ===== Custom Alert ===== */
+.custom-alert {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.alert-box {
+    background: #fff;
+    padding: 25px;
+    border-radius: 16px;
+    text-align: center;
+    width: 90%;
+    max-width: 350px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    animation: popIn 0.25s ease;
+}
+
+.alert-icon {
+    font-size: 40px;
+    color: #bf9225;
+    margin-bottom: 10px;
+}
+
+.alert-box h3 {
+    margin: 5px 0;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.alert-box p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.alert-box button {
+    background: #bf9225;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.alert-box button:hover {
+    background: #a87d15;
+}
+
+@keyframes popIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 480px) {
+    .amount-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .price-label {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+
+    .amount-input-wrap {
+        padding: 11px 12px;
+        border-radius: 12px;
+        gap: 8px;
+    }
+
+    .peso-sign {
+        font-size: 16px;
+    }
+
+    .amount-input-wrap input {
+        font-size: 18px;
+    }
+
+    .summary-box .note {
+        font-size: 12px;
+    }
+}
+
+
+
+
+
+
+
+
+
+

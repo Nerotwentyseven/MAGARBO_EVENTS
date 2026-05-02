@@ -1,0 +1,392 @@
+/* --- Imports & Fonts (Matches Homepage) --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* --- Variables (Inherited from Homepage + Menu Specifics) --- */
+:root {
+  /* Brand Colors from your Homepage CSS */
+  --primary-gold: #bf9225;
+  --bg-white: #ffffff;
+  --text-dark: #191e2a;
+  --text-gray: #666666;
+  --radius: 15px;
+
+  /* Menu Specific Colors (from Image) */
+  --bg-cream: #f9f8f4; /* The light beige background seen in the menu image */
+  --border-light: #e5e7eb;
+  --badge-bg: #bf9225; /* Using your brand gold */
+}
+
+/* --- Global Reset --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-cream); /* Cream background */
+  color: var(--text-dark);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+
+/* --- Layout Container --- */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* --- Top Header (Back link + CTA) --- */
+.top-header {
+  background-color: var(--bg-white);
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-light);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.back-home {
+  font-weight: 600;
+  color: var(--primary-gold);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.back-home i {
+  color: var(--primary-gold);
+  font-size: 14px;
+}
+
+.back-home:hover {
+  color: var(--primary-gold);
+  opacity: 1;
+}
+
+.back-home:hover i {
+  color: var(--primary-gold);
+  transform: none;
+}
+@media (max-width: 768px) {
+  .back-home {
+    font-size: 13px;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .back-home {
+    font-size: 13px;
+    gap: 6px;
+  }
+
+  .back-home i {
+    font-size: 13px;
+  }
+
+  .back-home span {
+    display: inline;
+  }
+}
+
+/* Button Styles */
+.btn {
+  padding: 10px 24px;
+  border-radius: 8px; /* Matching homepage radius style */
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.btn-primary {
+  background-color: var(--primary-gold);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+/* --- Hero Section --- */
+.hero {
+  background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+              url('../images/menu.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  min-height: 338.5px; /* same feel sa packages */
+  padding: 0 20px;
+  margin-bottom: 40px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #fff;
+}
+
+.hero h1 i {
+  color: var(--primary-gold); /* Utensils icon */
+}
+
+.hero p {
+  color: rgba(255,255,255,0.9);
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* --- Menu Grid System --- */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 Columns like the image */
+  gap: 24px;
+  padding-bottom: 60px;
+}
+
+/* --- Menu Card Design --- */
+.menu-card {
+  background-color: var(--bg-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.menu-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Header inside Card (Badge + Price) */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.badge {
+  background-color: var(--badge-bg);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 50px; /* Pill shape */
+  display: inline-block;
+}
+
+.price-info {
+  text-align: right;
+  line-height: 1.2;
+}
+
+.price {
+  display: block;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--primary-gold);
+}
+
+.per-head {
+  display: block;
+  font-size: 0.7rem;
+  color: #9ca3af; /* Light gray */
+}
+
+/* Card Title */
+.menu-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--text-dark);
+}
+
+/* Menu Sections (Soup, Hot Items, etc.) */
+.menu-section {
+  margin-bottom: 18px;
+}
+
+.section-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.section-title i {
+  font-size: 0.9rem;
+  width: 16px; /* Ensure alignment */
+  text-align: center;
+}
+
+/* List Items */
+.menu-section ul {
+  padding-left: 5px;
+}
+
+.menu-section ul li {
+  font-size: 0.9rem;
+  color: var(--text-gray);
+  margin-bottom: 4px;
+  padding-left: 15px;
+  position: relative;
+}
+
+/* Custom Bullet Dots */
+.menu-section ul li::before {
+  content: "•";
+  color: #d1d5db; /* Very light gray bullet */
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+/* --- Bottom CTA Banner --- */
+.cta-banner {
+  padding: 0 20px 60px 20px;
+}
+
+.cta-content {
+  background-color: var(--primary-gold); /* Brand Gold */
+  border-radius: var(--radius);
+  padding: 50px 20px;
+  text-align: center;
+  color: #fff;
+  max-width: 1280px;
+  margin: 0 auto;
+  box-shadow: 0 10px 25px rgba(191, 146, 37, 0.25);
+}
+
+.cta-content h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.cta-content p {
+  margin-bottom: 30px;
+  font-size: 1rem;
+  opacity: 0.95;
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+/* CTA Specific Buttons */
+.btn-light {
+  background-color: #fff;
+  color: var(--primary-gold);
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn-light:hover {
+  background-color: #f0f0f0;
+}
+
+.btn-outline-light {
+  background-color: transparent;
+  border: 2px solid #fff;
+  color: #fff;
+  padding: 10px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn-outline-light:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.section-title i.icon-soup {
+    color: #eab308;
+}
+
+.section-title i.icon-hot {
+    color: #ef4444;
+}
+
+.section-title i.icon-dessert {
+    color: #a855f7;
+}
+
+.section-title i.icon-drink {
+    color: #3b82f6;
+}
+
+.section-title i.icon-default {
+    color: #bf9225;
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 1024px) {
+  .menu-grid {
+      grid-template-columns: repeat(2, 1fr); /* 2 columns on tablet */
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-grid {
+      grid-template-columns: 1fr; /* 1 column on mobile */
+  }
+  
+  .top-header {
+      padding: 15px 20px;
+  }
+
+  .cta-content h2 {
+      font-size: 1.5rem;
+  }
+  
+  .cta-buttons {
+      flex-direction: column;
+      align-items: center;
+  }
+  
+  .btn-light, .btn-outline-light {
+      width: 100%;
+      max-width: 300px;
+      text-align: center;
+  }
+}

@@ -1,0 +1,149 @@
+/* --- COLOR VARIABLES --- */
+:root {
+    --bg-main: #f4f7f6;
+    --bg-side: #ffffff;
+    --bg-card: #ffffff;
+    --text-p: #2d3436;
+    --text-s: #636e72;
+    --border: #dfe6e9;
+    --accent: #bf9225;
+    --input-bg: #ffffff;
+    --text-h4: #000000;
+}
+
+/* --- DARK MODE VARIABLES (Eksakto sa Settings Screenshot mo) --- */
+body.dark-mode, body.dark-mode {
+    --bg-main: #121212;  /* Deep Black background */
+    --bg-side: #1e1e1e;  /* Dark Gray Sidebar & Cards */
+    --bg-card: #1e1e1e;
+    --text-p: #ffffff;   /* Pure White Text */
+    --text-s: #b2bec3;   /* Muted Gray Text */
+    --border: #2d3436;   /* Dark Borders */
+    --input-bg: #2d3436;
+    --text-h4: #ffffff; /* White for H4 */
+}
+
+/* --- GLOBAL APPLICATION --- */
+body {
+    background-color: var(--bg-main) !important;
+    color: var(--text-p);
+    transition: all 0.3s ease;
+    margin: 0;
+}
+
+/* --- SIDEBAR FIX --- */
+/* Pilitin ang sidebar na maging Dark Gray at hindi mag-white */
+body.dark-mode .sidebar-wrapper,
+body.dark-mode aside,
+body.dark-mode .sidebar-container,
+body.dark-mode .ADMIN-LAYOUT aside {
+    background-color: var(--bg-side) !important;
+    border-right: 1px solid var(--border) !important;
+}
+
+/* Eto ang request mo: White ang "Magarbo Events" branding */
+body.dark-mode .sidebar-header h2, 
+body.dark-mode .sidebar-header h3,
+body.dark-mode .sidebar-header .logo-text,
+body.dark-mode .sidebar-wrapper strong,
+body.dark-mode .admin-profile h3, body.dark-mode .name {
+    color: #ffffff !important;
+}
+
+/* --- MAIN CONTENT & CARDS --- */
+/* Para mawala yung puti sa likod ng cards sa employee list */
+body.dark-mode .main-content,
+body.dark-mode .ADMIN-EMPLOYEE-LIST {
+    background-color: var(--bg-main) !important;
+}
+
+/* Cards (Table at Stats) */
+.table-card, .stat-card, .settings-card, .test-card {
+    background-color: var(--bg-card) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text-p) !important;
+}
+
+/* --- TABLE & TEXT FIX --- */
+/* Para maging white ang mga names (Juan Dela Cruz) sa listahan */
+body.dark-mode table tbody td,
+body.dark-mode table thead th,
+body.dark-mode .stat-value,
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 {
+    color: var(--text-p) !important;
+}
+
+/* Para sa sub-titles gaya ng "Manage employee information" */
+body.dark-mode .header-title p,
+body.dark-mode .stat-sub,
+body.dark-mode .text-subtitle,
+body.dark-mode table td:not(.font-bold) {
+    color: var(--text-s) !important;
+}
+
+/* --- INPUTS & BUTTONS --- */
+input, select, textarea, .search-container {
+    background-color: var(--input-bg) !important;
+    color: var(--text-p) !important;
+    border: 1px solid var(--border) !important;
+}
+
+/* Search Icon fix */
+body.dark-mode .search-icon {
+    color: var(--text-s) !important;
+}
+
+/* --- MODAL DARK MODE FIX --- */
+
+/* Background ng mismong modal box */
+body.dark-mode .modal-content {
+    background-color: var(--bg-side) !important; /* #1e1e1e */
+    color: var(--text-p) !important; /* White */
+    border: 1px solid var(--border) !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+/* Header ng Modal */
+body.dark-mode .modal-header {
+    border-bottom: 1px solid var(--border) !important;
+}
+
+/* Text sa loob ng Modal */
+body.dark-mode .modal-header h2,
+body.dark-mode .modal-header p,
+body.dark-mode .modal-content p,
+body.dark-mode #deleteTarget {
+    color: #ffffff !important;
+}
+
+/* Close button (x) */
+body.dark-mode .close {
+    color: #b2bec3 !important;
+}
+body.dark-mode .close:hover {
+    color: #ffffff !important;
+}
+
+/* Form Labels sa loob ng Modal */
+body.dark-mode .form-group label {
+    color: #ffffff !important;
+}
+
+/* Inputs sa loob ng Modal */
+body.dark-mode .form-group input {
+    background-color: #252525 !important;
+    border: 1px solid var(--border) !important;
+    color: #ffffff !important;
+}
+
+/* Delete Modal Specific */
+body.dark-mode .delete-content {
+    background-color: #1e1e1e !important;
+}
+
+body.dark-mode .cancel-btn {
+    background-color: #333 !important;
+    color: white !important;
+    border: 1px solid #444 !important;
+}
+/* EMPLOYEE */

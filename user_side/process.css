@@ -1,0 +1,171 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+
+:root {
+    --gold: #BF9225;
+    --gold-bg: rgba(191, 146, 37, 0.1);
+    --stroke: 0.5px solid rgba(191, 146, 37, 0.5);
+}
+
+body {
+    background-color: #f0f2f5;
+    font-family: "Inter-Regular", Helvetica, Arial;
+    padding: 20px;
+}
+
+.REVIEW-AND-PAYMENT {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Nav & Header */
+.header-nav { margin-bottom: 20px; }
+.back-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    color: #BF9225;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.back-home i {
+    color: #BF9225;
+    font-size: 14px;
+}
+
+.back-home:hover {
+    color: #BF9225;
+    opacity: 1;
+}
+
+@media (max-width: 768px) {
+    .back-home {
+        font-size: 13px;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .back-home {
+        font-size: 13px;
+        gap: 6px;
+    }
+
+    .back-home i {
+        font-size: 13px;
+    }
+}
+
+.p { color: var(--gold); font-size: clamp(24px, 5vw, 32px); font-weight: 700; margin-bottom: 8px; }
+.text-wrapper-2 { color: rgba(191, 146, 37, 0.7); margin-bottom: 30px; }
+
+/* Stepper */
+.stepper {
+    display: flex; justify-content: center; gap: clamp(20px, 8vw, 60px); margin: 40px 0;
+}
+.step {
+    width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    background-color: var(--gold); color: #fff; font-size: 20px;
+}
+.step.highlight { box-shadow: 0 0 0 4px #fff, 0 0 0 6px var(--gold); }
+.step.inactive { background-color: #7a7a7a; }
+
+/* Main Card */
+.main-card {
+    background: #fff; border-radius: 15px; border: var(--stroke);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1); padding: clamp(20px, 5vw, 50px);
+}
+
+/* Admin Alert Box */
+.admin-approval-banner {
+    background-color: var(--gold-bg); border: 0.5px solid var(--gold);
+    padding: 15px; border-radius: 10px; display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; font-weight: 600;
+}
+.admin-approval-banner i { color: var(--gold); font-size: 20px; }
+
+.after-submitting {
+    font-size: 14px; line-height: 1.6; color: #555; margin-bottom: 30px; text-align: justify;
+}
+
+/* Review Section */
+.section-title { 
+    display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 600; margin-bottom: 20px; 
+}
+.section-title i { color: var(--gold); }
+
+.summary-container {
+    background-color: #fafafa; border: 0.5px solid #ddd; border-radius: 15px; padding: 30px;
+}
+.summary-title { font-weight: 600; margin-bottom: 20px; font-size: 18px; }
+
+/* Summary Grid */
+.summary-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;
+}
+.summary-item { display: flex; flex-direction: column; gap: 5px; }
+.label { font-size: 14px; color: #888; }
+.value { font-size: 16px; font-weight: 500; }
+.full-width { grid-column: 1 / -1; }
+
+.request-box {
+    background: #fff; border: 0.5px solid #ccc; padding: 15px; border-radius: 10px; min-height: 80px; margin-top: 5px;
+}
+
+/* Pricing Section */
+.total-section { margin-top: 30px; }
+.line { border: none; border-top: 1px solid #ddd; margin-bottom: 15px; }
+.total-row { display: flex; justify-content: space-between; align-items: center; }
+.total-label { font-size: 16px; font-weight: 600; }
+.total-value { font-size: 18px; color: var(--gold); font-weight: 700; }
+
+/* Footer Buttons */
+.form-footer {
+    margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;
+    display: flex; justify-content: space-between; gap: 20px;
+}
+.btn-next, .btn-prev {
+    height: 48px; width: 220px; border-radius: 10px; border: none; cursor: pointer; font-size: 16px;
+    transition: 0.3s;
+}
+.btn-next { background: var(--gold); color: #fff; }
+.btn-next:hover { background: #9e7a1e; }
+.btn-prev { background: #d9d9d9; color: #555; }
+
+/* ===== LONG TEXT FIX: PROCESS / REVIEW PAGE ===== */
+.summary-grid,
+.summary-item,
+.request-box {
+    min-width: 0;
+}
+
+.value,
+.request-box,
+.summary-item span {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.value {
+    line-height: 1.6;
+    max-width: 100%;
+}
+
+.request-box {
+    white-space: pre-wrap;
+}
+
+.summary-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .form-footer { flex-direction: column-reverse; }
+    .btn-next, .btn-prev { width: 100%; }
+    .stepper { gap: 15px; }
+}

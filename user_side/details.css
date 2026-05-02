@@ -1,0 +1,344 @@
+:root {
+    --gold: #bf9225;
+    --gold-light: rgba(191, 146, 37, 0.08);
+    --gold-border: rgba(191, 146, 37, 0.4);
+    --alert-bg: #e9dec4;
+    --red-alert: #d32f2f;
+    --bg-page: #f0f2f5;
+    --white: #ffffff;
+    --blue-soft: #e0e7ff;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background-color: var(--bg-page);
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+/* Navbar */
+.navbar {
+    background: var(--white);
+    padding: 20px 0;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 30px;
+}
+
+.back-link {
+    cursor: pointer;
+    color: #555;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Grid */
+.main-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 40px;
+}
+
+/* Headers */
+h1 {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: #666;
+    margin-bottom: 25px;
+    font-size: 15px;
+}
+
+h2 {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+/* Image */
+.hero-img {
+    width: 100%;
+    height: 380px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 25px;
+}
+
+/* Alert Box */
+.alert-box {
+    background-color: var(--alert-bg);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    border-left: 5px solid var(--red-alert);
+}
+
+.alert-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    color: var(--red-alert);
+}
+
+.alert-list {
+    list-style: none;
+    padding-left: 5px;
+}
+
+.alert-list li {
+    color: var(--red-alert);
+    font-size: 13.5px;
+    margin-bottom: 6px;
+}
+
+.bold {
+    font-weight: 700;
+}
+
+/* Tabs */
+.tab-switcher {
+    background: #e2e4e7;
+    display: inline-flex;
+    padding: 4px;
+    border-radius: 50px;
+    margin-bottom: 30px;
+    width: 400px;
+}
+
+.tab-btn {
+    border: none;
+    background: transparent;
+    flex: 1;
+    padding: 12px 0;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.3s;
+    color: #555;
+}
+
+.tab-btn.active {
+    background: var(--white);
+    color: #000;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Feature Cards */
+.feature-card {
+    background: var(--white);
+    padding: 16px 20px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid #eee;
+}
+
+.check {
+    color: #2e7d32;
+}
+
+.gold-bullet {
+    color: var(--gold);
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* Additional Inclusions Panel */
+.additional-services {
+    background: var(--blue-soft);
+    padding: 25px;
+    border-radius: 12px;
+    margin-top: 20px;
+}
+
+.additional-services h4 {
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.additional-services ul {
+    list-style: none;
+}
+
+.additional-services li {
+    margin-bottom: 10px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.check-blue {
+    color: #4338ca;
+}
+
+/* Sidebar */
+.sticky-card {
+    position: sticky;
+    top: 20px;
+    background: var(--white);
+    padding: 25px;
+    border-radius: 15px;
+    border: 1px solid #eee;
+}
+
+.label {
+    color: #888;
+    font-size: 13px;
+}
+
+.amount {
+    color: var(--gold);
+    font-size: 24px;
+    font-weight: 700;
+    margin: 5px 0;
+}
+
+.sub-label {
+    color: #999;
+    font-size: 12px;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.info-block {
+    background: var(--gold-light);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.deposit-card {
+    background: #fdfaf3;
+    border: 1px solid var(--gold-border);
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.deposit-title {
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 2px;
+}
+
+.deposit-desc {
+    font-size: 12px;
+    color: #666;
+}
+
+.book-now-btn {
+    width: 100%;
+    background: var(--gold);
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 10px;
+    font-weight: 700;
+    margin-top: 20px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.section-desc {
+    margin-bottom: 15px;
+}
+
+/* Gallery Banner - Fixed to match "See Our Work" Design */
+.gallery-banner {
+    background: var(--alert-bg);
+    /* Matches the light gold/beige background */
+    padding: 25px 30px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    /* Pushes text to left and button to right */
+    align-items: center;
+    margin-top: 25px;
+    margin-bottom: 20px;
+}
+
+.gallery-text .bold {
+    font-size: 16px;
+    color: #333;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.gallery-text .muted {
+    font-size: 14px;
+    color: #666;
+}
+
+.gallery-btn {
+    background: var(--white);
+    border: 1px solid var(--gold-border);
+    padding: 12px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.gallery-btn:hover {
+    background: #fdfaf3;
+    border-color: var(--gold);
+}
+
+/* Footer Note */
+.note-box {
+    background: var(--alert-bg);
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.muted {
+    color: #666;
+    font-size: 13px;
+}
+
+@media (max-width: 900px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        order: -1;
+    }
+
+    .tab-switcher {
+        width: 100%;
+    }
+}
+
+/* Responsive Fix for See Our Work */
+@media (max-width: 600px) {
+    .gallery-banner {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+}
