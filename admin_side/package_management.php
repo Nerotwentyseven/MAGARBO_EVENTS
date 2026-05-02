@@ -40,58 +40,57 @@ if ($result && mysqli_num_rows($result) > 0) {
             $includes[] = $i['include_text'];
         }
 
-        // AUTO POPULARITY BASED ON BOOKINGS
-$totalBookings = 0;
-$totalStmt = mysqli_query(
-    $conn,
-    "SELECT COUNT(*) AS total
-     FROM bookings
-     WHERE package_name IS NOT NULL
-       AND package_name != ''
-       AND booking_status = 'Approved'"
-);
-if ($rowTotal = mysqli_fetch_assoc($totalStmt)) {
-    $totalBookings = (int)$rowTotal['total'];
-}
+        $totalBookings = 0;
+        $totalStmt = mysqli_query(
+            $conn,
+            "SELECT COUNT(*) AS total
+            FROM bookings
+            WHERE package_name IS NOT NULL
+            AND package_name != ''
+            AND booking_status = 'Approved'"
+        );
+        if ($rowTotal = mysqli_fetch_assoc($totalStmt)) {
+            $totalBookings = (int)$rowTotal['total'];
+        }
 
-$packageBookings = 0;
-$pStmt = mysqli_prepare(
-    $conn,
-    "SELECT COUNT(*) AS total
-     FROM bookings
-     WHERE package_name = ?
-       AND booking_status = 'Approved'"
-);
-mysqli_stmt_bind_param($pStmt, "s", $pkg['package_name']);
-mysqli_stmt_execute($pStmt);
-$pRes = mysqli_stmt_get_result($pStmt);
+        $packageBookings = 0;
+        $pStmt = mysqli_prepare(
+            $conn,
+            "SELECT COUNT(*) AS total
+            FROM bookings
+            WHERE package_name = ?
+            AND booking_status = 'Approved'"
+        );
+        mysqli_stmt_bind_param($pStmt, "s", $pkg['package_name']);
+        mysqli_stmt_execute($pStmt);
+        $pRes = mysqli_stmt_get_result($pStmt);
 
-if ($pRow = mysqli_fetch_assoc($pRes)) {
-    $packageBookings = (int)$pRow['total'];
-}
+        if ($pRow = mysqli_fetch_assoc($pRes)) {
+            $packageBookings = (int)$pRow['total'];
+        }
 
-$percent = ($totalBookings > 0) 
-    ? round(($packageBookings / $totalBookings) * 100) 
-    : 0;
+        $percent = ($totalBookings > 0) 
+            ? round(($packageBookings / $totalBookings) * 100) 
+            : 0;
 
-$packages[] = [
-    "id" => $pkg['id'],
-    "name" => $pkg['package_name'],
-    "popularity" => $percent . "%",
-    "popularity_num" => $percent,
-    "price_start" => (float)$pkg['price_start'],
-    "img" => !empty($pkg['image_path']) ? "../" . $pkg['image_path'] : "https://via.placeholder.com/600x350?text=No+Image",
-    "desc" => $pkg['description'] ?? '',
-    "features" => $features,
-    "includes" => $includes,
-    "status" => $pkg['status']
-];
+        $packages[] = [
+            "id" => $pkg['id'],
+            "name" => $pkg['package_name'],
+            "popularity" => $percent . "%",
+            "popularity_num" => $percent,
+            "price_start" => (float)$pkg['price_start'],
+            "img" => !empty($pkg['image_path']) ? "../" . $pkg['image_path'] : "https://via.placeholder.com/600x350?text=No+Image",
+            "desc" => $pkg['description'] ?? '',
+            "features" => $features,
+            "includes" => $includes,
+            "status" => $pkg['status']
+        ];
 
-        $totalPackages++;
-        if ($percent > 0) $popularPackages++;
-        $totalAvg += (float)$pkg['price_start'];
-    }
-}
+                $totalPackages++;
+                if ($percent > 0) $popularPackages++;
+                $totalAvg += (float)$pkg['price_start'];
+            }
+        }
 
 $avgPrice = $totalPackages > 0 ? $totalAvg / $totalPackages : 0;
 ?>
@@ -125,32 +124,32 @@ $avgPrice = $totalPackages > 0 ? $totalAvg / $totalPackages : 0;
             </div>
 
             <div class="stats-row">
-    <div class="group">
-        <span class="text-wrapper-2">Total Packages</span>
-        <div class="group-2">
-            <span class="text-wrapper-3"><?php echo $totalPackages; ?></span>
-            <span class="text-wrapper-4">All packages</span>
-        </div>
-    </div>
-    <div class="group relative-stat">
-        <span class="text-wrapper-2">Popular Packages</span>
-        <div class="group-2">
-            <span class="text-wrapper-3"><?php echo $popularPackages; ?></span>
-            <span class="text-wrapper-4">With bookings</span>
-        </div>
-    </div>
-    <div class="group relative-stat">
-        <span class="text-wrapper-2">Avg. Price</span>
-        <div class="group-2">
-            <span class="text-wrapper-3">₱<?php echo number_format($avgPrice, 0); ?></span>
-            <span class="text-wrapper-4">Average package price</span>
-        </div>
-    </div>
-</div>
+                <div class="group">
+                    <span class="text-wrapper-2">Total Packages</span>
+                    <div class="group-2">
+                        <span class="text-wrapper-3"><?php echo $totalPackages; ?></span>
+                        <span class="text-wrapper-4">All packages</span>
+                    </div>
+                </div>
+                <div class="group relative-stat">
+                    <span class="text-wrapper-2">Popular Packages</span>
+                    <div class="group-2">
+                        <span class="text-wrapper-3"><?php echo $popularPackages; ?></span>
+                        <span class="text-wrapper-4">With bookings</span>
+                    </div>
+                </div>
+                <div class="group relative-stat">
+                    <span class="text-wrapper-2">Avg. Price</span>
+                    <div class="group-2">
+                        <span class="text-wrapper-3">₱<?php echo number_format($avgPrice, 0); ?></span>
+                        <span class="text-wrapper-4">Average package price</span>
+                    </div>
+                </div>
+            </div>
 
             <div class="sub-header">
                 <i class="fa-solid fa-box-archive element"></i>
-                <span class="text-wrapper-6">All Packages</span>
+                    <span class="text-wrapper-6">All Packages</span>
                 <div class="rectangle-2">
                     <span class="text-wrapper-7"><?php echo $totalPackages; ?> packages</span>
                 </div>
@@ -163,8 +162,8 @@ $avgPrice = $totalPackages > 0 ? $totalAvg / $totalPackages : 0;
                         <div>
                             <h2 class="pkg-title"><?php echo $pkg['name']; ?></h2>
                             <div class="pkg-meta">
-    <span class="pop-text"><?php echo htmlspecialchars($pkg['popularity']); ?></span>
-</div>
+                                <span class="pop-text"><?php echo htmlspecialchars($pkg['popularity']); ?></span>
+                            </div>
                         </div>
                         <div class="price-info">
                             <span class="range-label">Starting Price</span>

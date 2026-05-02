@@ -777,7 +777,6 @@ usort($events, function ($a, $b) {
         window.location.href = url;
     }
 
-    // CREATE EVENT MODAL LOGIC
     function handleAdminEventType() {
         const eventType = document.getElementById('eventTypeSelect')?.value || '';
         const religionWrap = document.getElementById('religionFieldWrap');
@@ -1000,57 +999,57 @@ function changeMenuQty(inputId, change) {
         })();
 
         const rawVenue = String(data.venue || 'N/A').trim();
-let formattedVenue = rawVenue;
+        let formattedVenue = rawVenue;
 
-if (rawVenue !== 'N/A') {
-    const parts = rawVenue.split(',').map(part => part.trim()).filter(Boolean);
+        if (rawVenue !== 'N/A') {
+            const parts = rawVenue.split(',').map(part => part.trim()).filter(Boolean);
 
-    let cityIndex = parts.findIndex(part => {
-        const p = part.toLowerCase();
-        return (
-            p.startsWith('city of') ||
-            p.includes(' city') ||
-            p.includes('municipality')
-        );
-    });
+            let cityIndex = parts.findIndex(part => {
+                const p = part.toLowerCase();
+                return (
+                    p.startsWith('city of') ||
+                    p.includes(' city') ||
+                    p.includes('municipality')
+                );
+            });
 
-    let provinceIndex = parts.findIndex(part => {
-        const p = part.toLowerCase();
-        return (
-            p === 'albay' ||
-            p === 'camarines sur' ||
-            p === 'camarines norte' ||
-            p === 'sorsogon' ||
-            p === 'catanduanes' ||
-            p === 'masbate' ||
-            p.includes('province')
-        );
-    });
+            let provinceIndex = parts.findIndex(part => {
+                const p = part.toLowerCase();
+                return (
+                    p === 'albay' ||
+                    p === 'camarines sur' ||
+                    p === 'camarines norte' ||
+                    p === 'sorsogon' ||
+                    p === 'catanduanes' ||
+                    p === 'masbate' ||
+                    p.includes('province')
+                );
+            });
 
-    let splitIndex = -1;
+            let splitIndex = -1;
 
-    if (cityIndex > 0) {
-        splitIndex = cityIndex - 1;
-    } else if (provinceIndex > 1) {
-        splitIndex = provinceIndex - 2;
-    }
+            if (cityIndex > 0) {
+                splitIndex = cityIndex - 1;
+            } else if (provinceIndex > 1) {
+                splitIndex = provinceIndex - 2;
+            }
 
-    if (splitIndex <= 0 && parts.length >= 3) {
-        splitIndex = parts.length - 3;
-    }
+            if (splitIndex <= 0 && parts.length >= 3) {
+                splitIndex = parts.length - 3;
+            }
 
-    if (splitIndex <= 0) {
-        splitIndex = 1;
-    }
+            if (splitIndex <= 0) {
+                splitIndex = 1;
+            }
 
-    const firstLine = parts.slice(0, splitIndex).join(', ');
-    const secondLine = parts.slice(splitIndex).join(', ');
+            const firstLine = parts.slice(0, splitIndex).join(', ');
+            const secondLine = parts.slice(splitIndex).join(', ');
 
-    formattedVenue = firstLine;
-    if (secondLine) {
-        formattedVenue += '\n' + secondLine;
-    }
-}
+            formattedVenue = firstLine;
+            if (secondLine) {
+                formattedVenue += '\n' + secondLine;
+            }
+        }
 
         const body = document.getElementById('fullDetailsBody');
         body.innerHTML = `
@@ -1083,132 +1082,132 @@ if (rawVenue !== 'N/A') {
         `;
 
         openModal('detailsModal');
-    }
-
-    let activeEventStatus = 'all';
-
-function applyEventFilters() {
-    const searchInput = document.getElementById('eventSearchInput');
-    const fromInput = document.getElementById('eventDateFrom');
-    const toInput = document.getElementById('eventDateTo');
-
-    const searchText = (searchInput?.value || '').trim().toLowerCase();
-    const fromDate = fromInput?.value || '';
-    const toDate = toInput?.value || '';
-
-    document.querySelectorAll('.event-card').forEach(card => {
-        const status = card.dataset.status || '';
-        const eventDate = card.dataset.date || '';
-        const searchableText = card.dataset.search || '';
-
-        const statusMatch = activeEventStatus === 'all' || status === activeEventStatus;
-        const searchMatch = !searchText || searchableText.includes(searchText);
-        const fromMatch = !fromDate || eventDate >= fromDate;
-        const toMatch = !toDate || eventDate <= toDate;
-
-        if (statusMatch && searchMatch && fromMatch && toMatch) {
-            card.style.display = 'flex';
-        } else {
-            card.style.display = 'none';
         }
-    });
-}
 
-document.querySelectorAll('.tab-item').forEach(btn => {
-    btn.addEventListener('click', function () {
-        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-        this.classList.add('active');
-        activeEventStatus = this.dataset.status || 'all';
-        applyEventFilters();
-    });
-});
+            let activeEventStatus = 'all';
 
-document.addEventListener('DOMContentLoaded', function () {
-    const searchInput = document.getElementById('eventSearchInput');
-    const fromInput = document.getElementById('eventDateFrom');
-    const toInput = document.getElementById('eventDateTo');
-    const clearBtn = document.getElementById('clearDateRangeBtn');
-    const applyBtn = document.getElementById('applyDateRangeBtn');
-    const createDateInput = document.getElementById('createEventDate');
+        function applyEventFilters() {
+            const searchInput = document.getElementById('eventSearchInput');
+            const fromInput = document.getElementById('eventDateFrom');
+            const toInput = document.getElementById('eventDateTo');
 
-    const dateToggleBtn = document.getElementById('dateRangeToggleBtn');
-    const dateDropdown = document.getElementById('dateRangeDropdown');
-    const dateCloseBtn = document.getElementById('dateRangeCloseBtn');
-    const dateFilterWrap = document.getElementById('dateFilterWrap');
+            const searchText = (searchInput?.value || '').trim().toLowerCase();
+            const fromDate = fromInput?.value || '';
+            const toDate = toInput?.value || '';
 
-    if (searchInput) {
-        searchInput.addEventListener('input', applyEventFilters);
-    }
+            document.querySelectorAll('.event-card').forEach(card => {
+                const status = card.dataset.status || '';
+                const eventDate = card.dataset.date || '';
+                const searchableText = card.dataset.search || '';
 
-    if (dateToggleBtn && dateDropdown) {
-        dateToggleBtn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            dateDropdown.classList.toggle('show');
-            dateToggleBtn.classList.toggle('active');
-        });
-    }
+                const statusMatch = activeEventStatus === 'all' || status === activeEventStatus;
+                const searchMatch = !searchText || searchableText.includes(searchText);
+                const fromMatch = !fromDate || eventDate >= fromDate;
+                const toMatch = !toDate || eventDate <= toDate;
 
-    if (dateCloseBtn && dateDropdown && dateToggleBtn) {
-        dateCloseBtn.addEventListener('click', function () {
-            dateDropdown.classList.remove('show');
-            dateToggleBtn.classList.remove('active');
-        });
-    }
-
-    if (applyBtn) {
-        applyBtn.addEventListener('click', function () {
-            applyEventFilters();
-            if (dateDropdown && dateToggleBtn) {
-                dateDropdown.classList.remove('show');
-                dateToggleBtn.classList.remove('active');
-            }
-        });
-    }
-
-    if (clearBtn) {
-        clearBtn.addEventListener('click', function () {
-            if (fromInput) fromInput.value = '';
-            if (toInput) toInput.value = '';
-            applyEventFilters();
-
-            if (dateDropdown && dateToggleBtn) {
-                dateDropdown.classList.remove('show');
-                dateToggleBtn.classList.remove('active');
-            }
-        });
-    }
-
-    document.addEventListener('click', function (e) {
-        if (
-            dateFilterWrap &&
-            !dateFilterWrap.contains(e.target) &&
-            dateDropdown &&
-            dateToggleBtn
-        ) {
-            dateDropdown.classList.remove('show');
-            dateToggleBtn.classList.remove('active');
+                if (statusMatch && searchMatch && fromMatch && toMatch) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         }
-    });
 
-    if (createDateInput) {
-        createDateInput.addEventListener('change', function () {
-            const selectedDate = this.value;
-
-            if (bookedDates[selectedDate] && bookedDates[selectedDate] >= 2) {
-                alert("This date is already fully booked.");
-                this.value = "";
-            }
+        document.querySelectorAll('.tab-item').forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                activeEventStatus = this.dataset.status || 'all';
+                applyEventFilters();
+            });
         });
-    }
 
-    handleAdminEventType();
-    handleServiceTypeChange();
-    applyEventFilters();
-});
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('eventSearchInput');
+            const fromInput = document.getElementById('eventDateFrom');
+            const toInput = document.getElementById('eventDateTo');
+            const clearBtn = document.getElementById('clearDateRangeBtn');
+            const applyBtn = document.getElementById('applyDateRangeBtn');
+            const createDateInput = document.getElementById('createEventDate');
 
-    const bookedDates = <?php echo json_encode($booked_dates); ?>;
+            const dateToggleBtn = document.getElementById('dateRangeToggleBtn');
+            const dateDropdown = document.getElementById('dateRangeDropdown');
+            const dateCloseBtn = document.getElementById('dateRangeCloseBtn');
+            const dateFilterWrap = document.getElementById('dateFilterWrap');
 
-  
+            if (searchInput) {
+                searchInput.addEventListener('input', applyEventFilters);
+            }
+
+            if (dateToggleBtn && dateDropdown) {
+                dateToggleBtn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    dateDropdown.classList.toggle('show');
+                    dateToggleBtn.classList.toggle('active');
+                });
+            }
+
+            if (dateCloseBtn && dateDropdown && dateToggleBtn) {
+                dateCloseBtn.addEventListener('click', function () {
+                    dateDropdown.classList.remove('show');
+                    dateToggleBtn.classList.remove('active');
+                });
+            }
+
+            if (applyBtn) {
+                applyBtn.addEventListener('click', function () {
+                    applyEventFilters();
+                    if (dateDropdown && dateToggleBtn) {
+                        dateDropdown.classList.remove('show');
+                        dateToggleBtn.classList.remove('active');
+                    }
+                });
+            }
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function () {
+                    if (fromInput) fromInput.value = '';
+                    if (toInput) toInput.value = '';
+                    applyEventFilters();
+
+                    if (dateDropdown && dateToggleBtn) {
+                        dateDropdown.classList.remove('show');
+                        dateToggleBtn.classList.remove('active');
+                    }
+                });
+            }
+
+            document.addEventListener('click', function (e) {
+                if (
+                    dateFilterWrap &&
+                    !dateFilterWrap.contains(e.target) &&
+                    dateDropdown &&
+                    dateToggleBtn
+                ) {
+                    dateDropdown.classList.remove('show');
+                    dateToggleBtn.classList.remove('active');
+                }
+            });
+
+            if (createDateInput) {
+                createDateInput.addEventListener('change', function () {
+                    const selectedDate = this.value;
+
+                    if (bookedDates[selectedDate] && bookedDates[selectedDate] >= 2) {
+                        alert("This date is already fully booked.");
+                        this.value = "";
+                    }
+                });
+            }
+
+            handleAdminEventType();
+            handleServiceTypeChange();
+            applyEventFilters();
+            });
+
+            const bookedDates = <?php echo json_encode($booked_dates); ?>;
+
+        
 </script>
 </body>
 </html>
