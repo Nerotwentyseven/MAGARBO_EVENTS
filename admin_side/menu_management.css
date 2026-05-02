@@ -337,7 +337,6 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 99999;
-    backdrop-filter: blur(2px);
 }
 
 .mg-modal-content {
@@ -536,12 +535,11 @@ body {
 .confirm-card {
     width: 100%;
     max-width: 330px;
-    background: #fff;
+    background: var(--bg-card);
     border-radius: 20px;
     padding: 24px 20px 18px;
     text-align: center;
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.10);
-    border: 1px solid rgba(191, 146, 37, 0.12);
+    border: 1px solid var(--border-color);
     animation: confirmFadeIn 0.18s ease;
 }
 
@@ -567,11 +565,12 @@ body {
     font-size: 18px;
     font-weight: 800;
     margin-bottom: 6px;
+    color: var(--text-main);
 }
 
 .confirm-card p {
     font-size: 14px;
-    color: #6c757d;
+    color: var(--text-muted);
 }
 
 .confirm-actions {
@@ -590,7 +589,8 @@ body {
 }
 
 .confirm-btn.cancel {
-    background: #f3f4f6;
+    background: var(--bg-soft);
+    color: var(--text-main);
 }
 
 .confirm-btn.delete-confirm {

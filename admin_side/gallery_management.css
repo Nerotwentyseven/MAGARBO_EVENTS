@@ -613,8 +613,7 @@ body {
 .confirm-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.18);
-    display: none;
+    background: var(--modal-overlay);
     align-items: center;
     justify-content: center;
     z-index: 9999;
@@ -624,12 +623,12 @@ body {
 .confirm-card {
     width: 100%;
     max-width: 330px;
-    background: #fff;
+    background: var(--bg-card);
     border-radius: 20px;
     padding: 24px 20px 18px;
     text-align: center;
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.10);
-    border: 1px solid rgba(191, 146, 37, 0.12);
+    box-shadow: var(--shadow-soft);
+    border: 1px solid var(--border);
     animation: confirmFadeIn 0.18s ease;
 }
 
@@ -654,14 +653,14 @@ body {
     font-size: 17px;
     font-weight: 800;
     letter-spacing: -0.2px;
-    color: #1e293b;
+    color: var(--text-p);
 }
 
 .confirm-card p {
     margin: 0;
     font-size: 13px;
     line-height: 1.45;
-    color: #6c757d;
+    color: var(--text-s);
 }
 
 .confirm-actions {
@@ -682,8 +681,8 @@ body {
 }
 
 .confirm-btn.cancel {
-    background: #f3f4f6;
-    color: #374151;
+    background: var(--bg-soft);
+    color: var(--text-p);
 }
 
 .confirm-btn.delete-confirm {
