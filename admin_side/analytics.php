@@ -224,15 +224,21 @@ $monthLabels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov
                 <p>Visual insights for Magarbo Events performance</p>
             </div>
 
-            <form method="GET" id="yearForm">
-                <select name="year" class="year-select" onchange="this.form.submit()">
-                    <?php foreach ($yearOptions as $yr): ?>
-                        <option value="<?php echo $yr; ?>" <?php echo $selectedYear === $yr ? 'selected' : ''; ?>>
-                            Year <?php echo $yr; ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </form>
+            <div class="reports-actions">
+    <form method="GET" id="yearForm">
+        <select name="year" class="year-select" onchange="this.form.submit()">
+            <?php foreach ($yearOptions as $yr): ?>
+                <option value="<?php echo $yr; ?>" <?php echo $selectedYear === $yr ? 'selected' : ''; ?>>
+                    Year <?php echo $yr; ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </form>
+
+    <button type="button" class="export-btn" onclick="openExportConfirmModal()">
+        <i class="fas fa-file-export"></i> Export Report
+    </button>
+</div>
         </header>
 
         <div class="stats-grid">
@@ -293,6 +299,22 @@ $monthLabels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov
             </div>
         </div>
     </main>
+</div>
+
+<div id="exportConfirmModal" class="confirm-overlay" style="display:none;">
+    <div class="confirm-card">
+        <div class="confirm-icon-wrap">
+            <i class="fas fa-file-export"></i>
+        </div>
+
+        <h3>Export Report?</h3>
+        <p>This will download the Reports & Analytics data for Year <?php echo $selectedYear; ?>.</p>
+
+        <div class="confirm-actions">
+            <button type="button" class="confirm-btn cancel" onclick="closeExportConfirmModal()">Cancel</button>
+            <button type="button" class="confirm-btn approve" onclick="confirmExportReport()">Export</button>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -450,6 +472,24 @@ new Chart(document.getElementById('customerPieChart'), {
         }
     }
 });
+
+function openExportConfirmModal() {
+    document.getElementById('exportConfirmModal').style.display = 'flex';
+}
+
+function closeExportConfirmModal() {
+    document.getElementById('exportConfirmModal').style.display = 'none';
+}
+
+function confirmExportReport() {
+    // close modal muna
+    document.getElementById('exportConfirmModal').style.display = 'none';
+
+    // delay konti para smooth UI
+    setTimeout(function() {
+        window.location.href = 'export_analytics.php?year=<?php echo $selectedYear; ?>';
+    }, 150);
+}
 </script>
 
 </body>
