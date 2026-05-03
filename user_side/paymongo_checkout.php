@@ -75,7 +75,10 @@ if ($user_id > 0) {
 
 $secretKey = 'sk_test_vjMC8YA7ph3KubZ6D4Pdm5sx';
 
-$baseUrl = "http://localhost/magarbo_system_current/user_side";
+$host = $_SERVER['HTTP_HOST']; //pwede halion pag may domain na
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http'; //pwede man
+
+$baseUrl = $scheme . '://' . $host . '/magarbo_system_current/user_side'; //temporary muna
 
 $amountInCentavos = (int) round($amount * 100);
 
