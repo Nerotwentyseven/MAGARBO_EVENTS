@@ -16,7 +16,6 @@
             color: #333;
         }
 
-        /* --- NAVBAR --- */
         .navbar {
             height: 65px;
             background: white;
@@ -102,7 +101,6 @@
             font-weight: 500;
         }
 
-        /* --- CONTAINER & WELCOME --- */
         .container {
             max-width: 1200px;
             margin: 40px auto;
@@ -120,7 +118,6 @@
             margin-bottom: 30px;
         }
 
-        /* --- CARDS --- */
         .action-cards {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -147,7 +144,6 @@
             transform: translateY(-3px);
         }
 
-        /* --- TABS --- */
         .tabs {
             background: #e2e2e280;
             display: inline-flex;
@@ -173,7 +169,6 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        /* --- CONTENT BOX --- */
         .content-box {
             background: white;
             border-radius: 15px;
@@ -191,7 +186,6 @@
             display: block;
         }
 
-        /* --- INFO ROW --- */
         .info-row {
             border-bottom: 1px solid #f0f0f0;
             padding: 18px 0;
@@ -224,7 +218,6 @@
             font-weight: 500;
         }
 
-        /* --- EMPTY STATE --- */
         .empty-state {
             text-align: center;
             padding: 60px 0;
@@ -249,7 +242,6 @@
             margin-top: 15px;
         }
 
-        /* --- CHAT --- */
         .chat-container {
             border: 1px solid #eee;
             border-radius: 12px;
@@ -323,7 +315,6 @@
             cursor: pointer;
         }
 
-        /* --- MODAL --- */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -393,8 +384,6 @@
             cursor: pointer;
             color: #999;
         }
-
-        /* ===== MOBILE + TABLET RESPONSIVE FIX FOR PROFILE PAGE ===== */
 
 @media (max-width: 1024px) {
     .navbar {
@@ -602,7 +591,6 @@
     }
 }
 
-/* ===== EXTRA SMALL PHONE FIX (320px to 430px) ===== */
 @media (max-width: 430px) {
     .navbar {
         padding: 10px 12px;
@@ -774,7 +762,6 @@
     }
 }
 
-/* ===== VERY TINY PHONE FIX (320px and below-ish) ===== */
 @media (max-width: 360px) {
     .navbar {
         padding: 10px;
@@ -870,13 +857,11 @@
     font-size: 20px;
 }
 
-/* cancel */
 .confirm-icon-wrap.cancel-mode {
     background: #fff7e3;
     color: #bf9225;
 }
 
-/* delete */
 .confirm-icon-wrap.delete-mode {
     background: #fee2e2;
     color: #dc2626;
@@ -944,7 +929,6 @@
     }
 }
 
-/* responsive for 320px and above */
 @media (max-width: 480px) {
     .confirm-overlay {
         padding: 16px;
@@ -983,7 +967,6 @@
     }
 }
 
-/* ===== MESSENGER-LIKE MOBILE CHAT BEHAVIOR ===== */
 @media (max-width: 768px) {
     body.mobile-message-mode #message {
         display: block !important;
@@ -1071,7 +1054,6 @@
     }
 }
 
-/* ACTION BAR */
 .completed-action-bar {
     display: flex;
     justify-content: space-between;
@@ -1089,7 +1071,6 @@
     gap: 6px;
 }
 
-/* DELETE BUTTON */
 .btn-delete-selected {
     background: #dc2626;
     color: #fff;
@@ -1106,7 +1087,6 @@
     opacity: 0.95;
 }
 
-/* COMPLETED CARD */
 .completed-card {
     display: flex;
     gap: 12px;
@@ -1114,18 +1094,15 @@
     opacity: 0.9;
 }
 
-/* CHECKBOX */
 .completed-checkbox {
     margin-top: 6px;
     accent-color: #bf9225;
 }
 
-/* CONTENT */
 .card-content {
     width: 100%;
 }
 
-/* HEADER */
 .card-header {
     display: flex;
     justify-content: space-between;
@@ -1137,21 +1114,18 @@
     color: var(--gold);
 }
 
-/* STATUS */
 .status.completed {
     font-size: 12px;
     color: green;
     font-weight: bold;
 }
 
-/* DETAILS */
 .card-details {
     margin-top: 8px;
     font-size: 14px;
     line-height: 1.6;
 }
 
-/* EMPTY */
 .empty-text {
     color: #888;
 }
@@ -1174,14 +1148,14 @@
 
 .phone-group {
     display: flex;
-    align-items: center; /* 🔥 para same line */
+    align-items: center;
     gap: 10px;
     margin-top: 6px;
 }
 
 .phone-group input {
     flex: 1;
-    height: 42px; /* 🔥 same height */
+    height: 42px;
     padding: 0 12px;
     border-radius: 8px;
     border: 1px solid #ddd;
@@ -1189,23 +1163,18 @@
     font-size: 14px;
 }
 
-/* 🔥 PROFESSIONAL BUTTON */
 .btn-change-phone {
     display: flex;
     align-items: center;
     justify-content: center;
-
     height: 35px;
     padding: 0 16px;
-
     border-radius: 8px;
     border: 1px solid #BF9225;
     color: #BF9225;
     text-decoration: none;
-
     font-size: 13px;
     font-weight: 500;
-
     transition: all 0.2s ease;
     white-space: nowrap;
 }

@@ -7,7 +7,6 @@ require_once '../db_connection.php';
 $serviceTypeFromSession = $_SESSION['service_type'] ?? '';
 $isCateringOnly = (trim(strtolower($serviceTypeFromSession)) === 'catering only');
 
-// KUNIN ANG MGA APPROVED DATES MULA SA DATABASE
 $booked_dates = [];
 
 $query = "SELECT event_date, COUNT(*) as count
@@ -23,11 +22,6 @@ if ($result && mysqli_num_rows($result) > 0) {
     }
 }
 
-/*
-|--------------------------------------------------------------------------
-| HELPER FUNCTIONS
-|--------------------------------------------------------------------------
-*/
 function normalizeCategoryKey($text) {
     $text = strtolower(trim((string)$text));
 
@@ -76,7 +70,6 @@ function getRelatedCategories($selected) {
     return [$selected];
 }
 
-//THEME SUGGESTIONS FROM gallery_themes
 $offersByCategory = [];
 
 $themeSql = "
@@ -340,8 +333,6 @@ if ($themeRes) {
     <script>
         let currentDisplayDate = new Date();
 
-        
-
         const bookedDates = <?php echo json_encode($booked_dates); ?>;
         const offersDB = <?php echo json_encode($offersByCategory); ?>;
         const isCateringOnly = <?php echo json_encode($isCateringOnly); ?>;
@@ -383,8 +374,6 @@ if ($themeRes) {
         function getRelatedCategories(selected) {
             return [selected];
         }
-
-        
 
         function getOffersForCategory(categoryKey) {
             const related = getRelatedCategories(categoryKey);
@@ -469,10 +458,10 @@ if ($themeRes) {
         });
 
         function closeAllCustomDropdowns() {
-    document.querySelectorAll('.custom-dropdown').forEach(drop => {
-        drop.classList.remove('open');
-    });
-}
+            document.querySelectorAll('.custom-dropdown').forEach(drop => {
+                drop.classList.remove('open');
+            });
+        }
 
 function toggleCustomDropdown(type) {
     const wrap = document.getElementById(type + 'DropdownWrap');
@@ -1045,7 +1034,7 @@ function updateVenueField() {
 
             if (!selectedThemeInput || !selectedThemeIdInput) return true;
 
-            // Kung may theme name pero walang theme id, ibig sabihin walang valid theme selection
+            
             if (selectedThemeInput.value.trim() !== '' && selectedThemeIdInput.value.trim() === '') {
                 openBookingAlert(
                 'Theme Required',
@@ -1055,18 +1044,18 @@ function updateVenueField() {
             return false;
             }
 
-            // kung parehong meron na, okay na
+           
             if (selectedThemeInput.value.trim() !== '' && selectedThemeIdInput.value.trim() !== '') {
                 return true;
             }
 
-            // fallback 1: kunin sa data-selected-theme
+            
             const dataTheme = requestField?.getAttribute('data-selected-theme') || '';
             if (dataTheme.trim() !== '') {
                 selectedThemeInput.value = dataTheme.trim();
             }
 
-            // fallback 2: kunin sa text na "Selected theme: ..."
+            
             if (selectedThemeInput.value.trim() === '') {
                 const textTheme = (selectedThemeText?.innerText || '')
                     .replace('Selected theme:', '')
@@ -1077,7 +1066,7 @@ function updateVenueField() {
                 }
             }
 
-            // final check: kung may theme name pero walang id, huwag pasubmit
+           
             if (selectedThemeInput.value.trim() !== '' && selectedThemeIdInput.value.trim() === '') {
                 openBookingAlert(
                 'Theme Selection Incomplete',

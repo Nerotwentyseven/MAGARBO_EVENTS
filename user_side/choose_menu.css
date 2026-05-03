@@ -1,4 +1,3 @@
-/* ===== VARIABLES ===== */
 :root {
     --bg-color: #FEFCF5;
     --gold: #C59D3F;
@@ -7,7 +6,6 @@
     --border: #E8DCC2;
 }
 
-/* ===== RESET ===== */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -26,7 +24,6 @@ body {
     margin: 0 auto;
 }
 
-/* ===== HEADER ===== */
 header {
     margin-bottom: 40px;
 }
@@ -53,7 +50,6 @@ header a {
     color: #777;
 }
 
-/* ===== STEPS ===== */
 .steps {
     display: flex;
     justify-content: center;
@@ -77,21 +73,18 @@ header a {
     background: var(--gold);
 }
 
-/* ===== LAYOUT ===== */
 .main-layout {
     display: grid;
     grid-template-columns: 1fr 350px;
     gap: 30px;
 }
 
-/* ===== MENU GRID ===== */
 .menu-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 25px;
 }
 
-/* ===== CARD ===== */
 .menu-card {
     background: #fff;
     border: 1px solid var(--border);
@@ -145,7 +138,6 @@ header a {
     line-height: 1.4;
 }
 
-/* ===== ITEMS ===== */
 .item-row {
     display: flex;
     gap: 12px;
@@ -167,7 +159,6 @@ header a {
     color: #666;
 }
 
-/* ===== QTY ===== */
 .qty-box {
     margin-top: auto;
     display: flex;
@@ -192,7 +183,6 @@ header a {
     text-align: center;
 }
 
-/* ===== SIDEBAR ===== */
 .cart-sidebar {
     background: #fff;
     border: 1px solid var(--border);
@@ -228,16 +218,12 @@ header a {
     cursor: pointer;
 }
 .btn-details:disabled {
-    background: #d6bf84; /* gold-ish */
+    background: #d6bf84;
     color: #ffffff;
     cursor: not-allowed;
-
-    /* 🔥 alisin red style ng browser */
     pointer-events: none;
     outline: none;
     border: none;
-
-    /* para consistent */
     opacity: 1;
 }
 .back-action {
@@ -261,22 +247,20 @@ header a {
     opacity: 1;
 }
 
-/* ICON COLORS PER CATEGORY */
-
 .item-row i.icon-soup {
-    color: #eab308; /* yellow */
+    color: #eab308;
 }
 
 .item-row i.icon-hot {
-    color: #ef4444; /* red */
+    color: #ef4444;
 }
 
 .item-row i.icon-dessert {
-    color: #a855f7; /* violet */
+    color: #a855f7;
 }
 
 .item-row i.icon-drink {
-    color: #3b82f6; /* blue */
+    color: #3b82f6;
 }
 
 .item-row i.icon-default {
@@ -303,16 +287,10 @@ header a {
     }
 }
 
-
-/* ===== RESPONSIVE FINAL (FIXED) ===== */
-
-/* TABLET */
 @media (max-width: 900px) {
     .main-layout {
         grid-template-columns: 1fr;
     }
-
-    /* KEEP 2 CARDS */
     .menu-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 20px;
@@ -323,7 +301,6 @@ header a {
     }
 }
 
-/* PHONE */
 @media (max-width: 600px) {
     .menu-grid {
         grid-template-columns: 1fr;

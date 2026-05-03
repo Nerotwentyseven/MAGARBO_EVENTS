@@ -7,7 +7,6 @@ require_once '../db_connection.php';
 
 $packages = [];
 
-// TOTAL APPROVED BOOKINGS WITH PACKAGE
 $totalPackageBookings = 0;
 $totalPackageStmt = mysqli_query(
     $conn,
@@ -84,7 +83,6 @@ if ($avgRes && $avgRow = mysqli_fetch_assoc($avgRes)) {
     $averageRating = $totalReviewCount > 0 ? round((float)$avgRow['avg_rating'], 1) : 0;
 }
 
-// Data for Testimonials - REAL REVIEWS FROM DATABASE
 $reviews = [];
 
 $reviewSql = "SELECT r.id, r.user_id, r.rating, r.comment, r.created_at,

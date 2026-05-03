@@ -9,8 +9,6 @@ if ($themeQuery && mysqli_num_rows($themeQuery) > 0) {
     $adminTheme = $themeRow['theme'] ?? 'Light Mode';
 }
 
-
-// MARK AS READ kapag may selected user
 if (isset($_GET['user_id'])) {
     $selected_user_id = (int) $_GET['user_id'];
 
@@ -29,7 +27,6 @@ if (isset($_GET['user_id'])) {
     $selected_user_id = 0;
 }
 
-// SEND ADMIN REPLY
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_reply'])) {
     $reply_text = trim($_POST['reply_text'] ?? '');
     $reply_user_id = (int) ($_POST['user_id'] ?? 0);
@@ -49,7 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_reply'])) {
             die("Execute failed: " . mysqli_stmt_error($stmt_reply));
         }
 
-        // GUMAWA NG NOTIFICATION PARA SA USER
         $notif_title = "New Message!";
         $notif_message = "Admin replied to your query. Click to view.";
         $notif_link = "profile.php?view=message";
@@ -68,7 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_reply'])) {
     exit();
 }
 
-// STATS
 $total_messages = 0;
 $unread_messages = 0;
 $read_messages = 0;
@@ -91,7 +86,6 @@ if ($read_r) {
     $read_messages = mysqli_fetch_assoc($read_r)['total'] ?? 0;
 }
 
-// INBOX LIST: latest message per user
 $inbox_sql = "
     SELECT 
         m.user_id,
@@ -120,7 +114,6 @@ $inbox_sql = "
 ";
 $inbox_result = mysqli_query($conn, $inbox_sql);
 
-// CHAT THREAD
 $chat_result = false;
 $selected_user = null;
 

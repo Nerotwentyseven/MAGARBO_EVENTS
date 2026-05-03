@@ -109,8 +109,8 @@ unset($_SESSION['alert']);
                     </div>
 
                     <div class="google-btn-wrapper">
-    <div id="googleSignInBtn"></div>
-</div>
+                        <div id="googleSignInBtn"></div>
+                    </div>
 
                 </div>
                 <p class="card-footer" id="footer-text">

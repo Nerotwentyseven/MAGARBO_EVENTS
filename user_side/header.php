@@ -65,7 +65,7 @@ if (isset($_SESSION['user_id'])) {
     <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? '#home' : 'index.php#home'; ?>" class="logo" onclick="closeMobileMenu()">
     <img src="<?php echo dirname($_SERVER['PHP_SELF']) == '/' ? 'images/logo.jpg' : '../images/logo.jpg'; ?>" alt="Logo" />
     <span>Magarbo Events</span>
-</a>
+    </a>
 
     <nav class="desktop-nav">
         <ul class="nav-links">
@@ -107,329 +107,324 @@ if (isset($_SESSION['user_id'])) {
     <?php if ($unread_count > 0): ?>
         <em class="mobile-menu-notif-badge" id="mobileNotifBadge">
     <?php echo $unread_count; ?>
-</em>
-    <?php endif; ?>
-</button>
-</header>
+    </em>
+        <?php endif; ?>
+    </button>
+    </header>
 
-<div id="notifDropdown" class="notification-dropdown">
-    <div class="notif-header">Notifications</div>
-    <div class="notif-body">
-        <?php if (!empty($notifications)): ?>
-            <?php foreach ($notifications as $notif): ?>
-                <a href="mark_notification_read.php?redirect=<?php echo urlencode($notif['link'] ?? '#'); ?>"
-                   class="notif-item <?php echo ($notif['is_read'] == 0) ? 'unread' : ''; ?>">
-                    <div class="notif-icon">
-                        <i class="fa-solid <?php echo ($notif['type'] === 'message') ? 'fa-envelope' : 'fa-calendar-star'; ?>"></i>
-                    </div>
-                    <div class="notif-text">
-                        <p>
-                            <strong><?php echo htmlspecialchars($notif['title']); ?></strong>
-                            <?php echo htmlspecialchars($notif['message']); ?>
-                        </p>
-                        <span><?php echo date('M d, Y g:i A', strtotime($notif['created_at'])); ?></span>
-                    </div>
+    <div id="notifDropdown" class="notification-dropdown">
+        <div class="notif-header">Notifications</div>
+        <div class="notif-body">
+            <?php if (!empty($notifications)): ?>
+                <?php foreach ($notifications as $notif): ?>
+                    <a href="mark_notification_read.php?redirect=<?php echo urlencode($notif['link'] ?? '#'); ?>"
+                    class="notif-item <?php echo ($notif['is_read'] == 0) ? 'unread' : ''; ?>">
+                        <div class="notif-icon">
+                            <i class="fa-solid <?php echo ($notif['type'] === 'message') ? 'fa-envelope' : 'fa-calendar-star'; ?>"></i>
+                        </div>
+                        <div class="notif-text">
+                            <p>
+                                <strong><?php echo htmlspecialchars($notif['title']); ?></strong>
+                                <?php echo htmlspecialchars($notif['message']); ?>
+                            </p>
+                            <span><?php echo date('M d, Y g:i A', strtotime($notif['created_at'])); ?></span>
+                        </div>
+                    </a>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div style="padding:15px; color:#888;">No notifications yet.</div>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-inner">
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <a href="javascript:void(0)" onclick="toggleNotif(event)" class="mobile-notif-link">
+                    <span><i class="fa-regular fa-bell"></i> Notifications</span>
+                    <?php if ($unread_count > 0): ?>
+                        <span class="mobile-notif-badge"><?php echo $unread_count; ?></span>
+                    <?php endif; ?>
                 </a>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <div style="padding:15px; color:#888;">No notifications yet.</div>
-        <?php endif; ?>
+            <?php endif; ?>
+            <a href="index.php#home" onclick="closeMobileMenu()">Home</a>
+            <a href="packages.php" onclick="closeMobileMenu()">Packages</a>
+            <a href="gallery.php" onclick="closeMobileMenu()">Gallery</a>
+            <a href="menu.php" onclick="closeMobileMenu()">Menu</a>
+            <a href="index.php#about" onclick="closeMobileMenu()">About Us</a>
+            <a href="index.php#contact" onclick="closeMobileMenu()">Contact Us</a>
+
+            <div class="mobile-menu-divider"></div>
+
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <a href="profile.php" class="mobile-profile-link" onclick="closeMobileMenu()">Profile</a>
+            <?php else: ?>
+                <a href="login.php" class="mobile-login-link" onclick="closeMobileMenu()">Login</a>
+            <?php endif; ?>
+        </div>
     </div>
-</div>
 
-<div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
+    <script>
+        const isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
 
-<div class="mobile-menu" id="mobileMenu">
-    <div class="mobile-menu-inner">
-        <?php if (isset($_SESSION['user_id'])): ?>
-            <a href="javascript:void(0)" onclick="toggleNotif(event)" class="mobile-notif-link">
-                <span><i class="fa-regular fa-bell"></i> Notifications</span>
-                <?php if ($unread_count > 0): ?>
-                    <span class="mobile-notif-badge"><?php echo $unread_count; ?></span>
-                <?php endif; ?>
-            </a>
-        <?php endif; ?>
-        <a href="index.php#home" onclick="closeMobileMenu()">Home</a>
-        <a href="packages.php" onclick="closeMobileMenu()">Packages</a>
-        <a href="gallery.php" onclick="closeMobileMenu()">Gallery</a>
-        <a href="menu.php" onclick="closeMobileMenu()">Menu</a>
-        <a href="index.php#about" onclick="closeMobileMenu()">About Us</a>
-        <a href="index.php#contact" onclick="closeMobileMenu()">Contact Us</a>
+        document.querySelectorAll('a[href^="index.php#"], a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
 
-        <div class="mobile-menu-divider"></div>
+                if (href.includes('#')) {
+                    const targetId = href.split('#')[1];
+                    const targetElement = document.getElementById(targetId);
+                    const isIndexPage = window.location.pathname.endsWith('index.php') || window.location.pathname.endsWith('/');
 
-        <?php if (isset($_SESSION['user_id'])): ?>
-            <a href="profile.php" class="mobile-profile-link" onclick="closeMobileMenu()">Profile</a>
-        <?php else: ?>
-            <a href="login.php" class="mobile-login-link" onclick="closeMobileMenu()">Login</a>
-        <?php endif; ?>
-    </div>
-</div>
-
-<script>
-    const isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
-
-    document.querySelectorAll('a[href^="index.php#"], a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            const href = this.getAttribute('href');
-
-            if (href.includes('#')) {
-                const targetId = href.split('#')[1];
-                const targetElement = document.getElementById(targetId);
-                const isIndexPage = window.location.pathname.endsWith('index.php') || window.location.pathname.endsWith('/');
-
-                if (targetElement && isIndexPage) {
-                    e.preventDefault();
-                    closeMobileMenu();
-                    targetElement.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+                    if (targetElement && isIndexPage) {
+                        e.preventDefault();
+                        closeMobileMenu();
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
                 }
-            }
+            });
         });
-    });
 
-    function toggleNotif(e) {
-    if (e) e.stopPropagation();
+        function toggleNotif(e) {
+        if (e) e.stopPropagation();
 
-    const d = document.getElementById('notifDropdown');
-    if (!d) return;
+        const d = document.getElementById('notifDropdown');
+        if (!d) return;
 
-    const isOpen = d.style.display === 'block';
+        const isOpen = d.style.display === 'block';
 
-    // close mobile menu first para hindi siya nasa likod ng notification
-    closeMobileMenu();
+        closeMobileMenu();
 
-    d.style.display = isOpen ? 'none' : 'block';
-}
-
-    function openFeedback() {
-        if (!isLoggedIn) {
-            document.getElementById('modalMessage').innerText = "Please login first to give feedback.";
-            document.getElementById('authModal').style.display = 'flex';
-        } else {
-            const feedbackModal = document.getElementById('feedbackModal');
-            if (feedbackModal) feedbackModal.style.display = 'flex';
-        }
+        d.style.display = isOpen ? 'none' : 'block';
     }
 
-    function closeModal(id) {
-        document.getElementById(id).style.display = 'none';
-    }
-
-    function setRating(n) {
-        const ratingInput = document.getElementById('ratingInput');
-        const stars = document.querySelectorAll('#starGroup i');
-
-        if (ratingInput) ratingInput.value = n;
-        if (stars.length) {
-            stars.forEach((s, i) => s.classList.toggle('active', i < n));
-        }
-    }
-
-    if (document.getElementById('ratingInput')) {
-        setRating(5);
-    }
-
-    function toggleMobileMenu() {
-        document.getElementById('mobileMenu').classList.toggle('active');
-        document.getElementById('mobileMenuOverlay').classList.toggle('active');
-        document.getElementById('menuToggle').classList.toggle('active');
-        document.body.classList.toggle('menu-open');
-    }
-
-    function closeMobileMenu() {
-        document.getElementById('mobileMenu').classList.remove('active');
-        document.getElementById('mobileMenuOverlay').classList.remove('active');
-        document.getElementById('menuToggle').classList.remove('active');
-        document.body.classList.remove('menu-open');
-    }
-
-    window.onclick = function (e) {
-        if (e.target.className === 'modal-overlay') e.target.style.display = 'none';
-
-        if (
-            !e.target.closest('.notif-wrapper') &&
-            !e.target.closest('.mobile-notif-link') &&
-            !e.target.closest('#notifDropdown')
-        ) {
-                    const d = document.getElementById('notifDropdown');
-                    if (d) d.style.display = 'none';
-        }
-    };
-
-    let lastNotifCount = 0;
-    let notifMiniAlertTimeout = null;
-
-    function showNotifMiniAlert(message = 'New Notification') {
-        const alertBox = document.getElementById('notifMiniAlert');
-        if (!alertBox) return;
-
-        alertBox.textContent = message;
-        alertBox.classList.add('show');
-
-        if (notifMiniAlertTimeout) {
-            clearTimeout(notifMiniAlertTimeout);
+        function openFeedback() {
+            if (!isLoggedIn) {
+                document.getElementById('modalMessage').innerText = "Please login first to give feedback.";
+                document.getElementById('authModal').style.display = 'flex';
+            } else {
+                const feedbackModal = document.getElementById('feedbackModal');
+                if (feedbackModal) feedbackModal.style.display = 'flex';
+            }
         }
 
-        notifMiniAlertTimeout = setTimeout(() => {
-            alertBox.classList.remove('show');
-        }, 3000);
-    }
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
 
-    function refreshNotifications() {
-        fetch('ajax.php?action=get_notifications')
-            .then(response => response.json())
-            .then(data => {
-                const badge = document.querySelector('.notif-badge');
-                let mobileBadge = document.getElementById('mobileNotifBadge');
-                const menuToggle = document.getElementById('menuToggle');
-                const bellLink = document.querySelector('.notif-bell-link');
-                const notifBody = document.querySelector('.notif-body');
+        function setRating(n) {
+            const ratingInput = document.getElementById('ratingInput');
+            const stars = document.querySelectorAll('#starGroup i');
 
-                if (!notifBody || !bellLink) return;
+            if (ratingInput) ratingInput.value = n;
+            if (stars.length) {
+                stars.forEach((s, i) => s.classList.toggle('active', i < n));
+            }
+        }
 
-                if (data.unread_count > lastNotifCount) {
-                    const latestNotif = (data.notifications && data.notifications.length > 0) ? data.notifications[0] : null;
+        if (document.getElementById('ratingInput')) {
+            setRating(5);
+        }
 
-                    if (latestNotif && latestNotif.type === 'message') {
-                        showNotifMiniAlert('New message from Admin');
-                    } else {
-                        showNotifMiniAlert('New Notification');
-                    }
-                }
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+            document.getElementById('mobileMenuOverlay').classList.toggle('active');
+            document.getElementById('menuToggle').classList.toggle('active');
+            document.body.classList.toggle('menu-open');
+        }
 
-                lastNotifCount = data.unread_count;
+        function closeMobileMenu() {
+            document.getElementById('mobileMenu').classList.remove('active');
+            document.getElementById('mobileMenuOverlay').classList.remove('active');
+            document.getElementById('menuToggle').classList.remove('active');
+            document.body.classList.remove('menu-open');
+        }
 
-                if (data.unread_count > 0) {
+        window.onclick = function (e) {
+            if (e.target.className === 'modal-overlay') e.target.style.display = 'none';
 
-                    // desktop bell badge
-                    if (badge) {
-                        badge.textContent = data.unread_count;
-                    } else {
-                        const span = document.createElement('span');
-                        span.className = 'notif-badge';
-                        span.textContent = data.unread_count;
-                        bellLink.appendChild(span);
-                    }
+            if (
+                !e.target.closest('.notif-wrapper') &&
+                !e.target.closest('.mobile-notif-link') &&
+                !e.target.closest('#notifDropdown')
+            ) {
+                        const d = document.getElementById('notifDropdown');
+                        if (d) d.style.display = 'none';
+            }
+        };
 
-                    // mobile hamburger badge
-                if (mobileBadge) {
-                    mobileBadge.textContent = data.unread_count;
-                } else if (menuToggle) {
-                    mobileBadge = document.createElement('em');
-                    mobileBadge.className = 'mobile-menu-notif-badge';
-                    mobileBadge.id = 'mobileNotifBadge';
-                    mobileBadge.textContent = data.unread_count;
-                    menuToggle.appendChild(mobileBadge);
-                }
+        let lastNotifCount = 0;
+        let notifMiniAlertTimeout = null;
 
-                } else {
+        function showNotifMiniAlert(message = 'New Notification') {
+            const alertBox = document.getElementById('notifMiniAlert');
+            if (!alertBox) return;
 
-                    // remove desktop badge
-                    if (badge) badge.remove();
+            alertBox.textContent = message;
+            alertBox.classList.add('show');
 
-                    // remove mobile badge
-                    if (mobileBadge) {
-                        mobileBadge.remove();
-                    }
-                }
-
-                let html = '';
-                if (data.notifications.length > 0) {
-                    data.notifications.forEach(notif => {
-                        html += `
-                            <a href="mark_notification_read.php?redirect=${encodeURIComponent(notif.link ?? '#')}" class="notif-item ${notif.is_read == 0 ? 'unread' : ''}">
-                                <div class="notif-icon">
-                                    <i class="fa-solid ${notif.type === 'message' ? 'fa-envelope' : 'fa-calendar-star'}"></i>
-                                </div>
-                                <div class="notif-text">
-                                    <p><strong>${notif.title}</strong> ${notif.message}</p>
-                                    <span>${notif.created_at}</span>
-                                </div>
-                            </a>
-                        `;
-                    });
-                } else {
-                    html = `<div style="padding:15px; color:#888; font-size:14px;">No notifications yet.</div>`;
-                }
-
-                notifBody.innerHTML = html;
-            })
-            .catch(error => console.log('Notification fetch error:', error));
-    }
-
-    setInterval(refreshNotifications, 3000);
-    window.onload = function () {
-        refreshNotifications();
-    };
-
-    let userHeartbeatPolling = null;
-
-    function pingUserHeartbeat() {
-        if (!isLoggedIn) return;
-
-        fetch('ajax.php?action=check_account_status', {
-            method: 'GET',
-            cache: 'no-store',
-            credentials: 'same-origin'
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.logout) {
-                window.location.href = 'login.php';
-                return;
+            if (notifMiniAlertTimeout) {
+                clearTimeout(notifMiniAlertTimeout);
             }
 
-            return fetch('ajax.php?action=heartbeat', {
+            notifMiniAlertTimeout = setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 3000);
+        }
+
+        function refreshNotifications() {
+            fetch('ajax.php?action=get_notifications')
+                .then(response => response.json())
+                .then(data => {
+                    const badge = document.querySelector('.notif-badge');
+                    let mobileBadge = document.getElementById('mobileNotifBadge');
+                    const menuToggle = document.getElementById('menuToggle');
+                    const bellLink = document.querySelector('.notif-bell-link');
+                    const notifBody = document.querySelector('.notif-body');
+
+                    if (!notifBody || !bellLink) return;
+
+                    if (data.unread_count > lastNotifCount) {
+                        const latestNotif = (data.notifications && data.notifications.length > 0) ? data.notifications[0] : null;
+
+                        if (latestNotif && latestNotif.type === 'message') {
+                            showNotifMiniAlert('New message from Admin');
+                        } else {
+                            showNotifMiniAlert('New Notification');
+                        }
+                    }
+
+                    lastNotifCount = data.unread_count;
+
+                    if (data.unread_count > 0) {
+
+                        if (badge) {
+                            badge.textContent = data.unread_count;
+                        } else {
+                            const span = document.createElement('span');
+                            span.className = 'notif-badge';
+                            span.textContent = data.unread_count;
+                            bellLink.appendChild(span);
+                        }
+
+                    if (mobileBadge) {
+                        mobileBadge.textContent = data.unread_count;
+                    } else if (menuToggle) {
+                        mobileBadge = document.createElement('em');
+                        mobileBadge.className = 'mobile-menu-notif-badge';
+                        mobileBadge.id = 'mobileNotifBadge';
+                        mobileBadge.textContent = data.unread_count;
+                        menuToggle.appendChild(mobileBadge);
+                    }
+
+                    } else {
+
+                        if (badge) badge.remove();
+
+                        if (mobileBadge) {
+                            mobileBadge.remove();
+                        }
+                    }
+
+                    let html = '';
+                    if (data.notifications.length > 0) {
+                        data.notifications.forEach(notif => {
+                            html += `
+                                <a href="mark_notification_read.php?redirect=${encodeURIComponent(notif.link ?? '#')}" class="notif-item ${notif.is_read == 0 ? 'unread' : ''}">
+                                    <div class="notif-icon">
+                                        <i class="fa-solid ${notif.type === 'message' ? 'fa-envelope' : 'fa-calendar-star'}"></i>
+                                    </div>
+                                    <div class="notif-text">
+                                        <p><strong>${notif.title}</strong> ${notif.message}</p>
+                                        <span>${notif.created_at}</span>
+                                    </div>
+                                </a>
+                            `;
+                        });
+                    } else {
+                        html = `<div style="padding:15px; color:#888; font-size:14px;">No notifications yet.</div>`;
+                    }
+
+                    notifBody.innerHTML = html;
+                })
+                .catch(error => console.log('Notification fetch error:', error));
+        }
+
+        setInterval(refreshNotifications, 3000);
+        window.onload = function () {
+            refreshNotifications();
+        };
+
+        let userHeartbeatPolling = null;
+
+        function pingUserHeartbeat() {
+            if (!isLoggedIn) return;
+
+            fetch('ajax.php?action=check_account_status', {
                 method: 'GET',
                 cache: 'no-store',
                 credentials: 'same-origin'
-            });
-        })
-        .catch(error => console.log('Heartbeat/status fetch error:', error));
-    }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.logout) {
+                    window.location.href = 'login.php';
+                    return;
+                }
 
-    function startUserHeartbeat() {
-        if (!isLoggedIn) return;
-        if (userHeartbeatPolling) return;
-
-        pingUserHeartbeat();
-        userHeartbeatPolling = setInterval(pingUserHeartbeat, 10000);
-    }
-
-    function stopUserHeartbeat() {
-        if (userHeartbeatPolling) {
-            clearInterval(userHeartbeatPolling);
-            userHeartbeatPolling = null;
+                return fetch('ajax.php?action=heartbeat', {
+                    method: 'GET',
+                    cache: 'no-store',
+                    credentials: 'same-origin'
+                });
+            })
+            .catch(error => console.log('Heartbeat/status fetch error:', error));
         }
-    }
 
-    if (!document.hidden) {
-        startUserHeartbeat();
-    }
+        function startUserHeartbeat() {
+            if (!isLoggedIn) return;
+            if (userHeartbeatPolling) return;
 
-    window.addEventListener('focus', function () {
+            pingUserHeartbeat();
+            userHeartbeatPolling = setInterval(pingUserHeartbeat, 10000);
+        }
+
+        function stopUserHeartbeat() {
+            if (userHeartbeatPolling) {
+                clearInterval(userHeartbeatPolling);
+                userHeartbeatPolling = null;
+            }
+        }
+
         if (!document.hidden) {
             startUserHeartbeat();
         }
-    });
 
-    window.addEventListener('pageshow', function () {
-        if (!document.hidden) {
-            startUserHeartbeat();
-        }
-    });
+        window.addEventListener('focus', function () {
+            if (!document.hidden) {
+                startUserHeartbeat();
+            }
+        });
 
-    document.addEventListener('visibilitychange', function () {
-        if (document.hidden) {
-            stopUserHeartbeat();
-        } else {
-            startUserHeartbeat();
-        }
-    });
+        window.addEventListener('pageshow', function () {
+            if (!document.hidden) {
+                startUserHeartbeat();
+            }
+        });
 
-    window.addEventListener('pagehide', stopUserHeartbeat);
-    window.addEventListener('beforeunload', stopUserHeartbeat);
-</script>
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden) {
+                stopUserHeartbeat();
+            } else {
+                startUserHeartbeat();
+            }
+        });
+
+        window.addEventListener('pagehide', stopUserHeartbeat);
+        window.addEventListener('beforeunload', stopUserHeartbeat);
+    </script>

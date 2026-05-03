@@ -1,4 +1,3 @@
-/* ===================== THEME VARIABLES ===================== */
 :root {
     --bg-main: #f4f6f8;
     --bg-content: #f8f9fa;
@@ -27,7 +26,6 @@ body.dark-mode {
     --danger: #f87171;
 }
 
-/* BASE */
 body {
     margin: 0;
     padding: 0;
@@ -49,7 +47,6 @@ body {
     background: var(--bg-content);
 }
 
-/* HEADER */
 .header-section h1 {
     font-size: 28px;
     font-weight: 800;
@@ -62,7 +59,6 @@ body {
     margin: 5px 0 30px;
 }
 
-/* ================= STATS ================= */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -98,7 +94,6 @@ body {
     margin-top: 6px;
 }
 
-/* ================= FILTER + SEARCH ================= */
 .action-bar {
     display: flex;
     justify-content: space-between;
@@ -129,7 +124,6 @@ body {
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-/* SEARCH */
 .search-container {
     display: flex;
     align-items: center;
@@ -154,7 +148,6 @@ body {
     color: var(--text-p);
 }
 
-/* ================= TABLE ================= */
 .table-card {
     background: var(--bg-card);
     border-radius: 15px;
@@ -192,7 +185,6 @@ td {
     color: var(--danger);
 }
 
-/* STATUS */
 .status-pill {
     padding: 4px 12px;
     border-radius: 6px;
@@ -211,7 +203,6 @@ td {
     color: #d9480f;
 }
 
-/* ACTIONS */
 .action-btns {
     display: flex;
     gap: 8px;
@@ -238,7 +229,6 @@ td {
     cursor: pointer;
 }
 
-/* ================= MODAL ================= */
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -271,7 +261,6 @@ td {
     color: var(--text-s);
 }
 
-/* FORM */
 .modal-field label {
     font-size: 12px;
     font-weight: 700;
@@ -289,7 +278,7 @@ td {
     color: var(--text-p);
 }
 
-/* HISTORY */
+
 .history-list {
     max-height: 250px;
     overflow-y: auto;
@@ -323,7 +312,6 @@ td {
     border-radius: 6px;
 }
 
-/* BUTTONS */
 .modal-submit-btn {
     width: 100%;
     padding: 14px;
@@ -346,7 +334,6 @@ td {
     margin-top: 10px;
 }
 
-/* CLOSE BUTTON */
 .close-modal,
 .close-modal-box {
     position: absolute;
@@ -357,67 +344,53 @@ td {
     color: var(--text-s);
 }
 
-/* ===================== SPACING FIX (CONSISTENCY) ===================== */
-
-/* HEADER spacing */
 .header-section {
     margin-bottom: 30px;
 }
 
-/* STATS spacing */
 .stats-grid {
     margin-bottom: 30px;
 }
 
-/* FILTER + SEARCH spacing */
 .action-bar {
     margin-bottom: 25px;
 }
 
-/* TABLE container spacing */
 .table-card {
     margin-bottom: 40px;
 }
 
-/* Ensure same padding as other pages */
 .frame {
     padding: 40px;
     box-sizing: border-box;
 }
 
-/* Consistent vertical rhythm */
 .header-section p {
     margin-bottom: 30px;
 }
 
-/* Optional: align filter and search perfectly */
 .action-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-/* ===================== MODAL HEIGHT FIX ===================== */
-
 .modal-content.detail-width {
-    max-height: 80vh;        /* limit height */
+    max-height: 80vh;
     display: flex;
     flex-direction: column;
 }
 
-/* Header stays fixed */
 .modal-header {
     flex-shrink: 0;
 }
 
-/* Body becomes scrollable */
 .modal-body {
     overflow-y: auto;
     margin-top: 15px;
     padding-right: 5px;
 }
 
-/* Scrollbar (optional pero mas maganda) */
 .modal-body::-webkit-scrollbar {
     width: 6px;
 }
@@ -427,9 +400,7 @@ td {
     border-radius: 10px;
 }
 
-/* ===================== MODAL DESIGN UPGRADE ===================== */
 
-/* Improve modal container */
 .modal-content.detail-width {
     max-height: 80vh;
     display: flex;
@@ -438,7 +409,6 @@ td {
     padding: 25px 28px;
 }
 
-/* Header cleaner */
 .modal-header {
     border-bottom: 1px solid var(--border);
     padding-bottom: 12px;
@@ -454,7 +424,6 @@ td {
     color: var(--text-s);
 }
 
-/* Body layout */
 .modal-body {
     display: flex;
     flex-direction: column;
@@ -462,7 +431,6 @@ td {
     overflow-y: auto;
 }
 
-/* Make sections look like cards */
 .modal-section {
     background: var(--bg-soft);
     border: 1px solid var(--border);
@@ -470,7 +438,6 @@ td {
     padding: 14px 16px;
 }
 
-/* Label style */
 .modal-section label {
     display: block;
     font-size: 11px;
@@ -480,7 +447,6 @@ td {
     text-transform: uppercase;
 }
 
-/* Value text */
 .modal-section p {
     margin: 0;
     font-size: 14px;
@@ -488,25 +454,21 @@ td {
     color: var(--text-p);
 }
 
-/* Grid for cleaner layout */
 .modal-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
 }
 
-/* Full width section */
 .modal-full {
     grid-column: 1 / -1;
 }
 
-/* Balance highlight */
 .modal-balance {
     color: var(--danger);
     font-weight: 700;
 }
 
-/* History styling improved */
 .history-item-card {
     background: var(--bg-card);
     border: 1px solid var(--border);
@@ -515,21 +477,17 @@ td {
     margin-bottom: 8px;
 }
 
-/* Dark mode polish */
+
 body.dark-mode .modal-section {
     background: rgba(255,255,255,0.04);
 }
 
-/* ===================== MODAL SECTION STYLE (BOXED) ===================== */
-
-/* container ng grid */
 .modal-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 14px;
 }
 
-/* bawat info box */
 .modal-box-item {
     background: var(--bg-card);
     border: 1px solid var(--border);
@@ -537,7 +495,6 @@ body.dark-mode .modal-section {
     padding: 14px 16px;
 }
 
-/* title (label) */
 .modal-box-item label {
     display: block;
     font-size: 12px;
@@ -548,7 +505,6 @@ body.dark-mode .modal-section {
     letter-spacing: 0.5px;
 }
 
-/* value */
 .modal-box-item p {
     margin: 0;
     font-size: 15px;
@@ -556,23 +512,19 @@ body.dark-mode .modal-section {
     color: var(--text-p);
 }
 
-/* full width */
 .modal-full {
     grid-column: 1 / -1;
 }
 
-/* highlight (balance etc) */
 .modal-highlight {
     color: var(--danger);
     font-weight: 700;
 }
 
-/* dark mode polish */
 body.dark-mode .modal-box-item {
     background: rgba(255,255,255,0.03);
 }
 
-/* PAGE HEADER */
 .page-header {
     display: flex;
     justify-content: space-between;
@@ -790,7 +742,6 @@ body.dark-mode .modal-box-item {
     }
 }
 
-/* Prevent uneven spacing on smaller screens */
 @media (max-width: 900px) {
     .frame {
         padding: 20px;

@@ -41,10 +41,6 @@ if ($action === 'heartbeat') {
 
     $now = date('Y-m-d H:i:s');
 
-    // kung may admin table ka, doon mo i-save
-    // pero base sa current setup mo, mas likely users lang ang may last_active
-    // so kung admin side ito at wala namang admin last_active, puwede mong ibalik lang success
-
     echo json_encode([
         'success' => true,
         'time' => $now
@@ -271,8 +267,6 @@ if ($action === 'send_message') {
     exit();
 }
 
-
-//APPOINTMENTS AJAX HANDLER (if needed in the future)
 if ($action === 'fetch_appointments_admin') {
     $sql = "SELECT a.*, 
             CONCAT(u.firstname, ' ', u.lastname) AS full_name,
@@ -407,8 +401,6 @@ if ($action === 'fetch_appointments_admin') {
     exit();
 }
 
-
-//ORDERS AJAX HANDLER (if needed in the future)
 if ($action === 'fetch_orders_admin') {
     $sql = "SELECT 
         b.*,
@@ -532,24 +524,24 @@ if ($action === 'fetch_orders_admin') {
             }
 
             $modalData = [
-    "id"             => $o['display_order_id'],
-    "name"           => $o['full_name'],
-    "event"          => $o['event_type'],
-    "date"           => date("M d, Y", strtotime($o['event_date'])),
-    "email"          => $o['user_email'],
-    "phone"          => $o['user_phone'] ?? 'N/A',
-    "service"        => $o['service_type'] ?? 'N/A',
-    "venue"          => $o['venue'] ?? 'N/A',
-    "time"           => $o['event_time'] ?? 'N/A',
-    "religion"       => !empty($o['religion']) ? $o['religion'] : 'N/A',
-    "package"        => !empty($o['package_name']) ? $o['package_name'] : 'N/A',
-    "notes"          => $o['request'] ?? 'No notes',
-    "selected_theme" => !empty($o['selected_theme']) ? $o['selected_theme'] : 'N/A',
-    "downpayment"    => (float)($o['downpayment_amount'] ?? 0),
-    "payment_status" => $o['payment_status'] ?? 'Pending',
-    "hasFoods"       => $hasFoods,
-    "menuItems"      => $menuItems
-];
+                "id"             => $o['display_order_id'],
+                "name"           => $o['full_name'],
+                "event"          => $o['event_type'],
+                "date"           => date("M d, Y", strtotime($o['event_date'])),
+                "email"          => $o['user_email'],
+                "phone"          => $o['user_phone'] ?? 'N/A',
+                "service"        => $o['service_type'] ?? 'N/A',
+                "venue"          => $o['venue'] ?? 'N/A',
+                "time"           => $o['event_time'] ?? 'N/A',
+                "religion"       => !empty($o['religion']) ? $o['religion'] : 'N/A',
+                "package"        => !empty($o['package_name']) ? $o['package_name'] : 'N/A',
+                "notes"          => $o['request'] ?? 'No notes',
+                "selected_theme" => !empty($o['selected_theme']) ? $o['selected_theme'] : 'N/A',
+                "downpayment"    => (float)($o['downpayment_amount'] ?? 0),
+                "payment_status" => $o['payment_status'] ?? 'Pending',
+                "hasFoods"       => $hasFoods,
+                "menuItems"      => $menuItems
+            ];
 
             $json_data = htmlspecialchars(json_encode($modalData), ENT_QUOTES, 'UTF-8');
             $status = strtolower($o['booking_status']);
@@ -624,8 +616,6 @@ if ($action === 'fetch_orders_admin') {
     exit();
 }
 
-
-//REVIEWS AJAX HANDLER (if needed in the future)
 if ($action === 'fetch_reviews_admin') {
     $sql = "SELECT r.*, 
         CONCAT(u.firstname, ' ', u.lastname) AS full_name

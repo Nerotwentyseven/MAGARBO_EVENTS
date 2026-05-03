@@ -20,7 +20,6 @@ body {
     padding: 30px 20px;
 }
 
-/* Navigation & Titles */
 .nav-header {
     margin-bottom: 20px;
 }
@@ -79,7 +78,6 @@ body {
     margin-bottom: 40px;
 }
 
-/* Stepper */
 .stepper-container {
     display: flex;
     justify-content: center;
@@ -103,7 +101,6 @@ body {
     background: #bf9225;
 }
 
-/* Main Card */
 .main-booking-card {
     background: #ffffff;
     border-radius: 20px;
@@ -125,7 +122,6 @@ body {
     color: #bf9225;
 }
 
-/* Grid Layout */
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -175,7 +171,6 @@ textarea {
     margin-top: 5px;
 }
 
-/* Dynamic Suggestions & Calendar Section */
 .dynamic-container {
     display: flex;
     gap: 30px;
@@ -199,7 +194,6 @@ textarea {
     order: 1;
 }
 
-/* Layout Shift on Activation */
 .is-active .suggestions-panel {
     display: block;
     animation: fadeIn 0.4s ease;
@@ -210,7 +204,6 @@ textarea {
     flex: 1;
 }
 
-/* Suggestion Cards */
 .panel-header {
     font-weight: 700;
     color: #1e293b;
@@ -254,7 +247,6 @@ textarea {
     font-size: 11px;
 }
 
-/* Calendar Aesthetics */
 .calendar-card {
     background: #fff;
     border: 1px solid #e2e8f0;
@@ -311,7 +303,6 @@ textarea {
     margin: 0 1px;
 }
 
-/* Note & Actions */
 .note-body {
     font-size: 14px;
     color: #64748b;
@@ -372,10 +363,6 @@ textarea {
     }
 }
 
-
-/* --- Suggestions & Offers Styles --- */
-
-/* Header icons and titles */
 .panel-header {
     font-size: 14px;
     font-weight: 700;
@@ -391,7 +378,6 @@ textarea {
     color: #bf9225;
 }
 
-/* Image Grid for Best Offers */
 .offers-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -412,7 +398,7 @@ textarea {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.4s ease; /* Hiwalay na transition para sa image zoom */
+    transition: transform 0.4s ease;
 }
 
 .offer-overlay {
@@ -434,21 +420,21 @@ textarea {
 }
 
 .offer-card:hover {
-    transform: translateY(-3px); /* Small lifting effect, but actual zoom happens on click */
-    z-index: 10; /* Lalutang sa ibabaw ng ibang cards at text */
+    transform: translateY(-3px);
+    z-index: 10;
     border-color: #bf9225;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); /* Mas malalim na shadow para sa "float" effect */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
 }
 .offer-card:hover img {
-    transform: scale(1.1); /* Mag-zo-zoom din ang image sa loob para mas dynamic */
+    transform: scale(1.1);
 }
 .offer-card:hover .offer-overlay {
-    background: linear-gradient(transparent, rgba(191, 146, 37, 0.9)); /* Magpapalit ng kulay sa gold */
+    background: linear-gradient(transparent, rgba(191, 146, 37, 0.9));
 }
 .offer-card:hover .offer-overlay span {
-    font-size: 12px; /* Lalaki rin ng konti ang text */
+    font-size: 12px;
 }
-/* Text Suggestions spacing */
+
 .suggestion-item {
     background: #fff;
     border: 1px solid #e2e8f0;
@@ -465,17 +451,15 @@ textarea {
     transform: translateX(5px);
 }
 
-/* Layout Shift */
 .is-active .suggestions-panel {
     display: block;
-    flex: 1.5; /* Binibigyan ng mas malawak na space ang suggestions */
+    flex: 1.5;
 }
 
 .is-active .calendar-wrapper {
     flex: 1;
 }
 
-/* --- THE IMAGE MODAL LIGHTBOX CSS --- */
 .modal-overlay {
     display: none;
     position: fixed;
@@ -490,7 +474,6 @@ textarea {
     box-sizing: border-box;
 }
 
-/* Close button (X) */
 .modal-close {
     position: absolute;
     top: 16px;
@@ -506,7 +489,6 @@ textarea {
     transform: scale(1.1);
 }
 
-/* Wrapper for content inside modal */
 .modal-content-wrapper {
     position: relative;
     width: min(92vw, 720px);
@@ -521,7 +503,6 @@ textarea {
     padding: 12px;
 }
 
-/* The actual image */
 .modal-image {
     width: 100%;
     max-width: 100%;
@@ -535,7 +516,6 @@ textarea {
     box-sizing: border-box;
 }
 
-/* Caption and Apply Button below image */
 .modal-caption {
     color: #fff;
     font-weight: 700;
@@ -698,13 +678,11 @@ textarea {
     font-weight: 700;
 }
 
-/* Animation for the modal opening */
 @keyframes zoomModal {
     from { opacity: 0; transform: scale(0.7); }
     to { opacity: 1; transform: scale(1); }
 }
 
-/* Tablet */
 @media (max-width: 768px) {
     .modal-overlay {
         padding: 14px;
@@ -738,7 +716,6 @@ textarea {
     }
 }
 
-/* Mobile */
 @media (max-width: 480px) {
     .modal-overlay {
         padding: 12px;
@@ -776,7 +753,6 @@ textarea {
     }
 }
 
-/* Extra small phones */
 @media (max-width: 320px) {
     .modal-overlay {
         padding: 10px;
@@ -809,8 +785,6 @@ textarea {
         font-size: 22px;
     }
 }
-
-/* ===== MOBILE + TABLET RESPONSIVE FIX FOR BOOKING PAGE ===== */
 
 @media (max-width: 1024px) {
     .book-details-wrapper {
@@ -1061,9 +1035,6 @@ textarea {
     }
 }
 
-
-
-/* ===== VENUE LOCATION - CONSISTENT FINAL UI ===== */
 .location-grid,
 .shop-address-grid {
     display: grid;
@@ -1155,7 +1126,6 @@ textarea {
     }
 }
 
-/* ===== CUSTOM LOCATION DROPDOWN ===== */
 .custom-dropdown {
     position: relative;
     width: 100%;
@@ -1353,15 +1323,11 @@ textarea {
     }
 }
 
-/* habang loading */
 textarea.loading {
     background-color: #f8fafc;
     cursor: not-allowed;
 }
 
-
-
-/* ===== BOOKING CUSTOM ALERT ===== */
 .booking-alert-overlay {
     position: fixed;
     inset: 0;

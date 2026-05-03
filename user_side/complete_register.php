@@ -51,7 +51,6 @@ if ($enteredOtp !== $sessionOtp) {
     exit();
 }
 
-// Final duplicate re-check before insert
 $email = $_SESSION['reg_email'];
 
 $check_stmt = mysqli_prepare($conn, "SELECT id FROM users WHERE email = ?");
@@ -86,7 +85,6 @@ mysqli_stmt_bind_param($insert_stmt, "ssss", $firstname, $lastname, $email, $has
 if (mysqli_stmt_execute($insert_stmt)) {
     $newUserId = mysqli_insert_id($conn);
 
-    // Generate permanent display_user_id
     $dateKey = date('Ymd');
     $baseId = 'USR' . $dateKey;
     $finalId = $baseId;

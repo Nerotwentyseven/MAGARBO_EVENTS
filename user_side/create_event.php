@@ -19,7 +19,6 @@ $menu_selection = $_POST['menu_selection'] ?? '';
 $request        = trim($_POST['request'] ?? '');
 $religion       = trim($_POST['religion'] ?? '');
 
-// basic validation
 if (
     $client_name === '' ||
     $client_email === '' ||
@@ -33,14 +32,12 @@ if (
     die("Missing required fields.");
 }
 
-// wedding only religion
 if (strcasecmp($event_type, 'Wedding') !== 0) {
     $religion = null;
 } elseif ($religion === '') {
     die("Religion is required for wedding events.");
 }
 
-// service type rules
 if ($service_type === 'Catering Only') {
     $package_name = null;
 
@@ -65,7 +62,6 @@ if ($service_type === 'Catering Only') {
     die("Invalid service type.");
 }
 
-// find or create user by email
 $user_id = null;
 
 $find_user_sql = "SELECT id FROM users WHERE email = ? LIMIT 1";
@@ -77,7 +73,6 @@ $result_find = mysqli_stmt_get_result($stmt_find);
 if ($user = mysqli_fetch_assoc($result_find)) {
     $user_id = (int)$user['id'];
 
-    // optional update of name/contact
     $name_parts = preg_split('/\s+/', $client_name, 2);
     $firstname = $name_parts[0] ?? $client_name;
     $lastname  = $name_parts[1] ?? '';
@@ -91,7 +86,6 @@ if ($user = mysqli_fetch_assoc($result_find)) {
     $firstname = $name_parts[0] ?? $client_name;
     $lastname  = $name_parts[1] ?? '';
 
-    // create placeholder user
     $default_password = password_hash('12345678', PASSWORD_DEFAULT);
 
     $insert_user_sql = "INSERT INTO users (firstname, lastname, email, phone, password) VALUES (?, ?, ?, ?, ?)";
@@ -105,7 +99,6 @@ if ($user = mysqli_fetch_assoc($result_find)) {
     $user_id = mysqli_insert_id($conn);
 }
 
-// convert selected menus into JSON string
 $menu_selection_json = null;
 
 if (is_array($menu_selection) && !empty($menu_selection)) {
@@ -125,7 +118,6 @@ if (is_array($menu_selection) && !empty($menu_selection)) {
     }
 }
 
-// insert as DRAFT event and APPROVED booking
 $booking_status = 'Approved';
 $event_status = 'Draft';
 $total_price = 0.00;

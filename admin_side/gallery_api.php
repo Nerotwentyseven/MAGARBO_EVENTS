@@ -101,9 +101,6 @@ function uploadImageFile($file, $targetDir = '../uploads/themes/')
     ];
 }
 
-/* =========================
-   LIST ALL GALLERY DATA
-========================= */
 if ($action === 'list') {
     $albums = [];
     $photos = [];
@@ -194,9 +191,6 @@ if ($action === 'list') {
     ]);
 }
 
-/* =========================
-   CREATE ALBUM
-========================= */
 if ($action === 'create_album') {
     $album_name = clean($conn, $_POST['album_name'] ?? '');
     $category = clean($conn, $_POST['category'] ?? '');
@@ -223,9 +217,6 @@ if ($action === 'create_album') {
     }
 }
 
-/* =========================
-   DELETE ALBUM
-========================= */
 if ($action === 'delete_album') {
     $album_id = (int)($_POST['album_id'] ?? 0);
 
@@ -250,9 +241,6 @@ if ($action === 'delete_album') {
     }
 }
 
-/* =========================
-   UPLOAD PHOTOS / VIDEOS
-========================= */
 if ($action === 'upload_photos') {
     $album_id = (int)($_POST['album_id'] ?? 0);
 
@@ -340,9 +328,6 @@ if ($action === 'upload_photos') {
     }
 }
 
-/* =========================
-   DELETE PHOTO / VIDEO
-========================= */
 if ($action === 'delete_photo') {
     $photo_id = (int)($_POST['photo_id'] ?? 0);
 
@@ -369,9 +354,6 @@ if ($action === 'delete_photo') {
     }
 }
 
-/* =========================
-   CREATE THEME CATEGORY
-========================= */
 if ($action === 'create_theme_category') {
     $category_name = clean($conn, $_POST['category_name'] ?? '');
 
@@ -393,9 +375,6 @@ if ($action === 'create_theme_category') {
     }
 }
 
-/* =========================
-   CREATE THEME
-========================= */
 if ($action === 'create_theme') {
     $category_id = (int)($_POST['category_id'] ?? 0);
     $theme_name = clean($conn, $_POST['theme_name'] ?? '');
@@ -449,9 +428,6 @@ if ($action === 'create_theme') {
     }
 }
 
-/* =========================
-   TOGGLE THEME STATUS
-========================= */
 if ($action === 'toggle_theme_status') {
     $theme_id = (int)($_POST['theme_id'] ?? 0);
     $is_active = (int)($_POST['is_active'] ?? -1);
@@ -478,9 +454,6 @@ if ($action === 'toggle_theme_status') {
     }
 }
 
-/* =========================
-   DELETE THEME
-========================= */
 if ($action === 'delete_theme') {
     $theme_id = (int)($_POST['theme_id'] ?? 0);
 
@@ -507,9 +480,6 @@ if ($action === 'delete_theme') {
     }
 }
 
-/* =========================
-   DELETE THEME CATEGORY
-========================= */
 if ($action === 'delete_theme_category') {
     $category_id = (int)($_POST['category_id'] ?? 0);
 
@@ -517,13 +487,11 @@ if ($action === 'delete_theme_category') {
         respond('error', 'Invalid category ID.');
     }
 
-    // Check if exists
     $check = mysqli_query($conn, "SELECT id FROM theme_categories WHERE id = $category_id LIMIT 1");
     if (!$check || mysqli_num_rows($check) === 0) {
         respond('error', 'Theme category not found.');
     }
 
-    // Get all theme photos first (for file deletion)
     $themeFiles = [];
     $themeQuery = mysqli_query($conn, "
         SELECT theme_photo 
@@ -539,7 +507,6 @@ if ($action === 'delete_theme_category') {
         }
     }
 
-    // Delete category (CASCADE will delete themes)
     if (mysqli_query($conn, "DELETE FROM theme_categories WHERE id = $category_id")) {
 
         // Delete image files

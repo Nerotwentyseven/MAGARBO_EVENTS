@@ -6,23 +6,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $selected_service = $_POST['service'];
     $_SESSION['service_type'] = $selected_service;
     
-    // Logic para sa redirection base sa pinili
     if ($selected_service == 'Catering Only') {
         $_SESSION['package'] = "N/A (Catering Only)";
         header("Location: choose_menu.php");
     } 
     elseif ($selected_service == 'Styling & Decoration Only') {
-        // FIX: Lilinisin ang lahat ng food/menu data para hindi lumitaw sa review
         $_SESSION['package'] = "N/A (Styling & Decoration Only)";
         $_SESSION['menu_cart'] = json_encode([]); // Empty cart
         $_SESSION['total_pax'] = 0;
         $_SESSION['total_cost'] = 0;
         
-        // Diretso sa booking details (kung saan mo nilalagay ang venue, date, etc.)
         header("Location: choose_package.php"); 
     } 
     else {
-        // Catering with Styling
         header("Location: choose_package.php");
     }
     exit();

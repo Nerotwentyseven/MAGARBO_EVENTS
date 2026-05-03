@@ -1,9 +1,7 @@
 /* --- Imports & Fonts --- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-/* --- Variables --- */
 :root {
-    /* Brand Colors (Inherited) */
     --primary-gold: #bf9225;
     --primary-gold-dark: #a37b1f; 
     --bg-white: #ffffff;
@@ -11,19 +9,14 @@
     --text-black: #000000;
     --text-white: #ffffff;
     --text-gray: #666666;
-    
-    /* Layout Variables */
     --radius: 15px; 
     --shadow: 0px 4px 10px rgba(0, 0, 0, 0.08);
-
-    /* Packages Page Specific Colors */
     --bg-header-cream: #fffbf0; 
     --border-color: #e5e7eb;
     --notification-bg: #fffef9;
     --notification-border: #ebdcb2;
 }
 
-/* --- Base Styles --- */
 * {
     margin: 0;
     padding: 0;
@@ -41,16 +34,15 @@ body.packages-page-body {
 a { text-decoration: none; color: inherit; transition: 0.3s; }
 ul { list-style: none; }
 
-/* --- Fixed Top Navigation (The Fix) --- */
 .top-nav {
-    position: fixed; /* Fixes header to the top */
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    background-color: var(--bg-white); /* White background for the bar */
-    padding: 15px 40px; /* Spacing for the link */
-    z-index: 1000; /* Ensures it stays on top of content */
-    border-bottom: 1px solid rgba(0,0,0,0.05); /* Subtle separator line */
+    background-color: var(--bg-white);
+    padding: 15px 40px;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
     display: flex;
     align-items: center;
 }
@@ -98,18 +90,15 @@ ul { list-style: none; }
     }
 }
 
-/* --- Header Section (Cream Background) --- */
 .header-details {
     background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
-                url('../images/package.jpg');
+    url('../images/package.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-
     padding: 80px 0 70px 0;
     margin-top: 50px;
     margin-bottom: 40px;
-
     border-bottom: none;
     color: #fff;
 }
@@ -138,29 +127,23 @@ ul { list-style: none; }
     margin-right: auto;
 }
 
-/* Notification Box */
 .notification-box {
-   
     border-radius: 6px;
     padding: 15px 30px;
     font-size: 0.85rem;
-    
     display: inline-block;
     max-width: 100%;
-
     background: rgba(255,255,255,0.12);
     border: 1px solid rgba(255,255,255,0.25);
     color: #fff;
 }
 
-/* --- Layout Container --- */
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px 80px 20px;
 }
 
-/* --- Main Grid Content --- */
 .package-count {
     color: var(--text-gray);
     font-size: 0.9rem;
@@ -174,7 +157,6 @@ ul { list-style: none; }
     gap: 30px;
 }
 
-/* --- Card Styling --- */
 .card-detail {
     background-color: var(--bg-white);
     border-radius: var(--radius);
@@ -209,7 +191,6 @@ ul { list-style: none; }
     flex-grow: 1;
 }
 
-/* Card Header */
 .card-header {
     display: flex;
     justify-content: space-between;
@@ -238,7 +219,6 @@ ul { list-style: none; }
     line-height: 1.5;
 }
 
-/* Features List */
 .features-list {
     margin-bottom: 35px;
     flex-grow: 1; 
@@ -262,7 +242,6 @@ ul { list-style: none; }
     color: var(--text-black);
 }
 
-/* Button */
 .btn-details {
     background-color: var(--primary-gold);
     color: var(--text-white);
@@ -289,7 +268,6 @@ ul { list-style: none; }
     font-size: 0.85rem;
 }
 
-/* --- Responsive Styling --- */
 @media (max-width: 900px) {
     .packages-grid {
         grid-template-columns: 1fr; 

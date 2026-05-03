@@ -49,13 +49,8 @@ if ($result && mysqli_num_rows($result) > 0) {
         $baseDownpayment = (float)($row['downpayment'] ?? 0);
         $totalPaidFromPayments = (float)($row['total_paid_from_payments'] ?? 0);
 
-        /*
-            Huwag pagsamahin ang bookings.downpayment + booking_payments.amount
-            kasi ang initial downpayment ay nasa booking_payments na rin.
-        */
         $paid = $totalPaidFromPayments > 0 ? $totalPaidFromPayments : $baseDownpayment;
 
-        // para hindi lumagpas sa total kung sumobra ang input
         if ($total > 0 && $paid > $total) {
             $paid = $total;
         }

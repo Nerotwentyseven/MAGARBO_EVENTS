@@ -4,18 +4,14 @@
     require_once 'user_auth.php';
     require_once '../db_connection.php';
 
-    
-
     if (!isset($_SESSION['user_id'])) {
         header("Location: ../login.php");
         exit();
     }
 
-
     $user_id = $_SESSION['user_id'];
     mysqli_query($conn, "UPDATE users SET last_active = NOW() WHERE id = $user_id");
 
-    // 1. KUNIN ANG USER DATA
     $user_query = "SELECT * FROM users WHERE id = '$user_id'";
     $user_result = mysqli_query($conn, $user_query);
     $user_data = mysqli_fetch_assoc($user_result);
@@ -68,7 +64,6 @@
     }
 }
 
-    // 2. KUNIN ANG BOOKINGS (Upcoming & Completed)
     $query_bookings = "SELECT * FROM bookings WHERE user_id = ? ORDER BY event_date ASC";
     $stmt_b = mysqli_prepare($conn, $query_bookings);
     mysqli_stmt_bind_param($stmt_b, "i", $user_id);
@@ -92,13 +87,12 @@
         }
     }
     $display_booking = ($total_bookings_count > 1) ? $total_bookings_count . " events" : $total_bookings_count . " event";
-    // 2.1 EVENT REMINDER NOTIFICATIONS
+
     foreach ($upcoming_events as $event) {
         if (empty($event['event_date'])) {
             continue;
         }
 
-        // APPROVED lang ang puwedeng magka-reminder
         if (($event['booking_status'] ?? '') !== 'Approved') {
             continue;
         }
@@ -111,7 +105,6 @@
         $tomorrow = date('Y-m-d', strtotime('+1 day'));
         $link = 'profile.php?view=upcoming';
 
-        // TODAY reminder
         if ($event_date_raw === $today) {
             $type = 'event_reminder_today';
             $title = 'Event Reminder';
@@ -134,7 +127,6 @@
             }
         }
 
-        // TOMORROW reminder
         if ($event_date_raw === $tomorrow) {
             $type = 'event_reminder_tomorrow';
             $title = 'Event Reminder';
@@ -158,7 +150,6 @@
         }
     }
 
-    // 3. KUNIN ANG APPOINTMENTS MULA SA DATABASE
     $query_apts = "SELECT * FROM appointments 
                 WHERE user_id = ?
                 ORDER BY 
@@ -176,7 +167,6 @@
     $result_apts = mysqli_stmt_get_result($stmt_a);
     $my_appointments = mysqli_fetch_all($result_apts, MYSQLI_ASSOC);
 
-    // 4. HANDLE NEW APPOINTMENT (SAVE TO DB)
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['apt_date'])) {
     $purpose = $_POST['purpose'] ?? 'General Consultation';
     $date = $_POST['apt_date'];
@@ -192,7 +182,6 @@
     if (mysqli_stmt_execute($stmt_i)) {
     $newAppointmentId = mysqli_insert_id($conn);
 
-    // ===== GENERATE PERMANENT APPOINTMENT DISPLAY ID =====
     $dateKey = !empty($date) ? date('Ymd', strtotime($date)) : date('Ymd');
     $baseId = 'APT' . $dateKey;
 
@@ -247,9 +236,6 @@
     exit();
 }
 
-
-    // 5. HANDLE APPOINTMENT ACTIONS
-    // -- CANCEL (Update status to Cancelled)
     if (isset($_GET['cancel_apt'])) {
         $apt_id = (int) $_GET['cancel_apt'];
         $cancel_query = "UPDATE appointments SET status = 'Cancelled' WHERE id = ? AND user_id = ? AND status = 'Pending'";
@@ -260,7 +246,6 @@
         exit();
     }
 
-    // -- DELETE SELECTED APPOINTMENTS (Cancelled / Completed only)
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_selected_appointments'])) {
         $selected_ids = $_POST['appointment_ids'] ?? [];
 
@@ -299,7 +284,6 @@
         exit();
     }
 
-    // -- DELETE COMPLETED EVENTS (single or multiple)
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_completed_events'])) {
         $selected_ids = $_POST['completed_event_ids'] ?? [];
 
@@ -338,7 +322,6 @@
         exit();
     }
 
-    // 6. CHAT LOGIC USING DATABASE
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send_msg'])) {
         $message_text = trim($_POST['message_text'] ?? '');
 
@@ -361,7 +344,6 @@
         exit();
     }
 
-    // MARK ADMIN MESSAGES AS READ KAPAG BINUKSAN NG USER ANG MESSAGE SECTION
     if ((isset($_GET['view']) && $_GET['view'] === 'message') || isset($_POST['send_msg'])) {
         $mark_admin_read = "UPDATE chat_messages 
                             SET is_read = 1 
@@ -374,7 +356,6 @@
         }
     }
 
-    // KUNIN ANG CHAT MESSAGES NG CURRENT USER
     $chat_messages = [];
     $get_chat = "SELECT sender, message, created_at, is_read FROM chat_messages WHERE user_id = ? ORDER BY created_at ASC, id ASC";
     $stmt_chat = mysqli_prepare($conn, $get_chat);
@@ -494,49 +475,49 @@
                         
 
                         <?php
-$currentPhone = trim($user_data['phone'] ?? '');
-$hasPhone = $currentPhone !== '';
-$phoneVerified = (int)($user_data['phone_verified'] ?? 0) === 1;
+                        $currentPhone = trim($user_data['phone'] ?? '');
+                        $hasPhone = $currentPhone !== '';
+                        $phoneVerified = (int)($user_data['phone_verified'] ?? 0) === 1;
 
-function maskPhone($phone) {
-    $digits = preg_replace('/\D/', '', $phone);
-    if (strlen($digits) !== 11) return $phone;
-    return substr($digits, 0, 4) . ' *** ' . substr($digits, -4);
-}
+                        function maskPhone($phone) {
+                            $digits = preg_replace('/\D/', '', $phone);
+                            if (strlen($digits) !== 11) return $phone;
+                            return substr($digits, 0, 4) . ' *** ' . substr($digits, -4);
+                        }
 
-$displayPhone = $hasPhone ? maskPhone($currentPhone) : '';
-$phoneButtonText = $hasPhone ? 'Change' : 'Set';
-?>
+                        $displayPhone = $hasPhone ? maskPhone($currentPhone) : '';
+                        $phoneButtonText = $hasPhone ? 'Change' : 'Set';
+                        ?>
 
-<div class="info-row">
-    <div class="info-icon"><i class="fa-solid fa-phone"></i></div>
+                        <div class="info-row">
+                            <div class="info-icon"><i class="fa-solid fa-phone"></i></div>
 
-    <div class="info-content">
-        <label>Phone Number</label>
+                            <div class="info-content">
+                                <label>Phone Number</label>
 
-        <div class="phone-group">
-            <input type="text"
-                value="<?php echo $hasPhone ? htmlspecialchars($displayPhone) : 'No mobile number added yet'; ?>"
-                readonly
-                style="background:#f5f5f5; cursor:not-allowed;">
+                                <div class="phone-group">
+                                    <input type="text"
+                                        value="<?php echo $hasPhone ? htmlspecialchars($displayPhone) : 'No mobile number added yet'; ?>"
+                                        readonly
+                                        style="background:#f5f5f5; cursor:not-allowed;">
 
-            <a href="change_phone.php" class="btn-change-phone">
-                <?php echo $phoneButtonText; ?>
-            </a>
-        </div>
+                                    <a href="change_phone.php" class="btn-change-phone">
+                                        <?php echo $phoneButtonText; ?>
+                                    </a>
+                                </div>
 
-        <small>
-            <?php if ($hasPhone): ?>
-                Status:
-                <strong style="color: <?php echo $phoneVerified ? '#198754' : '#dc3545'; ?>;">
-                    <?php echo $phoneVerified ? 'Verified' : 'Unverified'; ?>
-                </strong>
-            <?php else: ?>
-                Add your mobile number for account security and booking updates.
-            <?php endif; ?>
-        </small>
-    </div>
-</div>
+                                <small>
+                                    <?php if ($hasPhone): ?>
+                                        Status:
+                                        <strong style="color: <?php echo $phoneVerified ? '#198754' : '#dc3545'; ?>;">
+                                            <?php echo $phoneVerified ? 'Verified' : 'Unverified'; ?>
+                                        </strong>
+                                    <?php else: ?>
+                                        Add your mobile number for account security and booking updates.
+                                    <?php endif; ?>
+                                </small>
+                            </div>
+                        </div>
 
                         <div class="info-row">
                             <div class="info-icon"><i class="fa-regular fa-calendar-days"></i></div>
@@ -572,7 +553,6 @@ $phoneButtonText = $hasPhone ? 'Change' : 'Set';
                     </form>
                 </div>
 
-                <!-- APPOINTMENTS -->
                 <div id="appointments" class="section">
                     <h3 style="margin-bottom:20px;">My Appointments</h3>
 
@@ -729,7 +709,6 @@ $phoneButtonText = $hasPhone ? 'Change' : 'Set';
                     </div>
                 </div>
 
-                <!-- UPCOMING & COMPLETED -->
                 <div id="upcoming" class="section">
                     <h3>Upcoming Events</h3>
 
@@ -769,9 +748,9 @@ $phoneButtonText = $hasPhone ? 'Change' : 'Set';
                             </div>
                         <?php endif; ?>
 
-                    </div> <!-- ✅ closing ng upcomingEventsContent -->
+                    </div>
 
-                </div> <!-- ✅ closing ng upcoming section -->
+                </div>
 
 
                 <div id="completed" class="section">
@@ -779,7 +758,6 @@ $phoneButtonText = $hasPhone ? 'Change' : 'Set';
 
                     <form method="POST" id="completedDeleteForm">
 
-                        <!-- ACTION BAR -->
                         <div class="completed-action-bar">
                             <label class="select-all">
                                 <input type="checkbox" id="selectAllCompleted" onclick="toggleAllCompleted(this)">
@@ -839,7 +817,6 @@ $phoneButtonText = $hasPhone ? 'Change' : 'Set';
                 </div>
 
 
-                <!-- APPOINTMENT MODAL -->
                 <div id="aptModal" class="modal-overlay">
                     <div class="modal-content">
                         <i class="fa-solid fa-xmark close-modal" onclick="closeAptModal()"></i>
@@ -1373,7 +1350,6 @@ $phoneButtonText = $hasPhone ? 'Change' : 'Set';
 
                         if (!upcomingContent || !completedContent) return;
 
-                        // 🔥 SAVE CHECKED IDS
                         const checkedIds = [];
                         document.querySelectorAll('#completedEventsContent .completed-event-checkbox:checked')
                             .forEach(cb => checkedIds.push(cb.value));
@@ -1388,7 +1364,6 @@ $phoneButtonText = $hasPhone ? 'Change' : 'Set';
                                 upcomingContent.innerHTML = data.upcoming_html;
                                 completedContent.innerHTML = data.completed_html;
 
-                                // 🔥 RESTORE CHECKED STATE
                                 document.querySelectorAll('#completedEventsContent .completed-event-checkbox')
                                     .forEach(cb => {
                                         if (checkedIds.includes(cb.value)) {
@@ -1579,6 +1554,5 @@ $phoneButtonText = $hasPhone ? 'Change' : 'Set';
 
 
                 </script>
-    </body>
-
-    </html>
+</body>
+</html>

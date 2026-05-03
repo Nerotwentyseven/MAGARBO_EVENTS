@@ -8,7 +8,6 @@ if (!isset($_SESSION['temp_booking_data']) || !is_array($_SESSION['temp_booking_
     exit();
 }
 
-// minimum downpayment
 $downpayment = 2000;
 ?>
 <!DOCTYPE html>
@@ -172,8 +171,6 @@ function closeAlert() {
                 amountInput.focus();
                 return;
             }
-
-            
 
             window.location.href =
                 "create_payment.php?method=" + encodeURIComponent(selectedMethod) +

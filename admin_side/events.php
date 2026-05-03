@@ -9,7 +9,6 @@ if ($themeQuery && mysqli_num_rows($themeQuery) > 0) {
     $adminTheme = $themeRow['theme'] ?? 'Light Mode';
 }
 
-// FULLY BOOKED DATES (approved bookings only)
 $booked_dates = [];
 
 $fullDateSql = "SELECT event_date, COUNT(*) as count
@@ -26,7 +25,6 @@ if ($fullDateResult && mysqli_num_rows($fullDateResult) > 0) {
     }
 }
 
-// MENU OPTIONS
 $menuOptions = [];
 $menuSql = "SELECT id, menu_name, price FROM menus WHERE status = 'Active' ORDER BY menu_name ASC";
 $menuResult = mysqli_query($conn, $menuSql);
@@ -94,14 +92,6 @@ if ($result && mysqli_num_rows($result) > 0) {
             $totalPaidFromPayments = (float)($payRow['total_paid'] ?? 0);
         }
 
-        /*
-            IMPORTANT:
-            Huwag pagsamahin ang bookings.downpayment + booking_payments.amount
-            kasi same downpayment lang sila.
-            
-            If may paid rows sa booking_payments, yun ang gamitin.
-            If wala pa, fallback sa bookings.downpayment.
-        */
         $paidAmount = $totalPaidFromPayments > 0 ? $totalPaidFromPayments : $downpayment;
 
         // iwas sobra sa total
@@ -123,12 +113,9 @@ if ($result && mysqli_num_rows($result) > 0) {
         if ($status === 'confirmed') $totalConfirmed++;
         if ($status === 'draft') $totalDraft++;
 
-        // ==== SYSTEM-GENERATED DISPLAY ID ====
-        // base sa first 3 letters ng CLIENT NAME + event date
-
         $displayEventId = !empty($row['display_order_id'])
-    ? $row['display_order_id']
-    : ('ORD-' . $row['id']);
+            ? $row['display_order_id']
+            : ('ORD-' . $row['id']);
 
         $events[] = [
             "id"            => $row['id'],
@@ -157,7 +144,6 @@ if ($result && mysqli_num_rows($result) > 0) {
         ];
     }
 
-    // ==== SORT EVENTS ====
 usort($events, function ($a, $b) {
 
     $statusPriority = [
@@ -173,19 +159,16 @@ usort($events, function ($a, $b) {
     $aPriority = $statusPriority[$aStatus] ?? 99;
     $bPriority = $statusPriority[$bStatus] ?? 99;
 
-    // una: status grouping
     if ($aPriority !== $bPriority) {
         return $aPriority <=> $bPriority;
     }
 
-    // draft = recent created first
     if ($aStatus === 'draft' && $bStatus === 'draft') {
         $aCreated = strtotime($a['created_at'] ?? 'now');
         $bCreated = strtotime($b['created_at'] ?? 'now');
         return $bCreated <=> $aCreated;
     }
 
-    // confirmed = nearest event date first
     if ($aStatus === 'confirmed' && $bStatus === 'confirmed') {
         $aEventDate = strtotime($a['date'] ?? 'now');
         $bEventDate = strtotime($b['date'] ?? 'now');
@@ -199,7 +182,6 @@ usort($events, function ($a, $b) {
         return $aCreated <=> $bCreated;
     }
 
-    // ongoing = nearest event date first
     if ($aStatus === 'ongoing' && $bStatus === 'ongoing') {
         $aEventDate = strtotime($a['date'] ?? 'now');
         $bEventDate = strtotime($b['date'] ?? 'now');
@@ -213,7 +195,6 @@ usort($events, function ($a, $b) {
         return $aCreated <=> $bCreated;
     }
 
-    // completed = latest completed last group, nearest date first or oldest first
     $aEventDate = strtotime($a['date'] ?? 'now');
     $bEventDate = strtotime($b['date'] ?? 'now');
 

@@ -1,4 +1,3 @@
-/* ===================== THEME VARIABLES ===================== */
 :root {
     --bg-main: #f4f6f8;
     --bg-content: #f8f9fa;
@@ -6,23 +5,18 @@
     --bg-soft: #f1f3f5;
     --bg-input: #eeeeee;
     --bg-input-soft: #fafafa;
-
     --text-main: #1e293b;
     --text-title: #1a1a1a;
     --text-muted: #6c757d;
     --text-soft: #64748b;
     --text-body: #333333;
-
     --border-color: rgba(0, 0, 0, 0.1);
     --border-soft: #dddddd;
     --border-light: #f1f5f9;
-
     --accent: #bf9225;
     --danger: #ef4444;
-
     --badge-bg: #f0f2f5;
     --cat-bg: #f8f9fa;
-
     --modal-overlay: rgba(0, 0, 0, 0.5);
     --shadow-soft: 0 15px 40px rgba(0, 0, 0, 0.2);
 }
@@ -34,28 +28,23 @@ body.dark-mode {
     --bg-soft: #273449;
     --bg-input: #243041;
     --bg-input-soft: #273449;
-
     --text-main: #f1f5f9;
     --text-title: #f1f5f9;
     --text-muted: #94a3b8;
     --text-soft: #94a3b8;
     --text-body: #e2e8f0;
-
     --border-color: rgba(255, 255, 255, 0.1);
     --border-soft: rgba(255, 255, 255, 0.10);
     --border-light: rgba(255, 255, 255, 0.08);
-
     --accent: #bf9225;
     --danger: #f87171;
-
     --badge-bg: #273449;
     --cat-bg: #243041;
-
     --modal-overlay: rgba(0, 0, 0, 0.65);
     --shadow-soft: 0 15px 40px rgba(0, 0, 0, 0.35);
 }
 
-/* BASE */
+
 body {
     margin: 0;
     padding: 0;
@@ -79,7 +68,7 @@ body {
     box-sizing: border-box;
 }
 
-/* HEADER SECTION */
+
 .header-section {
     display: flex;
     justify-content: space-between;
@@ -118,7 +107,7 @@ body {
     gap: 8px;
 }
 
-/* STATS */
+
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -156,7 +145,6 @@ body {
     line-height: 1.4;
 }
 
-/* SECTION DIVIDER */
 .section-divider {
     font-size: 16px;
     font-weight: 700;
@@ -180,7 +168,6 @@ body {
     border: 1px solid var(--border-color);
 }
 
-/* MENU GRID */
 .menu-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -242,7 +229,6 @@ body {
     line-height: 1.5;
 }
 
-/* CATEGORIES */
 .category {
     margin-bottom: 14px;
 }
@@ -288,7 +274,6 @@ body {
     flex-shrink: 0;
 }
 
-/* ACTIONS */
 .actions {
     display: flex;
     gap: 10px;
@@ -325,7 +310,6 @@ body {
     border: none;
 }
 
-/* MODAL */
 .mg-modal-overlay {
     position: fixed;
     top: 0;
@@ -408,7 +392,6 @@ body {
     color: var(--text-muted);
 }
 
-/* MENU ITEMS TITLE */
 .mg-menu-items-title {
     font-size: 16px;
     font-weight: 700;
@@ -416,7 +399,6 @@ body {
     color: var(--text-title);
 }
 
-/* CATEGORY CARD */
 .mg-category-card {
     border: 1px solid var(--border-soft);
     border-radius: 15px;
@@ -598,8 +580,6 @@ body {
     color: #fff;
 }
 
-/* ================= MENU DYNAMIC CATEGORY ================= */
-
 .mg-dynamic-header {
     display: flex;
     justify-content: space-between;
@@ -624,7 +604,6 @@ body {
     cursor: pointer;
 }
 
-/* CATEGORY CARD */
 .dynamic-category-card {
     background: var(--bg-soft);
     border: 1px solid var(--border-soft);
@@ -633,7 +612,6 @@ body {
     margin-bottom: 14px;
 }
 
-/* CATEGORY HEADER */
 .mg-category-top {
     display: flex;
     gap: 10px;
@@ -661,7 +639,6 @@ body {
     cursor: pointer;
 }
 
-/* ADD ITEM ROW */
 .mg-add-row {
     display: flex;
     gap: 8px;
@@ -689,14 +666,12 @@ body {
     cursor: pointer;
 }
 
-/* ITEM LIST */
 .mg-item-list {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
 }
 
-/* ITEM CHIP */
 .mg-added-item {
     background: var(--bg-card);
     border: 1px solid var(--border-soft);
@@ -710,7 +685,6 @@ body {
     font-weight: 500;
 }
 
-/* DELETE ICON */
 .mg-delete-icon {
     font-size: 12px;
     cursor: pointer;
@@ -732,7 +706,6 @@ body {
     }
 }
 
-/* RESPONSIVE */
 @media (max-width: 1200px) {
     .menu-grid {
         grid-template-columns: repeat(2, 1fr);

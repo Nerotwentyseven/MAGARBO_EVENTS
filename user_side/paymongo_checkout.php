@@ -30,14 +30,6 @@ if (!in_array($selected_method, ['gcash', 'maya'], true)) {
     die("Invalid payment method.");
 }
 
-/*
-|--------------------------------------------------------------------------
-| TEST MODE
-|--------------------------------------------------------------------------
-| card muna habang test mode
-| LIVE MODE later:
-| $paymongo_method = ($selected_method === 'maya') ? 'paymaya' : 'gcash';
-*/
 $paymongo_method = ($selected_method === 'maya') ? 'paymaya' : 'gcash';
 
 $amount = (float)($payment['amount'] ?? 0);
@@ -48,7 +40,6 @@ if ($amount <= 0 || $booking_reference === '') {
     die("Invalid payment details.");
 }
 
-// Get real customer info from users table
 $user_id = (int)($_SESSION['temp_booking_data']['user_id'] ?? 0);
 
 $customerName = "Customer";
@@ -82,13 +73,10 @@ if ($user_id > 0) {
     }
 }
 
-// TEST secret key
 $secretKey = 'sk_test_vjMC8YA7ph3KubZ6D4Pdm5sx';
 
-// localhost URLs
 $baseUrl = "http://localhost/magarbo_system_current/user_side";
 
-// centavos
 $amountInCentavos = (int) round($amount * 100);
 
 $payload = [
@@ -167,7 +155,6 @@ if (!$checkoutUrl) {
     exit();
 }
 
-// Save PayMongo reference
 $provider = 'paymongo';
 $provider_reference = $checkoutSessionId;
 

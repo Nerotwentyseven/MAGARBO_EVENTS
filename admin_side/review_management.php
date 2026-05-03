@@ -66,7 +66,6 @@ if ($idRes) {
 
 $average = $total > 0 ? round($totalRating / $total, 1) : 0;
 
-// force active page for sidebar
 $current_page = 'review_management.php';
 ?>
 <!DOCTYPE html>

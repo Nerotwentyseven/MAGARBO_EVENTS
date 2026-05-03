@@ -6,7 +6,6 @@ require_once '../db_connection.php';
 
 $menus = [];
 
-// TOTAL MENU BOOKINGS (exclude cancelled)
 $totalMenuBookings = 0;
 $totalStmt = mysqli_query(
     $conn,

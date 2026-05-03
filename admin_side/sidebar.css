@@ -1,4 +1,3 @@
-/* ===================== THEME VARIABLES ===================== */
 :root {
     --sidebar-bg: #ffffff;
     --sidebar-border: #e0e0e0;
@@ -9,12 +8,10 @@
     --sidebar-icon: #64748b;
     --sidebar-hover-bg: #f0f2f5;
     --sidebar-hover-text: #000;
-
     --notif-dropdown-bg: #ffffff;
     --notif-dropdown-border: #eee;
     --notif-dropdown-title-bg: #f8fafc;
     --notif-item-border: #f9f9f9;
-
     --logout-bg: #fff5f5;
     --logout-text: #e03131;
     --logout-border: #ffc9c9;
@@ -32,12 +29,10 @@ body.dark-mode {
     --sidebar-icon: #94a3b8;
     --sidebar-hover-bg: rgba(255, 255, 255, 0.06);
     --sidebar-hover-text: #ffffff;
-
     --notif-dropdown-bg: #243041;
     --notif-dropdown-border: rgba(255, 255, 255, 0.10);
     --notif-dropdown-title-bg: #2b3a4d;
     --notif-item-border: rgba(255, 255, 255, 0.06);
-
     --logout-bg: rgba(224, 49, 49, 0.12);
     --logout-text: #f87171;
     --logout-border: rgba(248, 113, 113, 0.25);
@@ -45,7 +40,6 @@ body.dark-mode {
     --logout-hover-text: #fff;
 }
 
-/* SIDEBAR STYLES */
 .sidebar-container {
     width: 280px;
     background: var(--sidebar-bg);
@@ -91,7 +85,6 @@ body.dark-mode {
     color: var(--sidebar-text-muted);
 }
 
-/* Notification Dropdown */
 .notif-wrapper {
     margin-left: auto;
     cursor: pointer;
@@ -111,7 +104,6 @@ body.dark-mode {
     color: var(--sidebar-hover-text);
 }
 
-/* Ang mismong Dropdown Box */
 .notif-dropdown {
     display: none;
     position: absolute;
@@ -125,7 +117,6 @@ body.dark-mode {
     z-index: 9999;
 }
 
-/* Pag active ang dropdown */
 .notif-dropdown.active {
     display: block;
 }
@@ -164,7 +155,6 @@ body.dark-mode .notif-item a[style] {
     color: inherit !important;
 }
 
-/* Sidebar Menu */
 .sidebar-menu {
     flex-grow: 1;
     overflow-y: auto;
@@ -198,7 +188,6 @@ body.dark-mode .notif-item a[style] {
     font-weight: 600;
 }
 
-/* RED LOGOUT BUTTON */
 .sidebar-footer {
     padding: 20px;
     border-top: 1px solid var(--notif-dropdown-border);

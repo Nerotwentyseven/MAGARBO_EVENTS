@@ -24,7 +24,6 @@ if (!$user) {
     exit();
 }
 
-// generate new OTP
 $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 $expires = date('Y-m-d H:i:s', strtotime('+10 minutes'));
 
@@ -32,7 +31,6 @@ $update = mysqli_prepare($conn, "UPDATE users SET otp_code=?, otp_expires_at=? W
 mysqli_stmt_bind_param($update, "ssi", $otp, $expires, $user['id']);
 mysqli_stmt_execute($update);
 
-// send email
 $subject = "Magarbo Events - New Code";
 
 $body = "

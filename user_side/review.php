@@ -3,7 +3,6 @@ session_name('USERSESSID');
 session_start();
 require_once '../db_connection.php';
 
-// Optional login lang: pwede makita reviews kahit guest
 $user_id = $_SESSION['user_id'] ?? null;
 $isLoggedIn = !empty($user_id);
 
@@ -25,7 +24,6 @@ if ($isLoggedIn) {
 }
 
 
-// Handle review submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
     if (!$isLoggedIn) {
         header("Location: login.php");
@@ -44,7 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
     exit();
 }
 
-// Kunin lahat ng visible reviews kasama user info
 $reviews = [];
 $sql = "SELECT r.id, r.user_id, r.rating, r.comment, r.created_at,
                u.firstname, u.lastname
@@ -86,7 +83,6 @@ if ($res && mysqli_num_rows($res) > 0) {
     }
 }
 
-// Stats
 $total_reviews = count($reviews);
 $total_rating = 0;
 $rating_count = [5 => 0, 4 => 0, 3 => 0, 2 => 0, 1 => 0];

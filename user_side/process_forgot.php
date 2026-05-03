@@ -27,16 +27,14 @@ if (!$user) {
     exit();
 }
 
-// 🔥 Generate OTP
 $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 $expires = date('Y-m-d H:i:s', strtotime('+10 minutes'));
 
-// Save sa DB
+
 $update = mysqli_prepare($conn, "UPDATE users SET otp_code=?, otp_expires_at=? WHERE id=?");
 mysqli_stmt_bind_param($update, "ssi", $otp, $expires, $user['id']);
 mysqli_stmt_execute($update);
 
-// Send email
 $subject = "Magarbo Events - Password Reset Code";
 
 $body = "

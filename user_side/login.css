@@ -1,7 +1,5 @@
-/* --- Imports & Fonts --- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-/* --- Variables --- */
 :root {
     --primary-gold: #BC8E2C;      /* Exact gold from your design */
     --primary-gold-hover: #A37B1F;
@@ -15,7 +13,6 @@
     --radius-input: 8px;
 }
 
-/* --- Reset & Base --- */
 * {
     margin: 0;
     padding: 0;
@@ -31,7 +28,6 @@ body {
     flex-direction: column;
 }
 
-/* --- Top Bar (Back Link) --- */
 .top-bar {
     padding: 15px 40px;
     width: 100%;
@@ -63,7 +59,6 @@ body {
     opacity: 1;
 }
 
-/* --- Layout Wrapper --- */
 .login-wrapper {
     flex: 1;
     display: flex;
@@ -80,7 +75,6 @@ body {
     align-items: center;
 }
 
-/* --- Header Text --- */
 .page-header {
     text-align: center;
     margin-bottom: 25px;
@@ -93,7 +87,6 @@ body {
     margin-bottom: 8px;
 }
 
-/* --- Toggle Switch (Pill) --- */
 .toggle-container {
     background-color: #e6e2d6; 
     border-radius: 50px;
@@ -122,7 +115,6 @@ body {
     font-weight: 600;
 }
 
-/* --- Login Card --- */
 .login-card {
     background-color: var(--bg-white);
     border: 1px solid #d1d5db;
@@ -143,16 +135,15 @@ body {
     gap: 12px;
 }
 
-/* --- FORM ROW (Fixes First & Last Name Alignment) --- */
 .form-row {
     display: flex;
-    gap: 15px;      /* Gap between side-by-side inputs */
+    gap: 15px;
     margin-bottom: 20px;
     width: 100%;
 }
 
 .form-row .form-group {
-    flex: 1;        /* Forces inputs to share width equally */
+    flex: 1;
     margin-bottom: 0;
 }
 
@@ -169,21 +160,19 @@ body {
     font-size: 0.9rem;
 }
 
-/* --- INPUT BOXES (Fixes light-blue color and beige background) --- */
 .input-wrapper {
     position: relative;
     display: flex;
     align-items: center;
 }
 
-/* This forces all text, email, and password fields to be BEIGE */
 .input-wrapper input, 
 .form-group input[type="text"], 
 .form-group input[type="email"], 
 .form-group input[type="password"] {
     width: 100%;
     padding: 14px 14px 14px 40px;
-    background-color: var(--input-bg) !important; /* Forces beige color */
+    background-color: var(--input-bg) !important;
     border: 1px solid transparent;
     border-radius: var(--radius-input);
     font-family: 'Inter', sans-serif;
@@ -192,7 +181,6 @@ body {
     transition: 0.2s;
 }
 
-/* Removes icon padding for the small First/Last name boxes */
 .form-row input {
     padding-left: 12px !important;
 }
@@ -215,7 +203,6 @@ body {
     cursor: pointer;
 }
 
-/* --- Buttons --- */
 .btn-primary {
     width: 100%;
     background-color: var(--primary-gold);
@@ -233,7 +220,6 @@ body {
     background-color: var(--primary-gold-hover);
 }
 
-/* --- Socials & Divider --- */
 .divider {
     text-align: center;
     margin: 25px 0;
@@ -275,7 +261,6 @@ body {
     font-weight: 500;
 }
 
-/* --- Action Links --- */
 .form-actions {
     display: flex;
     justify-content: space-between;
@@ -301,15 +286,11 @@ body {
     text-decoration: none;
 }
 
-/* --- Responsive --- */
 @media (max-width: 500px) {
     .form-row { flex-direction: column; gap: 20px; }
     .toggle-container { width: 100%; }
 }
 
-/* ================================
-   CUSTOM ALERT MODAL
-================================ */
 .custom-alert-overlay {
     position: fixed;
     inset: 0;
@@ -417,7 +398,6 @@ body.alert-open {
     overflow: hidden;
 }
 
-/* GOOGLE BUTTON CUSTOM STYLE */
 .g_id_signin {
     width: 100% !important;
 }
@@ -426,12 +406,10 @@ body.alert-open {
     width: 100% !important;
 }
 
-/* Container fix */
 .social-buttons {
-    display: block; /* para hindi side by side */
+    display: block;
 }
 
-/* Custom wrapper style */
 .google-btn-wrapper {
     width: 100%;
     border: 1px solid #d1d5db;
@@ -445,9 +423,6 @@ body.alert-open {
     box-shadow: 0 0 0 2px rgba(188, 142, 44, 0.1);
 }
 
-
-
-/* Responsive */
 @media (max-width: 500px) {
     .custom-alert-overlay {
         padding: 14px;

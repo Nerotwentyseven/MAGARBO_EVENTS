@@ -10,7 +10,6 @@ body {
     background-color: #fcfcfc;
 }
 
-/* FIXED HEADER STYLING */
 .fixed-header {
     position: fixed;
     top: 0;
@@ -27,7 +26,6 @@ body {
 .header-inner {
     width: 100%;
     padding: 0 60px;
-    /* 60px margin sa gilid */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -97,7 +95,6 @@ body {
         display: block;
     }
 
-    /* IMPORTANT FIX */
     .nav-title {
         display: block;
         margin-left: auto;
@@ -131,18 +128,15 @@ body {
     font-size: 16px;
 }
 
-/* CONTENT AREA */
+
 .scroll-content {
     padding-top: 100px;
-    /* Space para sa fixed header */
 }
 
 .container-60 {
     padding: 0 60px;
-    /* 60px margin sa gilid */
 }
 
-/* 3 EQUAL RECTANGLES */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -187,7 +181,6 @@ body {
     opacity: 0.8;
 }
 
-/* DISTRIBUTION CARD */
 .distribution-box {
     align-items: stretch;
     justify-content: flex-start;
@@ -232,7 +225,6 @@ body {
     text-align: right;
 }
 
-/* TOOLBAR */
 .toolbar {
     display: flex;
     justify-content: space-between;
@@ -241,7 +233,6 @@ body {
 
 .filter-wrapper {
     background: #e9e6da;
-    /* Muted background color */
     padding: 12px 20px;
     border-radius: 10px;
     display: flex;
@@ -266,7 +257,6 @@ body {
     cursor: pointer;
 }
 
-/* REVIEW CARDS */
 .review-card-item {
     background: white;
     border: 1px solid var(--border);

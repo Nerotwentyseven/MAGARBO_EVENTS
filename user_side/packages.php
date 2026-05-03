@@ -6,7 +6,6 @@ require_once '../db_connection.php';
 
 $packages = [];
 
-// TOTAL APPROVED PACKAGE BOOKINGS
 $totalPackageBookings = 0;
 $totalStmt = mysqli_query(
     $conn,

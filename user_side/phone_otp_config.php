@@ -18,7 +18,7 @@ function normalizePHNumber(string $phone): ?string {
         return null;
     }
 
-    return $digits; // Save sa DB as 09XXXXXXXXX
+    return $digits;
 }
 
 function formatForSemaphore(string $phone): string {
@@ -28,7 +28,7 @@ function formatForSemaphore(string $phone): string {
         return $phone;
     }
 
-    return '63' . substr($normalized, 1); // Send as 639XXXXXXXXX
+    return '63' . substr($normalized, 1);
 }
 
 function sendSemaphoreSMS(string $number, string $message): array {

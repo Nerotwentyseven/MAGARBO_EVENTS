@@ -23,13 +23,11 @@ if (
 $email = $_SESSION['reg_email'];
 $firstname = $_SESSION['reg_firstname'];
 
-// Generate OTP
 $otp = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
-// Save OTP in session
 $_SESSION['reg_otp'] = $otp;
-$_SESSION['reg_otp_expiry'] = time() + 600; // 10 minutes
-$_SESSION['reg_resend_available_at'] = time() + 60; // resend allowed after 60s
+$_SESSION['reg_otp_expiry'] = time() + 600;
+$_SESSION['reg_resend_available_at'] = time() + 60;
 
 $subject = "Magarbo Events - Email Verification Code";
 $body = "

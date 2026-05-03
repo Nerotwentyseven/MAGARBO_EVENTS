@@ -55,7 +55,6 @@ try {
         exit;
     }
 
-    // Check existing user by email or google_id
     $stmt = mysqli_prepare($conn, "
         SELECT id, firstname, lastname, status
         FROM users
@@ -77,7 +76,6 @@ try {
             exit;
         }
 
-        // update google_id if needed
         $update = mysqli_prepare($conn, "
             UPDATE users
             SET google_id = ?, email_verified = 1
@@ -90,7 +88,6 @@ try {
         $_SESSION['user_email'] = $email;
         $_SESSION['full_name'] = trim($user['firstname'] . ' ' . $user['lastname']);
     } else {
-        // new Google account = auto create
         $randomPassword = password_hash(bin2hex(random_bytes(16)), PASSWORD_DEFAULT);
 
         $insert = mysqli_prepare($conn, "
@@ -102,7 +99,6 @@ try {
 
         $userId = mysqli_insert_id($conn);
 
-        // generate display_user_id
         $date = date("Ymd");
         $base = "USR" . $date;
 

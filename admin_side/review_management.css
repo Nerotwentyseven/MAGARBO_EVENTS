@@ -1,33 +1,25 @@
-/* ===================== THEME VARIABLES ===================== */
 :root {
     --bg-main: #f4f6f8;
     --bg-content: #f8f9fa;
     --bg-card: #ffffff;
     --bg-soft: #f1f3f5;
-
     --text-main: #1e293b;
     --text-title: #1a1a1a;
     --text-muted: #6c757d;
     --text-soft: #64748b;
-
     --border-color: rgba(0, 0, 0, 0.1);
     --border-light: #f1f5f9;
     --border-soft: #e9ecef;
-
     --accent: #bf9225;
     --danger: #e03131;
-
     --visible-bg: #f8f1db;
     --visible-text: #bf9225;
     --visible-border: #ead9a0;
-
     --hidden-bg: #f5f5f5;
     --hidden-text: #6c757d;
     --hidden-border: #e5e7eb;
-
     --delete-bg: #fff5f5;
     --delete-border: #ffc9c9;
-
     --modal-overlay: rgba(0, 0, 0, 0.4);
     --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
@@ -37,35 +29,27 @@ body.dark-mode {
     --bg-content: #111827;
     --bg-card: #1e293b;
     --bg-soft: #273449;
-
     --text-main: #f1f5f9;
     --text-title: #f1f5f9;
     --text-muted: #94a3b8;
     --text-soft: #94a3b8;
-
     --border-color: rgba(255, 255, 255, 0.1);
     --border-light: rgba(255, 255, 255, 0.08);
     --border-soft: rgba(255, 255, 255, 0.10);
-
     --accent: #bf9225;
     --danger: #f87171;
-
     --visible-bg: rgba(191, 146, 37, 0.16);
     --visible-text: #f4c95d;
     --visible-border: rgba(191, 146, 37, 0.35);
-
     --hidden-bg: rgba(148, 163, 184, 0.12);
     --hidden-text: #cbd5e1;
     --hidden-border: rgba(255, 255, 255, 0.10);
-
     --delete-bg: rgba(224, 49, 49, 0.12);
     --delete-border: rgba(248, 113, 113, 0.25);
-
     --modal-overlay: rgba(0, 0, 0, 0.6);
     --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.35);
 }
 
-/* BASE */
 body {
     margin: 0;
     padding: 0;
@@ -90,7 +74,6 @@ body {
     box-sizing: border-box;
 }
 
-/* HEADER */
 .page-title-section h1 {
     font-size: 28px;
     font-weight: 800;
@@ -106,7 +89,6 @@ body {
     line-height: 1.5;
 }
 
-/* STATS */
 .msg-stats-grid {
     display: flex;
     gap: 15px;
@@ -154,7 +136,6 @@ body {
     color: var(--accent);
 }
 
-/* FILTER */
 .filter-tabs-container {
     background: var(--bg-soft);
     display: inline-flex;
@@ -181,7 +162,6 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* TABLE */
 .review-table-container {
     background: var(--bg-card);
     border-radius: 15px;
@@ -227,7 +207,6 @@ body {
     word-break: break-word;
 }
 
-/* STATUS */
 .status-tag {
     padding: 4px 12px;
     border-radius: 6px;
@@ -249,7 +228,6 @@ body {
     border: 1px solid var(--hidden-border);
 }
 
-/* ACTIONS */
 .action-group {
     display: flex;
     gap: 8px;
@@ -305,7 +283,6 @@ body {
     background: var(--delete-bg);
 }
 
-/* MODAL */
 .modal {
     display: none;
     position: fixed;
@@ -400,8 +377,6 @@ body {
 .full-width {
     width: 100%;
 }
-
-/* ===================== BILLING-STYLE REVIEW MODAL ===================== */
 
 .review-detail-width {
     width: 560px;
@@ -568,7 +543,6 @@ body.dark-mode .review-box-item {
     color: #bf9225;
 }
 
-/* UNDO MODE (orange style) */
 .confirm-icon-wrap.undo-mode {
     background: #fff7e3;
     color: #bf9225;
@@ -634,8 +608,6 @@ body.dark-mode .review-box-item {
     color: #fff;
 }
 
-
-/* ================= TOOLBAR ================= */
 .reviews-toolbar {
     display: flex;
     justify-content: space-between;
@@ -645,7 +617,6 @@ body.dark-mode .review-box-item {
     flex-wrap: nowrap;
 }
 
-/* FIX FILTER */
 .filter-tabs-container {
     display: inline-flex;
     gap: 4px;
@@ -657,7 +628,6 @@ body.dark-mode .review-box-item {
     flex-shrink: 0;
 }
 
-/* SEARCH */
 .search-box-wrap {
     width: 340px;
     max-width: 100%;
@@ -701,7 +671,6 @@ body.dark-mode .review-box-item {
     background: rgba(191, 146, 37, 0.12);
 }
 
-/* TOP HEADER LAYOUT - same feel as orders */
 .page-header {
     display: flex;
     justify-content: space-between;
@@ -725,7 +694,6 @@ body.dark-mode .review-box-item {
     line-height: 1.5;
 }
 
-/* HEADER ACTIONS */
 .header-actions {
     display: flex;
     align-items: center;
@@ -964,7 +932,6 @@ body.dark-mode .review-box-item {
     }
 }
 
-/* RESPONSIVE */
 @media (max-width: 900px) {
     .main-content-area {
         padding: 20px;

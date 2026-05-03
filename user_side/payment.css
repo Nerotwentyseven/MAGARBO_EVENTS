@@ -15,7 +15,7 @@ body {
 
 .payment-wrapper {
     width: 100%;
-    max-width: 420px; /* Eksaktong lapad para sa mobile-view card */
+    max-width: 420px;
     padding: 20px;
 }
 
@@ -167,7 +167,6 @@ body {
     cursor: pointer;
 }
 
-/* ===== Downpayment Section ===== */
 .amount-row {
     margin-bottom: 10px;
     align-items: center;
@@ -227,7 +226,6 @@ body {
     margin: 0;
 }
 
-/* Firefox fix for number input arrows */
 .amount-input-wrap input[type=number] {
     appearance: textfield;
 }
@@ -238,7 +236,6 @@ body {
     line-height: 1.6;
 }
 
-/* ===== Custom Alert ===== */
 .custom-alert {
     position: fixed;
     top: 0;
@@ -306,7 +303,6 @@ body {
     }
 }
 
-/* ===== Responsive ===== */
 @media (max-width: 480px) {
     .amount-row {
         flex-direction: column;

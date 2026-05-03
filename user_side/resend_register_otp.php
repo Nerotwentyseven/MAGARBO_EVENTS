@@ -25,10 +25,8 @@ if (!isset($_SESSION['reg_email'], $_SESSION['reg_firstname'])) {
 $email = $_SESSION['reg_email'];
 $firstname = $_SESSION['reg_firstname'];
 
-// Generate new OTP
 $otp = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
-// Update session OTP
 $_SESSION['reg_otp'] = $otp;
 $_SESSION['reg_otp_expiry'] = time() + 600; // 10 minutes
 $_SESSION['reg_resend_available_at'] = time() + 60; // resend allowed after 60s

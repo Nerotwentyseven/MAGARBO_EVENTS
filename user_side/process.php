@@ -8,7 +8,6 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// 1. KUNIN ANG DATA MULA SA POST (Galing booking.php)
 $user_id    = $_SESSION['user_id'];
 $event_type = $_POST['event_type'] ?? 'N/A';
 $religion = $_POST['religion'] ?? null;
@@ -19,16 +18,12 @@ $request    = $_POST['request'] ?? '';
 $selected_theme_id = !empty($_POST['selected_theme_id']) ? (int) $_POST['selected_theme_id'] : null;
 $selected_theme = trim($_POST['selected_theme'] ?? '');
 
-// fallback: kung walang selected_theme pero may request na may "theme"
 if ($selected_theme === '' && !empty($request)) {
     if (preg_match('/"([^"]+)"\s*theme/i', $request, $matches)) {
         $selected_theme = trim($matches[1]);
     }
 }
 
-
-// 2. KUNIN ANG DATA MULA SA SESSION (Galing sa mga naunang steps)
-// Siguraduhin na ang mga ito ay may default values para iwas "Undefined variable"
 $service_type = $_SESSION['service_type'] ?? 'N/A';
 $package      = $_SESSION['package'] ?? 'N/A';
 $total_cost   = $_SESSION['total_cost'] ?? 0;
@@ -36,13 +31,9 @@ $total_pax    = $_SESSION['total_pax'] ?? 0;
 $menu_json    = $_SESSION['menu_cart'] ?? '[]';
 $cart_data    = json_decode($menu_json, true);
 
-// 3. DEFINE VARIABLES PARA SA DISPLAY (Ito yung mga nag-error sa iyo)
 $formatted_time = ($event_time !== 'N/A') ? date("g:i A", strtotime($event_time)) : 'N/A';
 $is_styling_only = ($service_type === 'Styling & Decoration Only');
 
-// 4. SAVE SA DATABASE
-// 4. HUWAG MUNA MAG-INSERT SA DATABASE. 
-// I-save muna lahat ng details sa Session para bitbit sila hanggang Payment Success.
 $_SESSION['temp_booking_data'] = [
     'user_id'           => $user_id,
     'event_type'        => $event_type,
@@ -61,7 +52,6 @@ $_SESSION['temp_booking_data'] = [
     
 ];
 
-// Alisin mo rin yung $_SESSION['last_booking_id'] dito dahil wala pa tayong ID.
 ?>
 
 <!DOCTYPE html>
@@ -144,75 +134,75 @@ $_SESSION['temp_booking_data'] = [
                         <div class="summary-item">
                             <span class="label">Venue:</span>
                             <span class="value">
-<?php
-$rawVenue = trim((string)$venue);
+                        <?php
+                        $rawVenue = trim((string)$venue);
 
-if ($rawVenue === '' || $rawVenue === 'N/A') {
-    echo 'N/A';
-} else {
-    $parts = array_values(array_filter(array_map('trim', explode(',', $rawVenue)), 'strlen'));
+                        if ($rawVenue === '' || $rawVenue === 'N/A') {
+                            echo 'N/A';
+                        } else {
+                            $parts = array_values(array_filter(array_map('trim', explode(',', $rawVenue)), 'strlen'));
 
-    $cityIndex = -1;
-    $provinceIndex = -1;
+                            $cityIndex = -1;
+                            $provinceIndex = -1;
 
-    foreach ($parts as $i => $part) {
-        $p = strtolower($part);
+                            foreach ($parts as $i => $part) {
+                                $p = strtolower($part);
 
-        if (
-            $p === 'albay' ||
-            $p === 'camarines sur' ||
-            $p === 'camarines norte' ||
-            $p === 'sorsogon' ||
-            $p === 'catanduanes' ||
-            $p === 'masbate' ||
-            str_contains($p, 'province')
-        ) {
-            $provinceIndex = $i;
-            break;
-        }
-    }
+                                if (
+                                    $p === 'albay' ||
+                                    $p === 'camarines sur' ||
+                                    $p === 'camarines norte' ||
+                                    $p === 'sorsogon' ||
+                                    $p === 'catanduanes' ||
+                                    $p === 'masbate' ||
+                                    str_contains($p, 'province')
+                                ) {
+                                    $provinceIndex = $i;
+                                    break;
+                                }
+                            }
 
-    foreach ($parts as $i => $part) {
-        $p = strtolower($part);
+                            foreach ($parts as $i => $part) {
+                                $p = strtolower($part);
 
-        if (
-            str_contains($p, 'city of') ||
-            str_contains($p, ' city') ||
-            str_contains($p, 'municipality')
-        ) {
-            $cityIndex = $i;
-            break;
-        }
-    }
+                                if (
+                                    str_contains($p, 'city of') ||
+                                    str_contains($p, ' city') ||
+                                    str_contains($p, 'municipality')
+                                ) {
+                                    $cityIndex = $i;
+                                    break;
+                                }
+                            }
 
-    $splitIndex = -1;
+                            $splitIndex = -1;
 
-    if ($cityIndex > 0) {
-        $splitIndex = $cityIndex - 1;
-    } elseif ($provinceIndex > 1) {
-        $splitIndex = $provinceIndex - 2;
-    }
+                            if ($cityIndex > 0) {
+                                $splitIndex = $cityIndex - 1;
+                            } elseif ($provinceIndex > 1) {
+                                $splitIndex = $provinceIndex - 2;
+                            }
 
-    if ($splitIndex <= 0 && count($parts) >= 3) {
-        $splitIndex = count($parts) - 3;
-    }
+                            if ($splitIndex <= 0 && count($parts) >= 3) {
+                                $splitIndex = count($parts) - 3;
+                            }
 
-    if ($splitIndex <= 0) {
-        $splitIndex = 1;
-    }
+                            if ($splitIndex <= 0) {
+                                $splitIndex = 1;
+                            }
 
-    $firstLine = implode(', ', array_slice($parts, 0, $splitIndex));
-    $secondLine = implode(', ', array_slice($parts, $splitIndex));
+                            $firstLine = implode(', ', array_slice($parts, 0, $splitIndex));
+                            $secondLine = implode(', ', array_slice($parts, $splitIndex));
 
-    echo htmlspecialchars($firstLine);
+                            echo htmlspecialchars($firstLine);
 
-    if ($secondLine !== '') {
-        echo '<br>' . htmlspecialchars($secondLine);
-    }
-}
-?>
-</span>
-                        </div>
+                            if ($secondLine !== '') {
+                                echo '<br>' . htmlspecialchars($secondLine);
+                            }
+                        }
+                        ?>
+                        </span>
+                                </div>
 
                         <?php if (!empty($selected_theme)): ?>
                         <div class="summary-item">

@@ -12,8 +12,6 @@ if ($themeQuery && mysqli_num_rows($themeQuery) > 0) {
     $theme = $themeRow['theme'] ?? 'Light Mode';
 }
 
-
-// TOTAL ORDERS TODAY (lahat ng orders na ginawa today)
 $todaySql = "SELECT COUNT(*) AS total_today
              FROM bookings
              WHERE DATE(created_at) = CURDATE()";
@@ -21,7 +19,6 @@ $todayResult = mysqli_query($conn, $todaySql);
 $todayData = mysqli_fetch_assoc($todayResult);
 $totalToday = $todayData['total_today'] ?? 0;
 
-// YESTERDAY (lahat din ng orders kahapon)
 $yesterdaySql = "SELECT COUNT(*) AS total_yesterday
                  FROM bookings
                  WHERE DATE(created_at) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)";
@@ -29,7 +26,6 @@ $yesterdayResult = mysqli_query($conn, $yesterdaySql);
 $yesterdayData = mysqli_fetch_assoc($yesterdayResult);
 $totalYesterday = $yesterdayData['total_yesterday'] ?? 0;
 
-// PERCENT CHANGE
 if ($totalYesterday > 0) {
     $percentChange = (($totalToday - $totalYesterday) / $totalYesterday) * 100;
 } else {
@@ -37,7 +33,6 @@ if ($totalYesterday > 0) {
 }
 $trendText = ($percentChange >= 0 ? '+' : '') . round($percentChange) . "% from yesterday";
 
-// PENDING APPROVALS
 $pendingSql = "SELECT COUNT(*) AS total_pending
                FROM bookings
                WHERE booking_status = 'Pending'";
@@ -45,8 +40,6 @@ $pendingResult = mysqli_query($conn, $pendingSql);
 $pendingData = mysqli_fetch_assoc($pendingResult);
 $totalPending = $pendingData['total_pending'] ?? 0;
 
-
-// RECENT ORDERS (max 5, pending only)
 $recentSql = "SELECT b.*, 
               CONCAT(u.firstname, ' ', u.lastname) AS full_name
               FROM bookings b
@@ -94,7 +87,6 @@ $nextEventResult = mysqli_query($conn, $nextEventSql);
 $nextEvent = mysqli_fetch_assoc($nextEventResult);
 
 $eventsByDate = [];
-// REVENUE THIS MONTH
 $revenueMonthSql = "SELECT COALESCE(SUM(
                         CASE 
                             WHEN event_status = 'draft' THEN 0
@@ -110,7 +102,6 @@ $revenueMonthResult = mysqli_query($conn, $revenueMonthSql);
 $revenueMonthData = mysqli_fetch_assoc($revenueMonthResult);
 $revenueThisMonth = (float)($revenueMonthData['revenue_this_month'] ?? 0);
 
-// REVENUE LAST MONTH
 $revenueLastMonthSql = "SELECT COALESCE(SUM(
                             CASE 
                                 WHEN event_status = 'draft' THEN 0
@@ -126,7 +117,6 @@ $revenueLastMonthResult = mysqli_query($conn, $revenueLastMonthSql);
 $revenueLastMonthData = mysqli_fetch_assoc($revenueLastMonthResult);
 $revenueLastMonth = (float)($revenueLastMonthData['revenue_last_month'] ?? 0);
 
-// PERCENT CHANGE FOR REVENUE
 if ($revenueLastMonth > 0) {
     $revenuePercentChange = (($revenueThisMonth - $revenueLastMonth) / $revenueLastMonth) * 100;
 } else {
@@ -229,32 +219,32 @@ if ($calendarResult && mysqli_num_rows($calendarResult) > 0) {
                 <div class="card upcoming-card">
                     <h2 class="card-title">Upcoming Events</h2>
                     <div class="event-list">
-<?php
-if ($upcomingResult && mysqli_num_rows($upcomingResult) > 0) {
-    while ($e = mysqli_fetch_assoc($upcomingResult)) {
+                <?php
+                if ($upcomingResult && mysqli_num_rows($upcomingResult) > 0) {
+                    while ($e = mysqli_fetch_assoc($upcomingResult)) {
 
-        $eventName = $e['event_type'];
-        $eventDate = date("M d, Y", strtotime($e['event_date']));
-        $status = strtolower($e['event_status']);
-?>
-    <div class="event-item">
-        <div class="event-meta">
-            <span class="event-name"><?php echo $eventName; ?></span>
-            <span class="event-date"><?php echo $eventDate; ?></span>
-        </div>
+                        $eventName = $e['event_type'];
+                        $eventDate = date("M d, Y", strtotime($e['event_date']));
+                        $status = strtolower($e['event_status']);
+                ?>
+                    <div class="event-item">
+                        <div class="event-meta">
+                            <span class="event-name"><?php echo $eventName; ?></span>
+                            <span class="event-date"><?php echo $eventDate; ?></span>
+                        </div>
 
-        <div class="event-badge <?php echo $status; ?>">
-            <?php echo ucfirst($status); ?>
-        </div>
-    </div>
+                        <div class="event-badge <?php echo $status; ?>">
+                            <?php echo ucfirst($status); ?>
+                        </div>
+                    </div>
 
-<?php
-    }
-} else {
-    echo "<p style='text-align:center;'>No upcoming events.</p>";
-}
-?>
-</div>
+                <?php
+                    }
+                } else {
+                    echo "<p style='text-align:center;'>No upcoming events.</p>";
+                }
+                ?>
+                </div>
                 </div>
             </div>
 
@@ -437,14 +427,12 @@ if ($upcomingResult && mysqli_num_rows($upcomingResult) > 0) {
         modal.style.display = 'none';
     }
 
-    // close pag click sa labas
     document.getElementById('eventModal').addEventListener('click', function(e) {
         if (e.target === this) {
             closeModal();
         }
     });
 
-    // close pag ESC
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeModal();

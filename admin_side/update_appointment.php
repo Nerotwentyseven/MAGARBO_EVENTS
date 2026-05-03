@@ -26,7 +26,6 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
                 ? date("F j, Y", strtotime($appointment['apt_date']))
                 : 'the selected date';
 
-            // UPDATE STATUS + cancelled_at
             if ($status === 'Cancelled') {
                 $sql = "UPDATE appointments 
                         SET status = ?, cancelled_at = NOW() 
@@ -52,7 +51,6 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
 
             if (mysqli_stmt_execute($stmt)) {
 
-                // GUMAWA NG NOTIFICATION
                 $type = 'appointment';
                 $link = 'profile.php?view=appointments';
 
@@ -70,7 +68,6 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
                     $message = "Your appointment for {$purpose} on {$apt_date} has been restored and is now pending again.";
                 }
 
-                // DUPLICATE CHECK
                 $check_sql = "SELECT id FROM notifications 
                               WHERE user_id = ? AND type = ? AND title = ? AND message = ? 
                               LIMIT 1";

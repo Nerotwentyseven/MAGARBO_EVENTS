@@ -1,58 +1,41 @@
-/* ===================== THEME VARIABLES ===================== */
 :root {
     --bg-main: #f4f6f8;
     --bg-content: #f8f9fa;
     --bg-card: #ffffff;
     --bg-soft: #f1f3f5;
-
     --text-main: #1e293b;
     --text-muted: #6c757d;
-
     --border-color: rgba(0, 0, 0, 0.1);
-
     --pending-bg: #fff4e6;
     --pending-text: #bf9225;
     --pending-border: #ffe8cc;
-
     --approved-bg: #ebfbee;
     --approved-text: #2b8a3e;
     --approved-border: #c3fae8;
-
     --modal-overlay: rgba(0, 0, 0, 0.4);
-
-    
     --accent: #bf9225;
-    
     --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-/* DARK MODE */
 body.dark-mode {
     --bg-main: #0f172a;
     --bg-content: #111827;
     --bg-card: #1e293b;
     --bg-soft: #273449;
-
     --text-main: #f1f5f9;
     --text-muted: #94a3b8;
-
     --border-color: rgba(255, 255, 255, 0.1);
-
     --pending-bg: rgba(191, 146, 37, 0.15);
     --pending-text: #f4c95d;
     --pending-border: rgba(191, 146, 37, 0.35);
-
     --approved-bg: rgba(43, 138, 62, 0.15);
     --approved-text: #4ade80;
     --approved-border: rgba(74, 222, 128, 0.25);
-
     --modal-overlay: rgba(0, 0, 0, 0.6);
-
     --accent: #bf9225;
     --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
-/* ===================== BASE ===================== */
 body {
     margin: 0;
     padding: 0;
@@ -77,7 +60,6 @@ body {
     box-sizing: border-box;
 }
 
-/* HEADER */
 .page-title-section h1 {
     font-size: 28px;
     font-weight: 800;
@@ -90,7 +72,6 @@ body {
     font-size: 14px;
 }
 
-/* STATS CARDS */
 .msg-stats-grid {
     display: flex;
     gap: 15px;
@@ -119,7 +100,6 @@ body {
     color: var(--text-main);
 }
 
-/* FILTER TABS */
 .filter-tabs-container {
     display: inline-flex;
     gap: 4px;
@@ -148,7 +128,6 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* TABLE */
 .appointment-table-container {
     background: var(--bg-card);
     border-radius: 15px;
@@ -179,7 +158,6 @@ body {
     font-size: 14px;
 }
 
-/* STATUS TAGS */
 .status-tag {
     padding: 4px 12px;
     border-radius: 6px;
@@ -199,7 +177,6 @@ body {
     border: 1px solid var(--approved-border);
 }
 
-/* ACTIONS */
 .action-group {
     display: flex;
     gap: 8px;
@@ -219,7 +196,6 @@ body {
     justify-content: center;
 }
 
-/* MODAL */
 .modal {
     display: none;
     position: fixed;
@@ -308,7 +284,6 @@ body {
     font-size: 14px;
 }
 
-/* MODAL GRID STYLE (Billing Style) */
 .modal-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -343,7 +318,6 @@ body {
     color: var(--text-main);
 }
 
-/* Notes scroll (same as billing) */
 .notes-box {
     min-height: 60px;
     max-height: 120px;
@@ -425,9 +399,6 @@ body {
     background: #bf9225;
     color: #fff;
 }
-
-
-
 
 .page-header {
     display: flex;
@@ -733,11 +704,6 @@ body {
         width: 100%;
     }
 }
-
-
-
-
-
 
 @keyframes confirmFadeIn {
     from {

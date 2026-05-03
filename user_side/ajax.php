@@ -1,6 +1,5 @@
 <?php
 session_name('USERSESSID');
-//AJAX NG MESSAGES
 session_start();
 require_once '../db_connection.php';
 
@@ -173,9 +172,6 @@ if ($action === 'send_message') {
     exit();
 }
 
-
-
-//AJAX NG NOTIFICATIONS
 if ($action === 'get_notifications') {
     $delete_old = "DELETE FROM notifications 
                    WHERE user_id = ? 
@@ -212,8 +208,6 @@ if ($action === 'get_notifications') {
     exit();
 }
 
-
-//AJAX NG EVENTS
 if ($action === 'fetch_events') {
     $query_bookings = "SELECT * FROM bookings WHERE user_id = ? ORDER BY event_date ASC";
     $stmt_b = mysqli_prepare($conn, $query_bookings);
@@ -418,5 +412,3 @@ echo json_encode([
     'message' => 'Invalid action.'
 ]);
 exit();
-
-

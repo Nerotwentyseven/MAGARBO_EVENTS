@@ -22,7 +22,6 @@ if (mysqli_fetch_assoc($res)) {
     exit();
 }
 
-// generate OTP
 $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 $expires = date('Y-m-d H:i:s', strtotime('+10 minutes'));
 
@@ -34,10 +33,8 @@ WHERE id=?
 mysqli_stmt_bind_param($stmt, "ssi", $otp, $expires, $_SESSION['user_id']);
 mysqli_stmt_execute($stmt);
 
-// save temp phone
 $_SESSION['new_phone'] = $new_phone;
 
-// ⚠️ NOTE: wala ka pang SMS API, so temp display muna
 echo "<script>
 alert('Your OTP code is: $otp'); 
 window.location='verify_phone_otp.php';

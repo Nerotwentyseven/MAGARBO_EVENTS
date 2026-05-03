@@ -23,14 +23,6 @@ $totalUsers = 0;
 $activeUsers = 0;
 $deactivatedUsers = 0;
 $deletedUsers = 0;
-
-/*
-|--------------------------------------------------------------------------
-| Generate display IDs like:
-| USR-20260418
-| USR-20260418-2
-|--------------------------------------------------------------------------
-*/
 $generatedUserIds = [];
 
 if ($result) {

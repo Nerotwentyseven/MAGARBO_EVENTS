@@ -46,11 +46,8 @@ echo json_encode([
     'unread_messages' => $msg,
     'pending_appointments' => $apt,
     'pending_orders' => $order,
-
-    // backup (para safe)
     'messages' => $msg,
     'appointments' => $apt,
     'orders' => $order,
-
     'total' => $msg + $apt + $order
 ]);

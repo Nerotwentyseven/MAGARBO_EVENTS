@@ -53,7 +53,6 @@ if ($pendingPhone === '') {
     exit();
 }
 
-/* RESEND OTP */
 if (isset($_GET['resend']) && $_GET['resend'] == '1') {
     $resendCount = (int)($user['phone_otp_resend_count'] ?? 0);
 
@@ -98,8 +97,6 @@ if (isset($_GET['resend']) && $_GET['resend'] == '1') {
     phoneFlash('success', 'A new OTP has been sent to your mobile number.');
 }
 
-/* VERIFY OTP */
-/* VERIFY OTP */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $otp = preg_replace('/\D/', '', $_POST['otp'] ?? '');
 
@@ -111,23 +108,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         phoneFlash('error', 'Please enter a valid 6-digit OTP code.');
     }
 
-    // Check if OTP exists
     if (empty($user['phone_otp']) || empty($user['phone_otp_expires'])) {
         phoneFlash('error', 'OTP request not found.', 'change_phone.php');
     }
 
-    // Check expiry
     if (strtotime($user['phone_otp_expires']) < time()) {
         phoneFlash('error', 'OTP has expired. Please request a new OTP.', 'change_phone.php');
     }
 
-    // Check attempts
     $attempts = (int)($user['phone_otp_attempts'] ?? 0);
     if ($attempts >= PHONE_OTP_MAX_ATTEMPTS) {
         phoneFlash('error', 'Maximum OTP attempts reached. Please request a new OTP.', 'change_phone.php');
     }
 
-    // 🔥 IMPORTANT: VERIFY HASHED OTP
     $isValid = password_verify($otp, $user['phone_otp']);
 
     if (!$isValid) {
@@ -143,7 +136,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         phoneFlash('error', "Invalid OTP. {$remaining} attempt(s) remaining.");
     }
 
-    // 🔥 SUCCESS → SAVE PHONE
     $finalize = mysqli_prepare($conn, "
         UPDATE users
         SET phone = pending_phone,

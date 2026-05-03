@@ -22,7 +22,6 @@ $notif_appointment_enabled = (int)($settings['notif_appointment'] ?? 1);
 
 $current_page = basename($_SERVER['PHP_SELF']);
 
-// 1. UNREAD USER MESSAGES
 $unread_messages = 0;
 if ($notif_msg_enabled === 1) {
     $msg_sql = "SELECT COUNT(*) AS total FROM chat_messages WHERE sender = 'user' AND is_read = 0";
@@ -33,7 +32,6 @@ if ($notif_msg_enabled === 1) {
     }
 }
 
-// 2. PENDING APPOINTMENTS
 $pending_appointments = 0;
 if ($notif_appointment_enabled === 1) {
     $apt_sql = "SELECT COUNT(*) AS total FROM appointments WHERE status = 'Pending'";
@@ -44,7 +42,6 @@ if ($notif_appointment_enabled === 1) {
     }
 }
 
-// 3. PENDING BOOKINGS / ORDERS
 $pending_orders = 0;
 if ($notif_order_enabled === 1) {
     $order_sql = "SELECT COUNT(*) AS total FROM bookings WHERE booking_status = 'Pending'";
@@ -55,7 +52,6 @@ if ($notif_order_enabled === 1) {
     }
 }
 
-// TOTAL BADGE COUNT
 $total_admin_notifs = $unread_messages + $pending_appointments + $pending_orders;
 ?>
 
@@ -213,7 +209,6 @@ $total_admin_notifs = $unread_messages + $pending_appointments + $pending_orders
     const wrapper = document.querySelector('.notif-wrapper');
     const messageRow = document.getElementById('messageNotifRow');
 
-    // ===== BADGE UPDATE =====
     if (data.total > 0) {
         if (badge) {
             badge.textContent = data.total;
@@ -227,7 +222,6 @@ $total_admin_notifs = $unread_messages + $pending_appointments + $pending_orders
         if (badge) badge.remove();
     }
 
-    // ===== MESSAGE ROW UPDATE (ITO ANG FIX) =====
     const unreadMessages = parseInt(data.unread_messages ?? data.messages ?? 0);
 
     if (messageRow) {
@@ -247,9 +241,7 @@ $total_admin_notifs = $unread_messages + $pending_appointments + $pending_orders
             .catch(err => console.log(err));
     }
 
-    // RUN EVERY 5 SECONDS
     setInterval(loadAdminNotifications, 5000);
 
-    // RUN ON LOAD
     loadAdminNotifications();
 </script>

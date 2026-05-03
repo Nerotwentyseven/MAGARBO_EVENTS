@@ -19,7 +19,6 @@ $menu_selection = $_POST['menu_qty'] ?? [];
 $request        = trim($_POST['request'] ?? '');
 $religion       = trim($_POST['religion'] ?? '');
 
-// REQUIRED CHECK
 if (
     $client_name === '' ||
     $client_email === '' ||
@@ -34,7 +33,6 @@ if (
     exit();
 }
 
-// BLOCK FULLY BOOKED DATE (max 2 approved bookings)
 $checkSql = "SELECT COUNT(*) AS total
              FROM bookings
              WHERE event_date = ?
@@ -50,7 +48,6 @@ if (($checkRow['total'] ?? 0) >= 2) {
     exit();
 }
 
-// WEDDING RELIGION RULE
 if (strcasecmp($event_type, 'Wedding') === 0) {
     if ($religion === '') {
         header("Location: events.php?error=religion_required");
@@ -60,7 +57,6 @@ if (strcasecmp($event_type, 'Wedding') === 0) {
     $religion = null;
 }
 
-// SERVICE TYPE RULES
 $valid_menu_selection = [];
 
 if (is_array($menu_selection)) {
@@ -118,7 +114,6 @@ if ($service_type === 'Catering Only') {
     exit();
 }
 
-// FIND EXISTING USER BY EMAIL
 $user_id = null;
 $findUserSql = "SELECT id FROM users WHERE email = ? LIMIT 1";
 $findUserStmt = mysqli_prepare($conn, $findUserSql);
@@ -129,7 +124,6 @@ $findUserResult = mysqli_stmt_get_result($findUserStmt);
 if ($findUserRow = mysqli_fetch_assoc($findUserResult)) {
     $user_id = (int)$findUserRow['id'];
 } else {
-    // CREATE USER IF NOT FOUND
     $name_parts = preg_split('/\s+/', $client_name, 2);
     $firstname = $name_parts[0] ?? $client_name;
     $lastname  = $name_parts[1] ?? '';
@@ -148,7 +142,6 @@ if ($findUserRow = mysqli_fetch_assoc($findUserResult)) {
     $user_id = mysqli_insert_id($conn);
 }
 
-// MENU JSON
 $menu_selection_json = null;
 
 $menu_selection_json = null;

@@ -10,7 +10,6 @@ if ($themeQuery && mysqli_num_rows($themeQuery) > 0) {
     $adminTheme = $themeRow['theme'] ?? 'Light Mode';
 }
 
-// ADD / UPDATE EMPLOYEE
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_employee'])) {
     $id = (int)($_POST['employee_id'] ?? 0);
     $name = trim($_POST['empName'] ?? '');
@@ -40,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_employee'])) {
     exit;
 }
 
-// DELETE EMPLOYEE
 if (isset($_GET['delete'])) {
     $deleteId = (int)$_GET['delete'];
 
@@ -52,7 +50,6 @@ if (isset($_GET['delete'])) {
     exit;
 }
 
-// FETCH EMPLOYEES
 $employees = [];
 $result = mysqli_query($conn, "SELECT * FROM employees ORDER BY id DESC");
 

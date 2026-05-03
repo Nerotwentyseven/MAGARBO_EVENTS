@@ -40,7 +40,6 @@ img {
     max-width: 100%;
 }
 
-/* --- Top Navigation --- */
 .top-nav {
     background-color: var(--bg-white);
     position: fixed;
@@ -104,7 +103,6 @@ img {
     background-color: var(--primary-gold-hover);
 }
 
-/* --- Hero Section --- */
 .hero-section {
     background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
                 url('../images/gallery.jpg');
@@ -143,7 +141,6 @@ img {
     margin: 0 auto;
 }
 
-/* --- Main Layout --- */
 .main-container {
     max-width: var(--container-width);
     margin: 0 auto;
@@ -219,7 +216,6 @@ img {
     white-space: nowrap;
 }
 
-/* --- Right Scroll Area --- */
 .gallery-scroll-area {
     height: calc(100vh - 130px);
     overflow-y: auto;
@@ -228,7 +224,6 @@ img {
     min-width: 0;
 }
 
-/* --- Gallery Grid --- */
 .gallery-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -285,7 +280,6 @@ img {
     border: 1px solid #eee;
 }
 
-/* --- Preview Modal --- */
 .image-preview-modal {
     position: fixed;
     inset: 0;
@@ -314,7 +308,6 @@ img {
     line-height: 1;
 }
 
-/* --- Scrollbar --- */
 .filter-card::-webkit-scrollbar,
 .gallery-scroll-area::-webkit-scrollbar {
     width: 8px;
@@ -326,7 +319,6 @@ img {
     border-radius: 20px;
 }
 
-/* --- Responsive --- */
 @media (max-width: 1100px) {
     .main-container {
         grid-template-columns: 240px minmax(0, 1fr);

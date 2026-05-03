@@ -21,7 +21,6 @@ if ($bookingId <= 0 || $amount <= 0 || $method === '' || $date === '') {
     exit;
 }
 
-/* Kunin booking */
 $bookingSql = "SELECT id, total_price, downpayment, event_status 
                FROM bookings 
                WHERE id = ? 
@@ -47,13 +46,11 @@ $totalPrice = (float)($booking['total_price'] ?? 0);
 $baseDownpayment = (float)($booking['downpayment'] ?? 0);
 $eventStatus = strtolower(trim($booking['event_status'] ?? ''));
 
-/* Billing only works for confirmed / ongoing / completed */
 if (!in_array($eventStatus, ['confirmed', 'ongoing', 'completed'], true) || $totalPrice <= 0) {
     header("Location: billing.php?error=not_billable");
     exit;
 }
 
-/* Kunin lahat ng paid payments */
 $sumSql = "SELECT COALESCE(SUM(amount), 0) AS total_paid
            FROM booking_payments
            WHERE booking_id = ?
@@ -72,12 +69,6 @@ mysqli_stmt_close($sumStmt);
 
 $totalPaidFromPayments = (float)($sumRow['total_paid'] ?? 0);
 
-/*
-    IMPORTANT:
-    Huwag i-add ang downpayment + booking_payments amount.
-    Kung may Paid rows sa booking_payments, yun na ang total paid.
-    Kung wala pa, fallback lang sa bookings.downpayment.
-*/
 $currentPaid = $totalPaidFromPayments > 0 ? $totalPaidFromPayments : $baseDownpayment;
 $currentBalance = max($totalPrice - $currentPaid, 0);
 
@@ -86,7 +77,6 @@ if ($currentBalance <= 0) {
     exit;
 }
 
-/* Huwag palagpasin sa remaining balance */
 if ($amount > $currentBalance) {
     $amount = $currentBalance;
 }

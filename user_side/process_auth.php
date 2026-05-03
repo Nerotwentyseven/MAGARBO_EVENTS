@@ -15,7 +15,6 @@ function setAlert($type, $title, $message, $form = 'login') {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $action = $_POST['action_type'] ?? '';
 
-    // --- 1. REGISTRATION LOGIC (SIGN UP) ---
     if ($action == 'register') {
     $firstname = trim($_POST['firstname'] ?? '');
     $lastname  = trim($_POST['lastname'] ?? '');
@@ -75,9 +74,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     mysqli_stmt_close($check_stmt);
 
-    
-
-    // TEMP SAVE ONLY — NO USER CREATION YET
     $_SESSION['reg_firstname'] = $firstname;
     $_SESSION['reg_lastname']  = $lastname;
     $_SESSION['reg_email']     = $email;
@@ -87,7 +83,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     exit();
 }
 
-    // --- 2. LOGIN LOGIC (SIGN IN) ---
     else if ($action == 'login') {
         $email    = strtolower(trim($_POST['email'] ?? ''));
         $password = $_POST['password'] ?? '';

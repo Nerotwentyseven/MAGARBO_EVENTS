@@ -16,7 +16,6 @@ $totalItems = 0;
 $totalPrice = 0;
 $highestPopularity = 0;
 
-// TOTAL MENU BOOKINGS (exclude cancelled)
 $totalMenuBookings = 0;
 $totalStmt = mysqli_query(
     $conn,
@@ -196,7 +195,6 @@ $avgPrice = $totalMenus > 0 ? $totalPrice / $totalMenus : 0;
         </div>
     </div>
 
-    <!-- MENU MODAL -->
     <div id="menuModal" class="mg-modal-overlay">
         <div class="mg-modal-content">
             <form id="menuSetForm" method="POST" action="save_menu.php">
@@ -248,7 +246,6 @@ $avgPrice = $totalMenus > 0 ? $totalPrice / $totalMenus : 0;
         </div>
     </div>
 
-    <!-- DELETE CONFIRM -->
     <div id="deleteConfirmModal" class="confirm-overlay">
         <div class="confirm-card">
             <div class="confirm-icon-wrap delete-mode">

@@ -18,7 +18,6 @@ body {
     margin: 0 auto;
 }
 
-/* Nav & Header */
 .header-nav { margin-bottom: 20px; }
 .back-home {
     display: inline-flex;
@@ -62,7 +61,6 @@ body {
 .p { color: var(--gold); font-size: clamp(24px, 5vw, 32px); font-weight: 700; margin-bottom: 8px; }
 .text-wrapper-2 { color: rgba(191, 146, 37, 0.7); margin-bottom: 30px; }
 
-/* Stepper */
 .stepper {
     display: flex; justify-content: center; gap: clamp(20px, 8vw, 60px); margin: 40px 0;
 }
@@ -73,13 +71,11 @@ body {
 .step.highlight { box-shadow: 0 0 0 4px #fff, 0 0 0 6px var(--gold); }
 .step.inactive { background-color: #7a7a7a; }
 
-/* Main Card */
 .main-card {
     background: #fff; border-radius: 15px; border: var(--stroke);
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1); padding: clamp(20px, 5vw, 50px);
 }
 
-/* Admin Alert Box */
 .admin-approval-banner {
     background-color: var(--gold-bg); border: 0.5px solid var(--gold);
     padding: 15px; border-radius: 10px; display: flex; align-items: center; gap: 12px;
@@ -91,7 +87,6 @@ body {
     font-size: 14px; line-height: 1.6; color: #555; margin-bottom: 30px; text-align: justify;
 }
 
-/* Review Section */
 .section-title { 
     display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 600; margin-bottom: 20px; 
 }
@@ -102,7 +97,6 @@ body {
 }
 .summary-title { font-weight: 600; margin-bottom: 20px; font-size: 18px; }
 
-/* Summary Grid */
 .summary-grid {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;
 }
@@ -122,7 +116,6 @@ body {
 .total-label { font-size: 16px; font-weight: 600; }
 .total-value { font-size: 18px; color: var(--gold); font-weight: 700; }
 
-/* Footer Buttons */
 .form-footer {
     margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;
     display: flex; justify-content: space-between; gap: 20px;
@@ -135,7 +128,6 @@ body {
 .btn-next:hover { background: #9e7a1e; }
 .btn-prev { background: #d9d9d9; color: #555; }
 
-/* ===== LONG TEXT FIX: PROCESS / REVIEW PAGE ===== */
 .summary-grid,
 .summary-item,
 .request-box {
@@ -163,7 +155,6 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
-/* Responsive adjustments */
 @media (max-width: 600px) {
     .form-footer { flex-direction: column-reverse; }
     .btn-next, .btn-prev { width: 100%; }

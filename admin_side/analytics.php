@@ -22,7 +22,6 @@ $baseAnalyticsWhere = "
     AND YEAR(event_date) = $selectedYear
 ";
 
-// GET AVAILABLE YEARS
 $yearOptions = [];
 $yearSql = "
     SELECT DISTINCT YEAR(event_date) AS yr
@@ -52,7 +51,6 @@ if (!in_array($selectedYear, $yearOptions, true)) {
     $selectedYear = $yearOptions[0];
 }
 
-// 1) TOTAL REVENUE / TOTAL BOOKINGS / AVG ORDER VALUE
 $summarySql = "
     SELECT 
         COUNT(*) AS total_bookings,
@@ -67,7 +65,6 @@ $totalBookings = (int)($summary['total_bookings'] ?? 0);
 $totalRevenue = (float)($summary['total_revenue'] ?? 0);
 $avgOrderValue = $totalBookings > 0 ? ($totalRevenue / $totalBookings) : 0;
 
-// 2) MONTHLY REVENUE
 $monthlyRevenue = array_fill(0, 12, 0);
 $monthlyRevenueSql = "
     SELECT 
@@ -89,7 +86,6 @@ if ($monthlyRevenueRes) {
     }
 }
 
-// 3) MONTHLY EVENT VOLUME
 $monthlyVolume = array_fill(0, 12, 0);
 $monthlyVolumeSql = "
     SELECT 
@@ -111,7 +107,6 @@ if ($monthlyVolumeRes) {
     }
 }
 
-// 4) EVENTS BY TYPE + EVENT TYPE PERFORMANCE
 $typeLabels = [];
 $typeCounts = [];
 $typeRevenue = [];
@@ -142,8 +137,6 @@ if (empty($typeLabels)) {
     $typeRevenue = [0];
 }
 
-// 5) CUSTOMER ACQUISITION (NEW CUSTOMERS THIS YEAR BY MONTH)
-// First-ever approved valid booking month for each user
 $newCustomersMonthly = array_fill(0, 12, 0);
 
 $newCustomerSql = "
@@ -173,7 +166,6 @@ if ($newCustomerRes) {
     }
 }
 
-// 6) CUSTOMER TYPES (NEW VS REPEAT in selected year)
 $customerTypesSql = "
     SELECT
         SUM(CASE WHEN yearly.total_bookings = 1 THEN 1 ELSE 0 END) AS new_customers,
@@ -358,7 +350,6 @@ const typeRevenue = <?php echo json_encode($typeRevenue); ?>;
 const newCustomersMonthly = <?php echo json_encode($newCustomersMonthly); ?>;
 const customerTypeData = <?php echo json_encode([$newCustomersCount, $repeatCustomersCount]); ?>;
 
-// 1. Revenue Line
 new Chart(document.getElementById('revLineChart'), {
     type: 'line',
     data: {
@@ -375,7 +366,6 @@ new Chart(document.getElementById('revLineChart'), {
     options: commonOptions
 });
 
-// 2. Events by Type
 new Chart(document.getElementById('typeDoughnutChart'), {
     type: 'doughnut',
     data: {
@@ -400,7 +390,6 @@ new Chart(document.getElementById('typeDoughnutChart'), {
     }
 });
 
-// 3. Monthly Event Volume
 new Chart(document.getElementById('volumeBarChart'), {
     type: 'bar',
     data: {
@@ -414,7 +403,6 @@ new Chart(document.getElementById('volumeBarChart'), {
     options: commonOptions
 });
 
-// 4. Event Type Performance
 new Chart(document.getElementById('perfHorizontalChart'), {
     type: 'bar',
     data: {
@@ -431,7 +419,6 @@ new Chart(document.getElementById('perfHorizontalChart'), {
     }
 });
 
-// 5. New Customer Acquisition
 new Chart(document.getElementById('customerLineChart'), {
     type: 'line',
     data: {
@@ -448,7 +435,6 @@ new Chart(document.getElementById('customerLineChart'), {
     options: commonOptions
 });
 
-// 6. Customer Types
 new Chart(document.getElementById('customerPieChart'), {
     type: 'pie',
     data: {
@@ -482,10 +468,8 @@ function closeExportConfirmModal() {
 }
 
 function confirmExportReport() {
-    // close modal muna
     document.getElementById('exportConfirmModal').style.display = 'none';
 
-    // delay konti para smooth UI
     setTimeout(function() {
         window.location.href = 'export_analytics.php?year=<?php echo $selectedYear; ?>';
     }, 150);

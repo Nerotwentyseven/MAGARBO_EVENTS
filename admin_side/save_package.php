@@ -23,7 +23,6 @@ if ($package_name === '') {
 
 $image_path = null;
 
-// IMAGE UPLOAD
 if (isset($_FILES['package_image']) && !empty($_FILES['package_image']['name'])) {
     $uploadDir = "../uploads/packages/";
 
@@ -40,7 +39,6 @@ if (isset($_FILES['package_image']) && !empty($_FILES['package_image']['name']))
     }
 }
 
-// UPDATE EXISTING PACKAGE
 if ($package_id > 0) {
     if ($image_path) {
         $sql = "UPDATE packages 
@@ -60,18 +58,15 @@ if ($package_id > 0) {
         die("Error updating package: " . mysqli_error($conn));
     }
 
-    // DELETE OLD FEATURES
     $delFeat = mysqli_prepare($conn, "DELETE FROM package_features WHERE package_id = ?");
     mysqli_stmt_bind_param($delFeat, "i", $package_id);
     mysqli_stmt_execute($delFeat);
 
-    // DELETE OLD INCLUDES
     $delInc = mysqli_prepare($conn, "DELETE FROM package_includes WHERE package_id = ?");
     mysqli_stmt_bind_param($delInc, "i", $package_id);
     mysqli_stmt_execute($delInc);
 
 } else {
-    // INSERT NEW PACKAGE
     $sql = "INSERT INTO packages (package_name, price_start, image_path, description, status)
             VALUES (?, ?, ?, ?, ?)";
     $stmt = mysqli_prepare($conn, $sql);
@@ -84,14 +79,12 @@ if ($package_id > 0) {
     $package_id = mysqli_insert_id($conn);
 }
 
-// DECODE FEATURES / INCLUDES
 $features = json_decode($features_json, true);
 $includes = json_decode($includes_json, true);
 
 if (!is_array($features)) $features = [];
 if (!is_array($includes)) $includes = [];
 
-// SAVE FEATURES
 $featStmt = mysqli_prepare($conn, "INSERT INTO package_features (package_id, feature_text) VALUES (?, ?)");
 foreach ($features as $feature) {
     $feature = trim($feature);
@@ -101,7 +94,6 @@ foreach ($features as $feature) {
     }
 }
 
-// SAVE INCLUDES
 $incStmt = mysqli_prepare($conn, "INSERT INTO package_includes (package_id, include_text) VALUES (?, ?)");
 foreach ($includes as $include) {
     $include = trim($include);

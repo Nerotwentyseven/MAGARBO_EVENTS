@@ -6,7 +6,6 @@ require_once '../db_connection.php';
 
 $packages = [];
 
-// TOTAL PACKAGE BOOKINGS (exclude cancelled)
 $totalPackageBookings = 0;
 $totalStmt = mysqli_query(
     $conn,
@@ -47,7 +46,6 @@ if ($result && mysqli_num_rows($result) > 0) {
             $includes[] = $i['include_text'];
         }
 
-        // REAL POPULARITY %
         $packageBookings = 0;
         $bStmt = mysqli_prepare(
             $conn,

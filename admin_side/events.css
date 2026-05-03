@@ -1,36 +1,26 @@
-/* ===================== THEME VARIABLES ===================== */
 :root {
     --bg-main: #f4f6f8;
     --bg-content: #f8f9fa;
     --bg-card: #ffffff;
     --bg-soft: #f1f3f5;
-
     --text-main: #1e293b;
     --text-title: #1a1a1a;
     --text-muted: #6c757d;
     --text-soft: #64748b;
-
     --border-color: rgba(0, 0, 0, 0.1);
     --border-soft: #eeeeee;
     --border-light: #f1f5f9;
-
     --accent: #bf9225;
-
     --draft-bg: #f3f4f6;
     --draft-text: #4b5563;
-
     --confirmed-bg: #eef2ff;
     --confirmed-text: #4338ca;
-
     --ongoing-bg: #ecfdf5;
     --ongoing-text: #059669;
-
     --completed-bg: #f9fafb;
     --completed-text: #9ca3af;
-
     --modal-overlay: rgba(0, 0, 0, 0.45);
-    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.1);
-
+    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.1); 
     --request-bg: #f8f9fa;
     --input-bg: #ffffff;
 }
@@ -40,38 +30,28 @@ body.dark-mode {
     --bg-content: #111827;
     --bg-card: #1e293b;
     --bg-soft: #273449;
-
     --text-main: #f1f5f9;
     --text-title: #f1f5f9;
     --text-muted: #94a3b8;
     --text-soft: #94a3b8;
-
     --border-color: rgba(255, 255, 255, 0.1);
     --border-soft: rgba(255, 255, 255, 0.08);
     --border-light: rgba(255, 255, 255, 0.08);
-
     --accent: #bf9225;
-
     --draft-bg: rgba(148, 163, 184, 0.12);
     --draft-text: #cbd5e1;
-
     --confirmed-bg: rgba(67, 56, 202, 0.18);
     --confirmed-text: #a5b4fc;
-
     --ongoing-bg: rgba(5, 150, 105, 0.18);
     --ongoing-text: #6ee7b7;
-
     --completed-bg: rgba(148, 163, 184, 0.12);
     --completed-text: #cbd5e1;
-
     --modal-overlay: rgba(0, 0, 0, 0.6);
     --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.35);
-
     --request-bg: #273449;
     --input-bg: #243041;
 }
 
-/* BASE */
 body {
     margin: 0;
     padding: 0;
@@ -96,12 +76,11 @@ body {
     box-sizing: border-box;
 }
 
-/* Header */
 .page-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 18px; /* from 30 → 20 */
+    margin-bottom: 18px;
 }
 
 .header-left h1 {
@@ -133,7 +112,6 @@ body {
     gap: 8px;
 }
 
-/* Stats Boxes */
 .stats-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -170,7 +148,6 @@ body {
     line-height: 1.4;
 }
 
-/* Tabs */
 .filter-tabs {
     display: inline-flex;
     gap: 4px;
@@ -198,7 +175,6 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* Event List */
 .events-list {
     display: flex;
     flex-direction: column;
@@ -274,7 +250,7 @@ body {
 
 .details-row {
     display: flex;
-    flex-direction: column; /* 🔥 KEY FIX */
+    flex-direction: column;
     gap: 6px;
     margin-top: 12px;
     color: var(--text-muted);
@@ -330,7 +306,6 @@ body.dark-mode .pricing-summary-box {
     color: var(--accent);
 }
 
-/* Buttons */
 .card-btns {
     display: flex;
     gap: 10px;
@@ -387,7 +362,6 @@ body.dark-mode .pricing-summary-box {
     font-size: 14px;
 }
 
-/* Modals */
 .modal-overlay {
     display: none;
     position: fixed;
@@ -540,8 +514,6 @@ body.dark-mode .pricing-summary-box {
     max-height: calc(88vh - 90px);
 }
 
-/* ===================== EXTRA DARK MODE FIXES FOR EVENTS MODALS ===================== */
-
 .modal-request-box {
     background: var(--input-bg);
     padding: 15px;
@@ -629,7 +601,6 @@ body.dark-mode .modal-menu-total {
     color: var(--text-main);
 }
 
-/* CREATE EVENT MODAL MENU AREA */
 .menu-field-wrap-box {
     border: 1px solid var(--border-soft);
     border-radius: 12px;
@@ -847,7 +818,6 @@ body.dark-mode .menu-grand-total-box {
     }
 }
 
-/* Responsive */
 @media (max-width: 1200px) {
     .stats-container {
         grid-template-columns: repeat(2, 1fr);
@@ -908,9 +878,6 @@ body.dark-mode .menu-grand-total-box {
     }
 }
 
-
-
-/* HEADER ACTIONS */
 .header-actions {
     display: flex;
     align-items: center;
@@ -1091,7 +1058,6 @@ body.dark-mode .menu-grand-total-box {
     opacity: 0.95;
 }
 
-/* EVENTS TOOLBAR */
 .events-toolbar {
     display: flex;
     justify-content: space-between;
@@ -1147,7 +1113,6 @@ body.dark-mode .menu-grand-total-box {
     color: var(--text-muted);
 }
 
-/* ===== LONG TEXT FIX: EVENTS DETAILS MODAL ===== */
 .modal-card-large,
 .m-body,
 .grid-2,
@@ -1189,7 +1154,6 @@ body.dark-mode .menu-grand-total-box {
     grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
 }
 
-/* VENUE FORMAT FIX */
 #fullDetailsBody .field p {
     white-space: pre-line !important;
 }
@@ -1200,7 +1164,6 @@ body.dark-mode .menu-grand-total-box {
     }
 }
 
-/* RESPONSIVE */
 @media (max-width: 900px) {
     .page-header {
         align-items: flex-start;

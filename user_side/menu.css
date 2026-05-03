@@ -101,10 +101,9 @@ ul { list-style: none; }
   }
 }
 
-/* Button Styles */
 .btn {
   padding: 10px 24px;
-  border-radius: 8px; /* Matching homepage radius style */
+  border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -122,7 +121,6 @@ ul { list-style: none; }
   opacity: 0.9;
 }
 
-/* --- Hero Section --- */
 .hero {
   background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
               url('../images/menu.jpg');
@@ -130,7 +128,7 @@ ul { list-style: none; }
   background-position: center;
   background-repeat: no-repeat;
 
-  min-height: 338.5px; /* same feel sa packages */
+  min-height: 338.5px;
   padding: 0 20px;
   margin-bottom: 40px;
 
@@ -153,7 +151,7 @@ ul { list-style: none; }
 }
 
 .hero h1 i {
-  color: var(--primary-gold); /* Utensils icon */
+  color: var(--primary-gold);
 }
 
 .hero p {
@@ -164,15 +162,13 @@ ul { list-style: none; }
   margin: 0 auto;
 }
 
-/* --- Menu Grid System --- */
 .menu-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 Columns like the image */
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   padding-bottom: 60px;
 }
 
-/* --- Menu Card Design --- */
 .menu-card {
   background-color: var(--bg-white);
   border: 1px solid var(--border-light);
@@ -188,7 +184,6 @@ ul { list-style: none; }
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
 }
 
-/* Header inside Card (Badge + Price) */
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -202,7 +197,7 @@ ul { list-style: none; }
   font-size: 0.75rem;
   font-weight: 600;
   padding: 5px 12px;
-  border-radius: 50px; /* Pill shape */
+  border-radius: 50px;
   display: inline-block;
 }
 
@@ -221,10 +216,9 @@ ul { list-style: none; }
 .per-head {
   display: block;
   font-size: 0.7rem;
-  color: #9ca3af; /* Light gray */
+  color: #9ca3af;
 }
 
-/* Card Title */
 .menu-card h3 {
   font-size: 1.1rem;
   font-weight: 700;
@@ -232,7 +226,6 @@ ul { list-style: none; }
   color: var(--text-dark);
 }
 
-/* Menu Sections (Soup, Hot Items, etc.) */
 .menu-section {
   margin-bottom: 18px;
 }
@@ -251,11 +244,10 @@ ul { list-style: none; }
 
 .section-title i {
   font-size: 0.9rem;
-  width: 16px; /* Ensure alignment */
+  width: 16px;
   text-align: center;
 }
 
-/* List Items */
 .menu-section ul {
   padding-left: 5px;
 }
@@ -268,22 +260,20 @@ ul { list-style: none; }
   position: relative;
 }
 
-/* Custom Bullet Dots */
 .menu-section ul li::before {
   content: "•";
-  color: #d1d5db; /* Very light gray bullet */
+  color: #d1d5db;
   font-weight: bold;
   position: absolute;
   left: 0;
 }
 
-/* --- Bottom CTA Banner --- */
 .cta-banner {
   padding: 0 20px 60px 20px;
 }
 
 .cta-content {
-  background-color: var(--primary-gold); /* Brand Gold */
+  background-color: var(--primary-gold);
   border-radius: var(--radius);
   padding: 50px 20px;
   text-align: center;
@@ -311,7 +301,6 @@ ul { list-style: none; }
   gap: 15px;
 }
 
-/* CTA Specific Buttons */
 .btn-light {
   background-color: #fff;
   color: var(--primary-gold);
@@ -359,16 +348,15 @@ ul { list-style: none; }
     color: #bf9225;
 }
 
-/* --- Responsive Design --- */
 @media (max-width: 1024px) {
   .menu-grid {
-      grid-template-columns: repeat(2, 1fr); /* 2 columns on tablet */
+      grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 768px) {
   .menu-grid {
-      grid-template-columns: 1fr; /* 1 column on mobile */
+      grid-template-columns: 1fr;
   }
   
   .top-header {

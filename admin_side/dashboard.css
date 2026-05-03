@@ -1,68 +1,51 @@
-/* ===================== THEME VARIABLES ===================== */
 :root {
     --bg-main: #f4f6f8;
     --bg-content: #f8f9fa;
     --bg-card: #ffffff;
     --bg-soft: #f1f3f5;
-
     --text-main: #1e293b;
     --text-muted: #6c757d;
-
     --border-color: rgba(0, 0, 0, 0.1);
     --accent: #bf9225;
-
     --pending-bg: #fff4e6;
     --pending-text: #bf9225;
     --pending-border: #ffe8cc;
-
     --approved-bg: #ebfbee;
     --approved-text: #2b8a3e;
     --approved-border: #c3fae8;
-
     --danger-bg: #fdf2f2;
     --danger-text: #1a1a1a;
     --danger-border: #ffc9c9;
-
     --trend-bg: #ebfbee;
     --trend-text: #2f9e44;
-
     --modal-overlay: rgba(0, 0, 0, 0.4);
     --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
-/* ===================== DARK MODE ===================== */
 body.dark-mode {
     --bg-main: #0f172a;
     --bg-content: #111827;
     --bg-card: #1e293b;
     --bg-soft: #273449;
-
     --text-main: #f1f5f9;
     --text-muted: #94a3b8;
-
     --border-color: rgba(255, 255, 255, 0.1);
     --accent: #bf9225;
-
     --pending-bg: rgba(191, 146, 37, 0.15);
     --pending-text: #f4c95d;
     --pending-border: rgba(191, 146, 37, 0.35);
-
     --approved-bg: rgba(43, 138, 62, 0.16);
     --approved-text: #4ade80;
     --approved-border: rgba(74, 222, 128, 0.25);
-
     --danger-bg: #2d1616;
     --danger-text: #ff8787;
     --danger-border: #5c2b2b;
-
     --trend-bg: rgba(43, 138, 62, 0.18);
     --trend-text: #4ade80;
-
     --modal-overlay: rgba(0, 0, 0, 0.6);
     --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.35);
 }
 
-/* ===================== GENERAL LAYOUT ===================== */
 body {
     margin: 0;
     padding: 0;
@@ -78,7 +61,6 @@ body {
     width: 100%;
 }
 
-/* MAIN CONTENT */
 .main-content {
     flex-grow: 1;
     overflow-y: auto;
@@ -101,7 +83,6 @@ body {
     font-size: 14px;
 }
 
-/* ===================== STATS GRID ===================== */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -141,7 +122,6 @@ body {
     display: inline-block;
 }
 
-/* ===================== MIDDLE LAYOUT ===================== */
 .middle-layout {
     display: grid;
     grid-template-columns: 1.5fr 1fr;
@@ -163,7 +143,6 @@ body {
     margin-bottom: 20px;
 }
 
-/* ===================== CALENDAR ===================== */
 .calendar-header-ui {
     display: flex;
     justify-content: space-between;
@@ -241,7 +220,6 @@ body {
     background: #868e96;
 }
 
-/* ===================== CONTROLS ===================== */
 .calendar-controls select {
     font-family: 'Inter', sans-serif;
     padding: 5px 10px;
@@ -259,7 +237,6 @@ body {
     border-color: var(--text-main);
 }
 
-/* ===================== RECENT ORDERS ===================== */
 .card-header-flex {
     display: flex;
     justify-content: space-between;
@@ -314,7 +291,6 @@ body {
     border: 1px solid var(--pending-border);
 }
 
-/* ===================== UPCOMING LIST ===================== */
 .event-item {
     display: flex;
     justify-content: space-between;
@@ -366,7 +342,6 @@ body.dark-mode .event-badge.ongoing {
     border: 1px solid rgba(96, 165, 250, 0.3);
 }
 
-/* ===================== MODAL ===================== */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -450,7 +425,6 @@ body.dark-mode .event-badge.ongoing {
     cursor: pointer;
 }
 
-/* ===================== RESPONSIVE ===================== */
 @media (max-width: 1200px) {
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);

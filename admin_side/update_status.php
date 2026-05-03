@@ -11,7 +11,6 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
 
     if (in_array($status, $allowed_status, true)) {
 
-        // KUNIN MUNA ANG BOOKING INFO
         $get_booking_sql = "SELECT id, user_id, event_type, event_date, selected_theme_id, theme_counted, booking_status, cancelled_at
                             FROM bookings
                             WHERE id = ?";
@@ -101,7 +100,6 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
                 }
                 mysqli_stmt_close($stmt);
 
-                // COUNT THEME ONLY ON FIRST APPROVAL
                 if (
                     $status === 'Approved' &&
                     $selected_theme_id > 0 &&
@@ -143,11 +141,6 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
                     mysqli_stmt_close($markCounted);
                 }
 
-                // =========================
-                // PAYMENT STATUS UPDATE
-                // =========================
-
-                // Kunin ang latest payment ng booking na ito
                 $paySql = "SELECT id, payment_status
                            FROM booking_payments
                            WHERE booking_id = ?
@@ -169,7 +162,6 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
                     $payment_row_id = (int)$paymentRow['id'];
                     $current_payment_status = trim($paymentRow['payment_status'] ?? '');
 
-                    // Admin cancel = refund pending
                     if ($status === 'Cancelled' && $current_payment_status === 'Paid') {
                         $updPay = mysqli_prepare(
                             $conn,
@@ -190,7 +182,6 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
                         mysqli_stmt_close($updPay);
                     }
 
-                    // Undo admin cancel = ibalik sa paid kung refund pending pa lang
                     if ($status === 'Pending' && $current_payment_status === 'Refund Pending') {
                         $updPay = mysqli_prepare(
                             $conn,
@@ -212,9 +203,6 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
                     }
                 }
 
-                // =========================
-                // NOTIFICATION
-                // =========================
                 if ($status === 'Approved') {
                     $type = 'booking_approved';
                     $title = 'Booking Approved';

@@ -172,7 +172,7 @@ if ($result) {
                         </td>
                         <td class="action-group">
 
-                        <?php if($apt['status'] == 'Pending'): ?>
+<?php if($apt['status'] == 'Pending'): ?>
     <a href="update_appointment.php?id=<?php echo $apt['id']; ?>&status=Approved"
     onclick="return openConfirm(event, this.href, 'Approve this appointment?')"
     class="btn-action-icon">

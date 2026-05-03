@@ -65,7 +65,6 @@ body {
     margin-top: 5px;
 }
 
-/* Stepper */
 .stepper {
     display: flex;
     justify-content: center;
@@ -89,7 +88,6 @@ body {
     background-color: #BF9225;
 }
 
-/* Card Styling */
 .glass-card {
     background: white;
     padding: 40px;
@@ -117,12 +115,11 @@ body {
     margin-bottom: 20px;
 }
 
-/* Service Options - Ang 'Stroke' fixed */
 .service-option {
     display: flex;
     align-items: center;
     padding: 20px;
-    border: 1px solid #E0E0E0; /* Manipis na stroke */
+    border: 1px solid #E0E0E0;
     border-radius: 12px;
     margin-bottom: 15px;
     cursor: pointer;
@@ -163,7 +160,6 @@ body {
 .option-content strong { display: block; font-size: 16px; margin-bottom: 4px; }
 .option-content span { font-size: 14px; color: #777; }
 
-/* Footer Buttons */
 .button-footer {
     margin-top: 40px;
     padding-top: 25px;

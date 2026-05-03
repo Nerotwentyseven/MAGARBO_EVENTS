@@ -208,7 +208,6 @@ while ($bookingRow = mysqli_fetch_assoc($rebuildRes)) {
 
 mysqli_stmt_close($rebuildStmt);
 
-        // Update payment row
         $provider = 'paymongo';
 
         $updateSql = "UPDATE booking_payments

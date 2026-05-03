@@ -46,13 +46,6 @@ $currentPhone = trim($user['phone'] ?? '');
 $pendingPhone = trim($user['pending_phone'] ?? '');
 $phoneVerified = (int)($user['phone_verified'] ?? 0) === 1;
 
-/*
-|--------------------------------------------------------------------------
-| IMPORTANT:
-| No auto redirect on GET.
-| This page should simply display the form unless it is a POST request.
-|--------------------------------------------------------------------------
-*/
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $phoneInput = trim($_POST['phone'] ?? '');

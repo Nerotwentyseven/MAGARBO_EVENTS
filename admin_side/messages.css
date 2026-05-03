@@ -1,72 +1,55 @@
-/* ===================== THEME VARIABLES ===================== */
 :root {
     --bg-main: #f4f6f8;
     --bg-content: #f8f9fa;
     --bg-card: #ffffff;
     --bg-soft: #f1f3f5;
     --bg-chat: #fcfcfc;
-
     --text-main: #1e293b;
     --text-muted: #6c757d;
     --text-soft: #64748b;
-
     --border-color: rgba(0, 0, 0, 0.1);
     --border-light: #f1f5f9;
     --accent: #bf9225;
-
     --danger: #ef4444;
     --success: #16a34a;
     --offline: #999999;
-
     --left-bubble-bg: #f1f5f9;
     --left-bubble-text: #334155;
-
     --right-bubble-bg: #bf9225;
     --right-bubble-text: #ffffff;
-
     --active-inbox-bg: #fef9ec;
     --hover-inbox-bg: #fef9ec;
     --unread-inbox-bg: #fff8e6;
-
     --empty-icon: #cbd5e1;
     --empty-text: #94a3b8;
 }
 
-/* ===================== DARK MODE ===================== */
 body.dark-mode {
     --bg-main: #0f172a;
     --bg-content: #111827;
     --bg-card: #1e293b;
     --bg-soft: #273449;
     --bg-chat: #182233;
-
     --text-main: #f1f5f9;
     --text-muted: #94a3b8;
     --text-soft: #94a3b8;
-
     --border-color: rgba(255, 255, 255, 0.1);
     --border-light: rgba(255, 255, 255, 0.08);
     --accent: #bf9225;
-
     --danger: #f87171;
     --success: #4ade80;
     --offline: #94a3b8;
-
     --left-bubble-bg: #273449;
     --left-bubble-text: #e2e8f0;
-
     --right-bubble-bg: #bf9225;
     --right-bubble-text: #ffffff;
-
     --active-inbox-bg: rgba(191, 146, 37, 0.18);
     --hover-inbox-bg: rgba(191, 146, 37, 0.12);
     --unread-inbox-bg: rgba(191, 146, 37, 0.12);
-
     --empty-icon: #64748b;
     --empty-text: #94a3b8;
 }
 
-/* ===================== BASE ===================== */
 body { 
     margin: 0; 
     padding: 0; 
@@ -104,15 +87,13 @@ body {
     font-size: 14px;
 }
 
-/* ===================== MAIN GRID ===================== */
 .messaging-main-grid {
     display: flex; 
     gap: 20px;
-    height: calc(100vh - 50px); /* mas mataas konti */
+    height: calc(100vh - 50px);
     margin-top: 10px;
 }
 
-/* ===================== STATS ===================== */
 .msg-stats-grid {
     display: flex;
     gap: 15px;
@@ -141,7 +122,7 @@ body {
     color: var(--text-main);
 }
 
-/* ===================== INBOX ===================== */
+
 .inbox-container-card {
     width: 450px; 
     background: var(--bg-card);
@@ -194,7 +175,6 @@ body {
     overflow-y: auto;
 }
 
-/* ===================== INBOX ITEM ===================== */
 .inbox-item {
     background-color: var(--bg-card) !important;
     border-left: 5px solid transparent;
@@ -230,7 +210,6 @@ body {
     font-size: 13px;
 }
 
-/* ===================== VIEWER ===================== */
 .message-viewer-card {
     flex: 1;
     background: var(--bg-card);
@@ -251,7 +230,6 @@ body {
     background-color: var(--bg-chat);
 }
 
-/* ===================== CHAT BUBBLES ===================== */
 .message-bubble {
     max-width: 80%;
     padding: 15px 20px;
@@ -274,7 +252,6 @@ body {
     border-bottom-right-radius: 2px;
 }
 
-/* ===================== SIDEBAR ACTIVE FIX ===================== */
 .menu-link.active {
     background-color: var(--bg-soft) !important; 
     border-radius: 8px;
@@ -381,8 +358,6 @@ body {
     color: var(--empty-text);
 }
 
-
-/* ===================== RESPONSIVE ===================== */
 @media (max-width: 1200px) {
     .messaging-main-grid {
         flex-direction: column;

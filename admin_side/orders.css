@@ -1,31 +1,24 @@
-/* ===================== THEME VARIABLES ===================== */
 :root {
     --bg-main: #f4f6f8;
     --bg-content: #f8f9fa;
     --bg-card: #ffffff;
     --bg-soft: #f1f3f5;
-
     --text-main: #1e293b;
     --text-title: #1a1a1a;
     --text-muted: #6c757d;
     --text-soft: #64748b;
     --text-body: #333333;
-
     --border-color: rgba(0, 0, 0, 0.1);
     --border-light: #f1f5f9;
     --border-soft: #eeeeee;
     --accent: #bf9225;
-
     --pending-bg: #fff4e6;
     --pending-text: #bf9225;
     --pending-border: #ffe8cc;
-
     --modal-overlay: rgba(0, 0, 0, 0.4);
     --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.1);
-
     --notes-bg: #f9f9f9;
     --notes-text: #555555;
-
     --muted-light: #777777;
     --muted-lighter: #999999;
     --muted-label: #bbbbbb;
@@ -36,34 +29,27 @@ body.dark-mode {
     --bg-content: #111827;
     --bg-card: #1e293b;
     --bg-soft: #273449;
-
     --text-main: #f1f5f9;
     --text-title: #f1f5f9;
     --text-muted: #94a3b8;
     --text-soft: #94a3b8;
     --text-body: #e2e8f0;
-
     --border-color: rgba(255, 255, 255, 0.1);
     --border-light: rgba(255, 255, 255, 0.08);
     --border-soft: rgba(255, 255, 255, 0.08);
     --accent: #bf9225;
-
     --pending-bg: rgba(191, 146, 37, 0.15);
     --pending-text: #f4c95d;
     --pending-border: rgba(191, 146, 37, 0.35);
-
     --modal-overlay: rgba(0, 0, 0, 0.6);
     --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.35);
-
     --notes-bg: #273449;
     --notes-text: #cbd5e1;
-
     --muted-light: #94a3b8;
     --muted-lighter: #94a3b8;
     --muted-label: #94a3b8;
 }
 
-/* LAYOUT BASE */
 body {
     margin: 0;
     padding: 0;
@@ -79,7 +65,6 @@ body {
     width: 100%;
 }
 
-/* SIDEBAR & CONTENT SYNC */
 .main-content-area {
     flex: 1;
     padding: 40px;
@@ -89,7 +74,6 @@ body {
     box-sizing: border-box;
 }
 
-/* HEADER & TABLE */
 .page-title-section h1 {
     font-size: 28px;
     font-weight: 800;
@@ -135,7 +119,6 @@ body {
     color: var(--text-body);
 }
 
-/* STATUS & ACTIONS */
 .status-tag.pending {
     background: var(--pending-bg);
     color: var(--pending-text);
@@ -177,7 +160,6 @@ body {
     justify-content: center;
 }
 
-/* MODAL DESIGN */
 .modal-overlay {
     display: none;
     position: fixed;
@@ -225,7 +207,6 @@ body {
     color: var(--muted-light);
 }
 
-/* SCROLLABLE AREA */
 .modal-body-scroll {
     overflow-y: auto;
     padding-right: 10px;
@@ -241,7 +222,6 @@ body {
     border-radius: 10px;
 }
 
-/* INFO CARDS */
 .modal-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -293,7 +273,6 @@ body {
     overflow-y: auto;
 }
 
-/* FOOD SECTION STYLE */
 .food-card {
     border: 1px solid var(--border-soft);
     border-radius: 12px;
@@ -425,7 +404,6 @@ body {
     }
 }
 
-/* RESPONSIVE */
 @media (max-width: 900px) {
     .main-content-area {
         padding: 20px;
@@ -578,7 +556,6 @@ body {
     text-transform: lowercase;
 }
 
-/* TOP HEADER LAYOUT - same feel as events */
 .page-header {
     display: flex;
     justify-content: space-between;
@@ -606,8 +583,6 @@ body {
     color: var(--accent);
 }
 
-
-/* HEADER ACTIONS */
 .header-actions {
     display: flex;
     align-items: center;
@@ -789,7 +764,6 @@ body {
     opacity: 0.95;
 }
 
-/* ===== LONG TEXT FIX: ORDERS DETAILS MODAL ===== */
 .modal-card,
 .modal-body-scroll,
 .modal-grid,
@@ -823,12 +797,10 @@ body {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 }
 
-/* VENUE FORMAT FIX */
 .card-body p {
-    white-space: pre-line; /* 🔥 para gumana <br> */
+    white-space: pre-line;
 }
 
-/* ===== ORDER DETAILS: TIME SEPARATE FROM VENUE ===== */
 .event-logistics-row {
     display: flex;
     gap: 14px;
@@ -870,7 +842,6 @@ body {
     }
 }
 
-/* RESPONSIVE */
 @media (max-width: 900px) {
     .page-header {
         align-items: flex-start;
