@@ -12,6 +12,7 @@ $booked_dates = [];
 $query = "SELECT event_date, COUNT(*) as count
           FROM bookings
           WHERE booking_status = 'Approved'
+            AND LOWER(COALESCE(event_status, 'draft')) != 'completed'
           GROUP BY event_date";
 
 $result = mysqli_query($conn, $query);

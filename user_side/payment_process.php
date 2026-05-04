@@ -149,7 +149,6 @@ mysqli_stmt_bind_param(
 
         mysqli_stmt_close($fixDownpaymentStmt);
 
-        // Rebuild display_order_id for ALL bookings with the same event date
 $dateKey = !empty($event_date) ? date('Ymd', strtotime($event_date)) : date('Ymd');
 
 $rebuildSql = "

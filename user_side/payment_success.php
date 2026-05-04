@@ -33,7 +33,6 @@ if (!$payment) {
 $status = trim($payment['payment_status'] ?? '');
 $method = strtolower(trim($payment['payment_method'] ?? ''));
 
-// habang wala pang webhook, diretso muna sa processing
 if ($status === 'Pending' || $status === 'Paid') {
     header("Location: payment_process.php?pid={$payment_id}&method={$method}");
     exit();

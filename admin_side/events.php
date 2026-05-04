@@ -14,6 +14,7 @@ $booked_dates = [];
 $fullDateSql = "SELECT event_date, COUNT(*) as count
                 FROM bookings
                 WHERE booking_status = 'Approved'
+                  AND LOWER(COALESCE(event_status, 'draft')) != 'completed'
                 GROUP BY event_date";
 
 $fullDateResult = mysqli_query($conn, $fullDateSql);
@@ -396,7 +397,16 @@ usort($events, function ($a, $b) {
                                     <button class="btn-gold" onclick="updateStatus('<?php echo (int)$e['id']; ?>', 'ongoing')">Start Event</button>
 
                                 <?php elseif($e['status'] == 'ongoing'): ?>
-                                    <button class="btn-gold" onclick="updateStatus('<?php echo (int)$e['id']; ?>', 'completed')">Complete</button>
+
+                                <?php if ((float)$e['balance'] <= 0): ?>
+                                    <button class="btn-gold" onclick="updateStatus('<?php echo (int)$e['id']; ?>', 'completed')">
+                                        Complete
+                                    </button>
+                                <?php else: ?>
+                                    <button class="btn-gray" disabled title="Cannot complete while there is remaining balance">
+                                        Complete
+                                    </button>
+                                <?php endif; ?>
 
                                 <?php else: ?>
                                     <button class="btn-gray" disabled>Completed</button>

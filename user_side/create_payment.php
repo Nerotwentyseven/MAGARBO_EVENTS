@@ -16,23 +16,30 @@ if (!in_array($method, $allowedMethods, true)) {
     exit();
 }
 
-// minimum downpayment = 2000, user may pay higher
 $amount = isset($_GET['amount']) ? (float)$_GET['amount'] : 2000.00;
 
 if ($amount < 2000) {
     $amount = 2000.00;
 }
 
-// private internal booking reference
+$feeRate = 0;
+
+if ($method === 'gcash') {
+    $feeRate = 0.025;
+} elseif ($method === 'maya') {
+    $feeRate = 0.02;
+}
+
+$processing_fee = round($amount * $feeRate, 2);
+$amount_charged = $amount + $processing_fee;
+
 if (!isset($_SESSION['booking_ref']) || empty($_SESSION['booking_ref'])) {
     $_SESSION['booking_ref'] = "MAG-" . date("Ymd") . "-" . rand(100, 999);
 }
-$booking_reference = $_SESSION['booking_ref'];
 
-// unique payment attempt reference
+$booking_reference = $_SESSION['booking_ref'];
 $payment_attempt_reference = "PAY-" . date("YmdHis") . "-" . rand(100, 999);
 
-// snapshot ng buong booking data
 $booking_payload = json_encode($_SESSION['temp_booking_data'], JSON_UNESCAPED_UNICODE);
 
 if ($booking_payload === false) {
@@ -46,8 +53,7 @@ if ($user_id <= 0) {
     die("Invalid user session.");
 }
 
-// reuse existing pending payment kung same booking + same method
-$existingSql = "SELECT id, payment_method, payment_status
+$existingSql = "SELECT id, payment_method, payment_status, amount
                 FROM booking_payments
                 WHERE booking_reference = ?
                 ORDER BY id DESC
@@ -98,12 +104,14 @@ $sql = "INSERT INTO booking_payments (
             payment_attempt_reference,
             booking_payload,
             amount,
+            processing_fee,
+            amount_charged,
             payment_method,
             payment_status,
             provider,
             payment_date,
             note
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 $stmt = mysqli_prepare($conn, $sql);
 
@@ -119,12 +127,14 @@ $note = 'Initial downpayment request created.';
 
 mysqli_stmt_bind_param(
     $stmt,
-    "isssdsssss",
+    "isssdddsssss",
     $booking_id,
     $booking_reference,
     $payment_attempt_reference,
     $booking_payload,
     $amount,
+    $processing_fee,
+    $amount_charged,
     $method,
     $payment_status,
     $provider,

@@ -32,7 +32,16 @@ if (!in_array($selected_method, ['gcash', 'maya'], true)) {
 
 $paymongo_method = ($selected_method === 'maya') ? 'paymaya' : 'gcash';
 
-$amount = (float)($payment['amount'] ?? 0);
+$baseAmount = (float)($payment['amount'] ?? 0);
+$processingFee = (float)($payment['processing_fee'] ?? 0);
+$amountCharged = (float)($payment['amount_charged'] ?? 0);
+
+$amount = $amountCharged > 0 ? $amountCharged : ($baseAmount + $processingFee);
+
+if ($amount <= 0) {
+    $amount = $baseAmount;
+}
+
 $booking_reference = trim($payment['booking_reference'] ?? '');
 $payment_attempt_reference = trim($payment['payment_attempt_reference'] ?? '');
 
@@ -98,9 +107,9 @@ $payload = [
                 [
                     "currency" => "PHP",
                     "amount" => $amountInCentavos,
-                    "name" => "Booking Downpayment",
+                    "name" => "Booking Downpayment + Processing Fee",
                     "quantity" => 1,
-                    "description" => "Reservation downpayment"
+                    "description" => "Reservation downpayment with payment processing fee"
                 ]
             ],
             "payment_method_types" => [$paymongo_method],

@@ -54,6 +54,7 @@ $calendarSql = "SELECT b.event_date, b.event_time, b.event_type, b.venue,
                 FROM bookings b
                 JOIN users u ON b.user_id = u.id
                 WHERE b.booking_status = 'Approved'
+                  AND LOWER(COALESCE(b.event_status, 'draft')) != 'completed'
                 ORDER BY b.event_date ASC, b.event_time ASC";
 
 $calendarResult = mysqli_query($conn, $calendarSql);

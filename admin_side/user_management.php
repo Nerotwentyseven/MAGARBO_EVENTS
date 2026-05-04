@@ -13,8 +13,8 @@ if ($themeQuery && mysqli_num_rows($themeQuery) > 0) {
 
 $sql = "SELECT * FROM users
         ORDER BY
-            DATE(COALESCE(created_at, NOW())) DESC,
-            created_at ASC,
+            firstname ASC,
+            lastname ASC,
             id ASC";
 $result = mysqli_query($conn, $sql);
 
