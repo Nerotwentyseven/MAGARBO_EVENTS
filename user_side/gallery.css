@@ -59,49 +59,6 @@ img {
     align-items: center;
 }
 
-.back-home {
-    color: var(--primary-gold);
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.95rem;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-.back-home i {
-    color: var(--primary-gold);
-    font-size: 14px;
-}
-
-.back-home:hover {
-    color: var(--primary-gold);
-    opacity: 1;
-}
-
-.back-home:hover i {
-    color: var(--primary-gold);
-    transform: none;
-}
-
-.book-btn {
-    background-color: var(--primary-gold);
-    color: var(--text-white);
-    border: none;
-    padding: 10px 24px;
-    border-radius: var(--radius-sm);
-    font-weight: 600;
-    font-family: 'Inter', sans-serif;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    display: inline-block;
-    text-decoration: none;
-}
-
-.book-btn:hover {
-    background-color: var(--primary-gold-hover);
-}
 
 .hero-section {
     background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
@@ -110,7 +67,7 @@ img {
     background-position: center;
     background-repeat: no-repeat;
 
-    padding: 110px 20px 70px 20px;
+    padding: 160px 20px 70px 20px;
     text-align: center;
 }
 

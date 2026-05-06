@@ -1,12 +1,11 @@
 <?php
 session_name('USERSESSID');
 session_start();
-
+$pageTitle = "Catering Menu | Magarbo Events";
 require_once '../db_connection.php';
 
 $menus = [];
 
-// TOTAL MENU BOOKINGS (exclude cancelled)
 $totalMenuBookings = 0;
 $totalStmt = mysqli_query(
     $conn,
@@ -111,32 +110,26 @@ function getCategoryMeta($categoryName) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Food Menu</title>
+    <title><?php echo $pageTitle; ?></title>
     <link rel="stylesheet" href="menu.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <header class="top-header">
-        <div class="back-home" onclick="location.href='index.php'">
-            <i class="fa-solid fa-arrow-left"></i>
-            <span>Back to Home</span>
-        </div>
-        <a href="choose_service.php" class="btn btn-primary" style="text-decoration:none;">Book Now</a>
-    </header>
+    <?php include 'header.php'; ?>
 
-        <section class="hero">
+        <section class="menu-hero">
             <h1><i class="fa-solid fa-utensils"></i> Our Food Menu</h1>
             <p>Discover our carefully crafted menu selections featuring Filipino favorites and international cuisine. Browse our available menu sets for your event.</p>
         </section>
 
-        <main class="container">
+        <main class="menu-container">
         <section class="menu-grid">
             <?php if (!empty($menus)): ?>
                 <?php foreach ($menus as $menu): ?>
                 <div class="menu-card">
-                    <div class="card-header">
+                    <div class="menu-card-header">
                         <span class="badge"><?php echo htmlspecialchars($menu['popularity']); ?></span>
                         <div class="price-info">
                             <span class="price" <?php echo $menu['is_contact'] ? 'style="font-size: 1rem;"' : ''; ?>>
@@ -155,7 +148,7 @@ function getCategoryMeta($categoryName) {
                                     $catMeta = getCategoryMeta($categoryName);
                                 ?>
                                 <div class="menu-section">
-                                    <h4 class="section-title">
+                                    <h4 class="menu-section-title">
                                         <i class="fa-solid <?php echo $catMeta['icon']; ?> <?php echo $catMeta['class']; ?>"></i>
                                         <?php echo strtoupper(htmlspecialchars($categoryName)); ?>
                                     </h4>

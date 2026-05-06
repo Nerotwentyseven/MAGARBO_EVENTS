@@ -1,22 +1,18 @@
 /* --- Imports & Fonts (Matches Homepage) --- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-/* --- Variables (Inherited from Homepage + Menu Specifics) --- */
 :root {
-  /* Brand Colors from your Homepage CSS */
   --primary-gold: #bf9225;
   --bg-white: #ffffff;
   --text-dark: #191e2a;
   --text-gray: #666666;
   --radius: 15px;
 
-  /* Menu Specific Colors (from Image) */
-  --bg-cream: #f9f8f4; /* The light beige background seen in the menu image */
+  --bg-cream: #f9f8f4;
   --border-light: #e5e7eb;
-  --badge-bg: #bf9225; /* Using your brand gold */
+  --badge-bg: #bf9225;
 }
 
-/* --- Global Reset --- */
 * {
   margin: 0;
   padding: 0;
@@ -25,7 +21,7 @@
 
 body {
   font-family: 'Inter', sans-serif;
-  background-color: var(--bg-cream); /* Cream background */
+  background-color: var(--bg-cream);
   color: var(--text-dark);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -34,14 +30,12 @@ body {
 a { text-decoration: none; color: inherit; }
 ul { list-style: none; }
 
-/* --- Layout Container --- */
-.container {
+.menu-container {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-/* --- Top Header (Back link + CTA) --- */
 .top-header {
   background-color: var(--bg-white);
   padding: 15px 40px;
@@ -121,7 +115,7 @@ ul { list-style: none; }
   opacity: 0.9;
 }
 
-.hero {
+.menu-hero {
   background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
               url('../images/menu.jpg');
   background-size: cover;
@@ -129,7 +123,7 @@ ul { list-style: none; }
   background-repeat: no-repeat;
 
   min-height: 338.5px;
-  padding: 0 20px;
+  padding: 150px 20px 70px;
   margin-bottom: 40px;
 
   display: flex;
@@ -139,7 +133,7 @@ ul { list-style: none; }
   text-align: center;
 }
 
-.hero h1 {
+.menu-hero h1 {
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 15px;
@@ -150,11 +144,11 @@ ul { list-style: none; }
   color: #fff;
 }
 
-.hero h1 i {
+.menu-hero h1 i {
   color: var(--primary-gold);
 }
 
-.hero p {
+.menu-hero p {
   color: rgba(255,255,255,0.9);
   font-size: 1rem;
   line-height: 1.6;
@@ -184,7 +178,7 @@ ul { list-style: none; }
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
 }
 
-.card-header {
+.menu-card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -230,7 +224,7 @@ ul { list-style: none; }
   margin-bottom: 18px;
 }
 
-.section-title {
+.menu-section-title {
   font-size: 0.75rem;
   font-weight: 700;
   color: var(--text-dark);
@@ -242,7 +236,7 @@ ul { list-style: none; }
   letter-spacing: 0.5px;
 }
 
-.section-title i {
+.menu-section-title i {
   font-size: 0.9rem;
   width: 16px;
   text-align: center;
@@ -328,23 +322,23 @@ ul { list-style: none; }
   background-color: rgba(255, 255, 255, 0.15);
 }
 
-.section-title i.icon-soup {
+.menu-section-title i.icon-soup {
     color: #eab308;
 }
 
-.section-title i.icon-hot {
+.menu-section-title i.icon-hot {
     color: #ef4444;
 }
 
-.section-title i.icon-dessert {
+.menu-section-title i.icon-dessert {
     color: #a855f7;
 }
 
-.section-title i.icon-drink {
+.menu-section-title i.icon-drink {
     color: #3b82f6;
 }
 
-.section-title i.icon-default {
+.menu-section-title i.icon-default {
     color: #bf9225;
 }
 

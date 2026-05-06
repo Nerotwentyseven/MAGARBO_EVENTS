@@ -73,17 +73,13 @@ if ($result && mysqli_num_rows($result) > 0) {
     <title><?php echo $pageTitle; ?></title>
     <link rel="stylesheet" href="packages.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="packages-page-body">
+<body>
 
-    <nav class="top-nav">
-        <div class="back-home" onclick="location.href='index.php'">
-            <i class="fa-solid fa-arrow-left"></i>
-            <span>Back to Home</span>
-        </div>
-    </nav>
+    <?php include 'header.php'; ?>
 
-    <header class="header-details">
+    <header class="packages-hero">  
         <div class="header-content">
             <h1>Event Styling Packages</h1>
             <p class="header-desc">
@@ -97,7 +93,7 @@ if ($result && mysqli_num_rows($result) > 0) {
         </div>
     </header>
 
-    <div class="container">
+    <div class="packages-container">
         <p class="package-count">Showing <?php echo count($packages); ?> packages</p>
         
         <div class="packages-grid">
@@ -111,7 +107,7 @@ if ($result && mysqli_num_rows($result) > 0) {
                     </div>
                     
                     <div class="card-body">
-    <div class="card-header">
+    <div class="package-card-header">
         <h3><?php echo $p['title']; ?></h3>
         
         

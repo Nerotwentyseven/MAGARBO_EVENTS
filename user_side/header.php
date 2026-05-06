@@ -69,10 +69,10 @@ if (isset($_SESSION['user_id'])) {
 
     <nav class="desktop-nav">
         <ul class="nav-links">
-            <li><a href="index.php#home">Home</a></li>
-            <li><a href="packages.php">Packages</a></li>
-            <li><a href="gallery.php">Gallery</a></li>
-            <li><a href="menu.php">Menu</a></li>
+            <li><a href="index.php#home" onclick="handleHomeClick(event)">Home</a></li>
+            <li><a href="packages.php" onclick="handlePackagesClick(event)">Packages</a></li>
+            <li><a href="gallery.php" onclick="handleGalleryClick(event)">Gallery</a></li>
+            <li><a href="menu.php" onclick="handleMenuClick(event)">Menu</a></li>
             <li><a href="index.php#about">About Us</a></li>
             <li><a href="index.php#contact">Contact Us</a></li>
         </ul>
@@ -150,9 +150,9 @@ if (isset($_SESSION['user_id'])) {
                 </a>
             <?php endif; ?>
             <a href="index.php#home" onclick="closeMobileMenu()">Home</a>
-            <a href="packages.php" onclick="closeMobileMenu()">Packages</a>
-            <a href="gallery.php" onclick="closeMobileMenu()">Gallery</a>
-            <a href="menu.php" onclick="closeMobileMenu()">Menu</a>
+            <a href="packages.php" onclick="handlePackagesClick(event)">Packages</a>
+            <a href="gallery.php" onclick="handleGalleryClick(event)">Gallery</a>
+            <a href="menu.php" onclick="handleMenuClick(event)">Menu</a>
             <a href="index.php#about" onclick="closeMobileMenu()">About Us</a>
             <a href="index.php#contact" onclick="closeMobileMenu()">Contact Us</a>
 
@@ -189,6 +189,66 @@ if (isset($_SESSION['user_id'])) {
                 }
             });
         });
+
+        function handleHomeClick(e) {
+            const currentPage = window.location.pathname.split('/').pop();
+
+            if (currentPage === 'index.php' || currentPage === '') {
+                e.preventDefault();
+
+                closeMobileMenu();
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        function handlePackagesClick(e) {
+            const currentPage = window.location.pathname.split('/').pop();
+
+            if (currentPage === 'packages.php') {
+                e.preventDefault();
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+
+                closeMobileMenu();
+            }
+        }
+
+        function handleGalleryClick(e) {
+            const currentPage = window.location.pathname.split('/').pop();
+
+            if (currentPage === 'gallery.php') {
+                e.preventDefault();
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+
+                closeMobileMenu();
+            }
+        }
+
+        function handleMenuClick(e) {
+            const currentPage = window.location.pathname.split('/').pop();
+
+            if (currentPage === 'menu.php') {
+                e.preventDefault();
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+
+                closeMobileMenu();
+            }
+        }
 
         function toggleNotif(e) {
         if (e) e.stopPropagation();

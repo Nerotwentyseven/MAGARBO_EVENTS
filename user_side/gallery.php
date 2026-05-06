@@ -1,6 +1,7 @@
 <?php
 session_name('USERSESSID');
 session_start();
+$pageTitle = "Event Gallery | Magarbo Events";
 require_once '../db_connection.php';
 
 $selectedCategory = $_GET['category'] ?? 'All Photos';
@@ -105,7 +106,7 @@ if ($imagesQuery) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Gallery | Magarbo Events</title>
+    <title><?php echo $pageTitle; ?></title>
     <link rel="stylesheet" href="gallery.css?v=<?php echo time(); ?>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -113,15 +114,7 @@ if ($imagesQuery) {
 </head>
 <body>
 
-    <header class="top-nav">
-        <div class="nav-container">
-            <div class="back-home" onclick="location.href='index.php'">
-                <i class="fa-solid fa-arrow-left"></i>
-                <span>Back to Home</span>
-            </div>
-            <a href="choose_service.php" class="book-btn">Book Now</a>
-        </div>
-    </header>
+    <?php include 'header.php'; ?>
 
     <section class="hero-section">
         <div class="hero-content">
