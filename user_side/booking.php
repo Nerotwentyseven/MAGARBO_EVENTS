@@ -122,9 +122,9 @@ if ($themeRes) {
 <body>
     <div class="book-details-wrapper">
         <div class="nav-header">
-            <div class="back-home" onclick="location.href='index.php'">
-                <i class="fa-solid fa-arrow-left"></i>
-                <span>Back to Home</span>
+            <div class="back-home" onclick="openCancelBookingAlert()">
+                <i class="fa-solid fa-xmark"></i>
+                <span>Cancel Booking</span>
             </div>
         </div>
 
@@ -150,7 +150,7 @@ if ($themeRes) {
                 <div class="form-grid">
                     <div class="field-group">
                         <label>Event Category</label>
-                        <input type="text" name="event_type" id="categoryInput" list="categoryOptions" placeholder="Select or type category" oninput="handleCategoryInput(this.value)" required>
+                        <input type="text" name="event_type" id="categoryInput" list="categoryOptions" placeholder="Select or type category" oninput="handleCategoryInput(this.value)" onfocus="this.select()" required>
                         <datalist id="categoryOptions">
                             <option value="Anniversary">
                             <option value="Birthday">
@@ -238,7 +238,7 @@ if ($themeRes) {
                 <div id="religionSection" class="special-section" style="display: none; margin-top: 20px;">
                     <div class="info-box">
                         <label>Religious Customization</label>
-                        <input type="text" name="religion" id="religionSelect" list="religionOptions" placeholder="Select or type religion">
+                        <input type="text" name="religion" id="religionSelect" list="religionOptions" placeholder="Select or type religion" onfocus="this.select()">
 
                         <datalist id="religionOptions">
                             <option value="Catholic">
@@ -297,7 +297,10 @@ if ($themeRes) {
                 </div>
 
                 <div class="form-actions" style="margin-top: 30px;">
-                    <button type="button" class="btn-secondary" onclick="window.history.back()">Previous</button>
+                    <button type="button" class="btn-secondary" onclick="window.history.back()">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        Previous
+                    </button>
                     <button type="submit" class="btn-primary">Next Step</button>
                 </div>
             </form>
@@ -332,6 +335,8 @@ if ($themeRes) {
  
 
     <script>
+        
+
         let currentDisplayDate = new Date();
 
         const bookedDates = <?php echo json_encode($booked_dates); ?>;
@@ -348,6 +353,21 @@ if ($themeRes) {
         let selectedProvinceName = '';
         let selectedMunicipalityName = '';
         let selectedBarangayName = '';
+
+        function openCancelBookingAlert() {
+    openBookingAlert(
+        'Cancel Booking?',
+        'Are you sure you want to cancel this booking and go back to homepage?',
+        'info'
+    );
+
+    const actions = document.querySelector('.booking-alert-actions');
+
+    actions.innerHTML = `
+        <button type="button" class="booking-alert-btn" onclick="closeBookingAlert()">No</button>
+        <button type="button" class="booking-alert-btn ok" onclick="window.location.href='index.php'">Confirm</button>
+    `;
+}
 
         function normalizeCategoryKey(text) {
             const value = String(text || '').toLowerCase().trim();
@@ -464,253 +484,250 @@ if ($themeRes) {
             });
         }
 
-function toggleCustomDropdown(type) {
-    const wrap = document.getElementById(type + 'DropdownWrap');
-    if (!wrap || wrap.classList.contains('disabled')) return;
+        function toggleCustomDropdown(type) {
+            const wrap = document.getElementById(type + 'DropdownWrap');
+            if (!wrap || wrap.classList.contains('disabled')) return;
 
-    const isOpen = wrap.classList.contains('open');
-    closeAllCustomDropdowns();
-
-    if (!isOpen) {
-        wrap.classList.add('open');
-        const search = document.getElementById(type + 'Search');
-        if (search) {
-            search.value = '';
-            filterCustomOptions(type);
-            setTimeout(() => search.focus(), 50);
-        }
-    }
-}
-
-document.addEventListener('click', function (e) {
-    if (!e.target.closest('.custom-dropdown')) {
-        closeAllCustomDropdowns();
-    }
-});
-
-function filterCustomOptions(type) {
-    const searchEl = document.getElementById(type + 'Search');
-    const optionsEl = document.getElementById(type + 'Options');
-    const keyword = (searchEl?.value || '').toLowerCase().trim();
-
-    const sourceMap = {
-        province: provinceListData,
-        municipality: municipalityListData,
-        barangay: barangayListData
-    };
-
-    const data = sourceMap[type] || [];
-
-    optionsEl.innerHTML = '';
-
-    const filtered = data.filter(item =>
-        String(item.name || '').toLowerCase().includes(keyword)
-    );
-
-    if (!filtered.length) {
-        optionsEl.innerHTML = `<div class="custom-dropdown-empty">No results found</div>`;
-        return;
-    }
-
-    filtered.forEach(item => {
-        const option = document.createElement('button');
-        option.type = 'button';
-        option.className = 'custom-dropdown-option';
-        option.textContent = item.name;
-
-        option.onclick = function () {
-            if (type === 'province') {
-                document.getElementById('provinceSelect').value = item.code;
-                document.getElementById('provinceTriggerText').textContent = item.name;
-                selectedProvinceName = item.name;
-                handleProvinceChange(item.code);
-            }
-
-            if (type === 'municipality') {
-                document.getElementById('municipalitySelect').value = item.code;
-                document.getElementById('municipalityTriggerText').textContent = item.name;
-                selectedMunicipalityName = item.name;
-                handleMunicipalityChange(item.code);
-            }
-
-            if (type === 'barangay') {
-                document.getElementById('barangaySelect').value = item.name;
-                document.getElementById('barangayTriggerText').textContent = item.name;
-                selectedBarangayName = item.name;
-                updateVenueField();
-            }
-
+            const isOpen = wrap.classList.contains('open');
             closeAllCustomDropdowns();
-        };
 
-        optionsEl.appendChild(option);
-    });
-}
+            if (!isOpen) {
+                wrap.classList.add('open');
+                const search = document.getElementById(type + 'Search');
+                if (search) {
+                    search.value = '';
+                    filterCustomOptions(type);
+                    setTimeout(() => search.focus(), 50);
+                }
+            }
+        }
 
-function setDropdownDisabled(type, disabled = true) {
-    const wrap = document.getElementById(type + 'DropdownWrap');
-    if (!wrap) return;
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.custom-dropdown')) {
+                closeAllCustomDropdowns();
+            }
+        });
 
-    if (disabled) {
-        wrap.classList.add('disabled');
-        wrap.classList.remove('open');
-    } else {
-        wrap.classList.remove('disabled');
-    }
-}
+        function filterCustomOptions(type) {
+            const searchEl = document.getElementById(type + 'Search');
+            const optionsEl = document.getElementById(type + 'Options');
+            const keyword = (searchEl?.value || '').toLowerCase().trim();
 
-function resetDropdown(type, placeholder) {
-    const hidden = document.getElementById(type + 'Select');
-    const triggerText = document.getElementById(type + 'TriggerText');
-    const options = document.getElementById(type + 'Options');
-    const search = document.getElementById(type + 'Search');
+            const sourceMap = {
+                province: provinceListData,
+                municipality: municipalityListData,
+                barangay: barangayListData
+            };
 
-    if (hidden) hidden.value = '';
-    if (triggerText) triggerText.textContent = placeholder;
-    if (options) options.innerHTML = '';
-    if (search) search.value = '';
+            const data = sourceMap[type] || [];
 
-    if (type === 'province') selectedProvinceName = '';
-    if (type === 'municipality') selectedMunicipalityName = '';
-    if (type === 'barangay') selectedBarangayName = '';
-}
+            optionsEl.innerHTML = '';
+
+            const filtered = data.filter(item =>
+                String(item.name || '').toLowerCase().includes(keyword)
+            );
+
+            if (!filtered.length) {
+                optionsEl.innerHTML = `<div class="custom-dropdown-empty">No results found</div>`;
+                return;
+            }
+
+            filtered.forEach(item => {
+                const option = document.createElement('button');
+                option.type = 'button';
+                option.className = 'custom-dropdown-option';
+                option.textContent = item.name;
+
+                option.onclick = function () {
+                    if (type === 'province') {
+                        document.getElementById('provinceSelect').value = item.code;
+                        document.getElementById('provinceTriggerText').textContent = item.name;
+                        selectedProvinceName = item.name;
+                        handleProvinceChange(item.code);
+                    }
+
+                    if (type === 'municipality') {
+                        document.getElementById('municipalitySelect').value = item.code;
+                        document.getElementById('municipalityTriggerText').textContent = item.name;
+                        selectedMunicipalityName = item.name;
+                        handleMunicipalityChange(item.code);
+                    }
+
+                    if (type === 'barangay') {
+                        document.getElementById('barangaySelect').value = item.name;
+                        document.getElementById('barangayTriggerText').textContent = item.name;
+                        selectedBarangayName = item.name;
+                        updateVenueField();
+                    }
+
+                    closeAllCustomDropdowns();
+                };
+
+                optionsEl.appendChild(option);
+            });
+        }
+
+        function setDropdownDisabled(type, disabled = true) {
+            const wrap = document.getElementById(type + 'DropdownWrap');
+            if (!wrap) return;
+
+            if (disabled) {
+                wrap.classList.add('disabled');
+                wrap.classList.remove('open');
+            } else {
+                wrap.classList.remove('disabled');
+            }
+        }
+
+        function resetDropdown(type, placeholder) {
+            const hidden = document.getElementById(type + 'Select');
+            const triggerText = document.getElementById(type + 'TriggerText');
+            const options = document.getElementById(type + 'Options');
+            const search = document.getElementById(type + 'Search');
+
+            if (hidden) hidden.value = '';
+            if (triggerText) triggerText.textContent = placeholder;
+            if (options) options.innerHTML = '';
+            if (search) search.value = '';
+
+            if (type === 'province') selectedProvinceName = '';
+            if (type === 'municipality') selectedMunicipalityName = '';
+            if (type === 'barangay') selectedBarangayName = '';
+        }
 
         async function loadProvinces() {
-    resetDropdown('province', 'Loading provinces...');
-    resetDropdown('municipality', 'Select City / Municipality');
-    resetDropdown('barangay', 'Select Barangay');
+            resetDropdown('province', 'Loading provinces...');
+            resetDropdown('municipality', 'Select City / Municipality');
+            resetDropdown('barangay', 'Select Barangay');
 
-    setDropdownDisabled('municipality', true);
-    setDropdownDisabled('barangay', true);
+            setDropdownDisabled('municipality', true);
+            setDropdownDisabled('barangay', true);
 
-    try {
-        const res = await fetch(`${PSGC_BASE_URL}/provinces/`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            try {
+                const res = await fetch(`${PSGC_BASE_URL}/provinces/`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-        const data = await res.json();
-        if (!Array.isArray(data)) throw new Error('Invalid provinces response');
+                const data = await res.json();
+                if (!Array.isArray(data)) throw new Error('Invalid provinces response');
 
-        provinceListData = data.map(province => ({
-            code: province.code,
-            name: province.name
-        }));
+                provinceListData = data.map(province => ({
+                    code: province.code,
+                    name: province.name
+                }));
 
-        // SORT A-Z
-        provinceListData.sort((a, b) => 
-            a.name.localeCompare(b.name)
-        );
+                provinceListData.sort((a, b) => 
+                    a.name.localeCompare(b.name)
+                );
 
-        resetDropdown('province', 'Select Province');
-        filterCustomOptions('province');
-    } catch (error) {
-        document.getElementById('provinceTriggerText').textContent = 'Failed to load provinces';
-        console.error('Province load error:', error);
-    }
-}
+                resetDropdown('province', 'Select Province');
+                filterCustomOptions('province');
+            } catch (error) {
+                document.getElementById('provinceTriggerText').textContent = 'Failed to load provinces';
+                console.error('Province load error:', error);
+            }
+        }
 
-async function handleProvinceChange(provinceCode) {
-    resetDropdown('municipality', 'Loading city / municipality...');
-    resetDropdown('barangay', 'Select Barangay');
-    setDropdownDisabled('municipality', true);
-    setDropdownDisabled('barangay', true);
+        async function handleProvinceChange(provinceCode) {
+            resetDropdown('municipality', 'Loading city / municipality...');
+            resetDropdown('barangay', 'Select Barangay');
+            setDropdownDisabled('municipality', true);
+            setDropdownDisabled('barangay', true);
 
-    document.getElementById('streetInput').value = '';
-    selectedMunicipalityName = '';
-    selectedBarangayName = '';
-    municipalityListData = [];
-    barangayListData = [];
+            document.getElementById('streetInput').value = '';
+            selectedMunicipalityName = '';
+            selectedBarangayName = '';
+            municipalityListData = [];
+            barangayListData = [];
 
-    if (!provinceCode) {
-        resetDropdown('municipality', 'Select City / Municipality');
-        updateVenueField();
-        return;
-    }
+            if (!provinceCode) {
+                resetDropdown('municipality', 'Select City / Municipality');
+                updateVenueField();
+                return;
+            }
 
-    try {
-        const res = await fetch(`${PSGC_BASE_URL}/provinces/${provinceCode}/cities-municipalities/`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            try {
+                const res = await fetch(`${PSGC_BASE_URL}/provinces/${provinceCode}/cities-municipalities/`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-        const data = await res.json();
-        if (!Array.isArray(data)) throw new Error('Invalid municipality response');
+                const data = await res.json();
+                if (!Array.isArray(data)) throw new Error('Invalid municipality response');
 
-        municipalityListData = data.map(item => ({
-            code: item.code,
-            name: item.name
-        }));
+                municipalityListData = data.map(item => ({
+                    code: item.code,
+                    name: item.name
+                }));
 
-        // SORT A-Z
-        municipalityListData.sort((a, b) => 
-            a.name.localeCompare(b.name)
-        );
+                municipalityListData.sort((a, b) => 
+                    a.name.localeCompare(b.name)
+                );
 
-        resetDropdown('municipality', 'Select City / Municipality');
-        setDropdownDisabled('municipality', false);
-        filterCustomOptions('municipality');
-    } catch (error) {
-        document.getElementById('municipalityTriggerText').textContent = 'Failed to load city / municipality';
-        console.error('Municipality load error:', error);
-    }
+                resetDropdown('municipality', 'Select City / Municipality');
+                setDropdownDisabled('municipality', false);
+                filterCustomOptions('municipality');
+            } catch (error) {
+                document.getElementById('municipalityTriggerText').textContent = 'Failed to load city / municipality';
+                console.error('Municipality load error:', error);
+            }
 
-    updateVenueField();
-}
+            updateVenueField();
+        }
 
-async function handleMunicipalityChange(municipalityCode) {
-    resetDropdown('barangay', 'Loading barangays...');
-    setDropdownDisabled('barangay', true);
+        async function handleMunicipalityChange(municipalityCode) {
+            resetDropdown('barangay', 'Loading barangays...');
+            setDropdownDisabled('barangay', true);
 
-    document.getElementById('streetInput').value = '';
-    selectedBarangayName = '';
-    barangayListData = [];
+            document.getElementById('streetInput').value = '';
+            selectedBarangayName = '';
+            barangayListData = [];
 
-    if (!municipalityCode) {
-        resetDropdown('barangay', 'Select Barangay');
-        updateVenueField();
-        return;
-    }
+            if (!municipalityCode) {
+                resetDropdown('barangay', 'Select Barangay');
+                updateVenueField();
+                return;
+            }
 
-    try {
-        const res = await fetch(`${PSGC_BASE_URL}/cities-municipalities/${municipalityCode}/barangays/`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            try {
+                const res = await fetch(`${PSGC_BASE_URL}/cities-municipalities/${municipalityCode}/barangays/`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-        const data = await res.json();
-        if (!Array.isArray(data)) throw new Error('Invalid barangay response');
+                const data = await res.json();
+                if (!Array.isArray(data)) throw new Error('Invalid barangay response');
 
-        barangayListData = data.map(item => ({
-            name: item.name
-        }));
+                barangayListData = data.map(item => ({
+                    name: item.name
+                }));
 
-        // SORT A-Z
-        barangayListData.sort((a, b) => 
-            a.name.localeCompare(b.name)
-        );
+                barangayListData.sort((a, b) => 
+                    a.name.localeCompare(b.name)
+                );
 
-        resetDropdown('barangay', 'Select Barangay');
-        setDropdownDisabled('barangay', false);
-        filterCustomOptions('barangay');
-    } catch (error) {
-        document.getElementById('barangayTriggerText').textContent = 'Failed to load barangays';
-        console.error('Barangay load error:', error);
-    }
+                resetDropdown('barangay', 'Select Barangay');
+                setDropdownDisabled('barangay', false);
+                filterCustomOptions('barangay');
+            } catch (error) {
+                document.getElementById('barangayTriggerText').textContent = 'Failed to load barangays';
+                console.error('Barangay load error:', error);
+            }
 
-    updateVenueField();
-}
+            updateVenueField();
+        }
 
-function updateVenueField() {
-    const streetInput = document.getElementById('streetInput');
-    const venueInput = document.getElementById('venueInput');
-    const venuePreview = document.getElementById('venuePreview');
+        function updateVenueField() {
+            const streetInput = document.getElementById('streetInput');
+            const venueInput = document.getElementById('venueInput');
+            const venuePreview = document.getElementById('venuePreview');
 
-    const street = streetInput.value.trim();
+            const street = streetInput.value.trim();
 
-    const finalVenue = [street, selectedBarangayName, selectedMunicipalityName, selectedProvinceName]
-        .filter(Boolean)
-        .join(', ');
+            const finalVenue = [street, selectedBarangayName, selectedMunicipalityName, selectedProvinceName]
+                .filter(Boolean)
+                .join(', ');
 
-    venueInput.value = finalVenue;
-    venuePreview.textContent = finalVenue
-        ? `Complete Address: ${finalVenue}`
-        : 'Complete your address details.';
-}
+            venueInput.value = finalVenue;
+            venuePreview.textContent = finalVenue
+                ? `Complete Address: ${finalVenue}`
+                : 'Complete your address details.';
+        }
 
         function handleCategoryInput(val) {
             const container = document.getElementById('layoutContainer');
@@ -913,6 +930,7 @@ function updateVenueField() {
 
                     requestField.setAttribute('data-selected-theme', cleanTheme);
                     requestField.placeholder = 'You can still edit or add more details here...';
+                    saveBookingDraft();
                                     } else {
                         requestField.value = '';
                         requestField.disabled = false;
@@ -975,6 +993,7 @@ function updateVenueField() {
             if (selectedThemeInput) {
                 selectedThemeInput.value = '';
             }
+            saveBookingDraft();
         }
 
         document.addEventListener('keydown', function(event) {
@@ -1081,91 +1100,206 @@ function updateVenueField() {
         }
 
         function validateBookingForm() {
-    const themeSyncOk = syncSelectedThemeBeforeSubmit();
-    if (!themeSyncOk) {
-        return false;
-    }
-
-    const categoryInput = document.getElementById('categoryInput');
-    const religionSection = document.getElementById('religionSection');
-    const religionSelect = document.getElementById('religionSelect');
-    const normalized = normalizeCategoryKey(categoryInput?.value || '');
-
-    if (normalized === 'wedding') {
-        if (!religionSelect || !religionSelect.value.trim()) {
-            if (religionSection) {
-                religionSection.style.display = 'block';
+            const themeSyncOk = syncSelectedThemeBeforeSubmit();
+            if (!themeSyncOk) {
+                return false;
             }
 
-            openBookingAlert(
-                'Religion Required',
-                'Please select a religion for Wedding events.',
+            const categoryInput = document.getElementById('categoryInput');
+            const religionSection = document.getElementById('religionSection');
+            const religionSelect = document.getElementById('religionSelect');
+            const normalized = normalizeCategoryKey(categoryInput?.value || '');
+
+            if (normalized === 'wedding') {
+                if (!religionSelect || !religionSelect.value.trim()) {
+                    if (religionSection) {
+                        religionSection.style.display = 'block';
+                    }
+
+                    openBookingAlert(
+                        'Religion Required',
+                        'Please select a religion for Wedding events.',
+                        'info',
+                        religionSelect
+                    );
+                    return false;
+                }
+            }
+
+            const provinceSelect = document.getElementById('provinceSelect');
+            const municipalitySelect = document.getElementById('municipalitySelect');
+            const barangaySelect = document.getElementById('barangaySelect');
+            const streetInput = document.getElementById('streetInput');
+            const venueInput = document.getElementById('venueInput');
+
+            if (!provinceSelect.value) {
+                openBookingAlert(
+                'Province Required',
+                'Please select a province.',
                 'info',
-                religionSelect
+                provinceSelect
             );
             return false;
+            }
+
+            if (!municipalitySelect.value) {
+                openBookingAlert(
+                    'City / Municipality Required',
+                    'Please select a city or municipality.',
+                    'info',
+                    municipalitySelect
+                );
+                return false;
+            }
+
+            if (!barangaySelect.value) {
+                openBookingAlert(
+                    'Barangay Required',
+                    'Please select a barangay.',
+                    'info',
+                    barangaySelect
+                );
+                return false;
+            }
+
+            if (!streetInput.value.trim()) {
+                openBookingAlert(
+                    'Street Address Required',
+                    'Please enter the house no., street, purok, or landmark.',
+                    'info',
+                    streetInput
+                );
+                return false;
+            }
+
+            updateVenueField();
+
+            if (!venueInput.value.trim()) {
+                openBookingAlert(
+                    'Venue Incomplete',
+                    'Please complete the venue location.',
+                    'info'
+                );
+                return false;
+            }
+
+            return true;
         }
-    }
 
-    const provinceSelect = document.getElementById('provinceSelect');
-    const municipalitySelect = document.getElementById('municipalitySelect');
-    const barangaySelect = document.getElementById('barangaySelect');
-    const streetInput = document.getElementById('streetInput');
-    const venueInput = document.getElementById('venueInput');
+        const BOOKING_DRAFT_KEY = 'magarbo_booking_draft_v1';
 
-    if (!provinceSelect.value) {
-        openBookingAlert(
-        'Province Required',
-        'Please select a province.',
-        'info',
-        provinceSelect
-    );
-    return false;
-    }
+        function getBookingDraftData() {
+            return {
+                event_type: document.getElementById('categoryInput')?.value || '',
+                event_date: document.getElementById('eventDate')?.value || '',
+                event_time: document.querySelector('input[name="event_time"]')?.value || '',
+                religion: document.getElementById('religionSelect')?.value || '',
+                request: document.getElementById('requestField')?.value || '',
+                selected_theme_id: document.getElementById('selectedThemeIdInput')?.value || '',
+                selected_theme: document.getElementById('selectedThemeInput')?.value || '',
+                selected_theme_text: document.getElementById('selectedThemeText')?.innerText || ''
+            };
+        }
 
-    if (!municipalitySelect.value) {
-        openBookingAlert(
-            'City / Municipality Required',
-            'Please select a city or municipality.',
-            'info',
-            municipalitySelect
-        );
-        return false;
-    }
+        function saveBookingDraft() {
+            localStorage.setItem(BOOKING_DRAFT_KEY, JSON.stringify(getBookingDraftData()));
+        }
 
-    if (!barangaySelect.value) {
-        openBookingAlert(
-            'Barangay Required',
-            'Please select a barangay.',
-            'info',
-            barangaySelect
-        );
-        return false;
-    }
+        function loadBookingDraft() {
+            const rawDraft = localStorage.getItem(BOOKING_DRAFT_KEY);
+            if (!rawDraft) return;
 
-    if (!streetInput.value.trim()) {
-        openBookingAlert(
-            'Street Address Required',
-            'Please enter the house no., street, purok, or landmark.',
-            'info',
-            streetInput
-        );
-        return false;
-    }
+            let draft;
 
-    updateVenueField();
+            try {
+                draft = JSON.parse(rawDraft);
+            } catch (e) {
+                localStorage.removeItem(BOOKING_DRAFT_KEY);
+                return;
+            }
 
-    if (!venueInput.value.trim()) {
-        openBookingAlert(
-            'Venue Incomplete',
-            'Please complete the venue location.',
-            'info'
-        );
-        return false;
-    }
+            const categoryInput = document.getElementById('categoryInput');
+            const eventDate = document.getElementById('eventDate');
+            const eventTime = document.querySelector('input[name="event_time"]');
+            const religionSelect = document.getElementById('religionSelect');
+            const religionSection = document.getElementById('religionSection');
+            const requestField = document.getElementById('requestField');
+            const selectedThemeIdInput = document.getElementById('selectedThemeIdInput');
+            const selectedThemeInput = document.getElementById('selectedThemeInput');
+            const selectedThemeText = document.getElementById('selectedThemeText');
+            const selectedThemeWrapper = document.getElementById('selectedThemeWrapper');
 
-    return true;
-}
+            if (draft.event_type && categoryInput) {
+                categoryInput.value = draft.event_type;
+                handleCategoryInput(draft.event_type);
+            }
+
+            if (draft.event_date && eventDate) eventDate.value = draft.event_date;
+            if (draft.event_time && eventTime) eventTime.value = draft.event_time;
+
+            if (draft.religion && religionSelect) {
+                religionSelect.value = draft.religion;
+                if (religionSection) religionSection.style.display = 'block';
+            }
+
+            if (draft.request && requestField) {
+                requestField.value = draft.request;
+                requestField.placeholder = 'You can still edit or add more details here...';
+            }
+
+            if (draft.selected_theme_id && selectedThemeIdInput) {
+                selectedThemeIdInput.value = draft.selected_theme_id;
+            }
+
+            if (draft.selected_theme && selectedThemeInput) {
+                selectedThemeInput.value = draft.selected_theme;
+                if (requestField) {
+                    requestField.setAttribute('data-selected-theme', draft.selected_theme);
+                }
+            }
+
+            if (draft.selected_theme_text && selectedThemeText && selectedThemeWrapper) {
+                selectedThemeText.innerText = draft.selected_theme_text;
+                selectedThemeWrapper.style.display = 'flex';
+            }
+        }
+
+        function clearBookingDraft() {
+            localStorage.removeItem(BOOKING_DRAFT_KEY);
+        }
+
+        function setupBookingDraftAutosave() {
+            const fields = [
+                document.getElementById('categoryInput'),
+                document.getElementById('eventDate'),
+                document.querySelector('input[name="event_time"]'),
+                document.getElementById('religionSelect'),
+                document.getElementById('requestField')
+            ];
+
+            fields.forEach(field => {
+                if (!field) return;
+                field.addEventListener('input', saveBookingDraft);
+                field.addEventListener('change', saveBookingDraft);
+            });
+
+            const bookingForm = document.getElementById('bookingForm');
+
+            if (bookingForm) {
+                const bookingForm = document.getElementById('bookingForm');
+
+        if (bookingForm) {
+            bookingForm.addEventListener('submit', function () {
+                saveBookingDraft();
+            });
+        }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            loadBookingDraft();
+            setupBookingDraftAutosave();
+        });
 
         renderCalendar();
         loadProvinces();

@@ -8,8 +8,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     if ($selected_service == 'Catering Only') {
         $_SESSION['package'] = "N/A (Catering Only)";
+
+        $_SESSION['clear_theme_draft_only'] = true;
+
         header("Location: choose_menu.php");
-    } 
+    }
     elseif ($selected_service == 'Styling & Decoration Only') {
         $_SESSION['package'] = "N/A (Styling & Decoration Only)";
         $_SESSION['menu_cart'] = json_encode([]); // Empty cart
@@ -35,12 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <div class="main-wrapper">
-        <div class="nav-container">
-            <div class="back-home" onclick="location.href='index.php'">
-                <i class="fa-solid fa-arrow-left"></i>
-                <span>Back to Home</span>
-            </div>
-        </div>
 
         <div class="header-section">
             <h1 class="p">Book Your Event with Magarbo Events</h1>
@@ -94,11 +91,63 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </label>
 
                 <div class="button-footer">
-                    <button type="button" class="btn-prev" onclick="location.href='index.php'"><i class="fa-solid fa-arrow-left"></i> Previous</button>
+                    <button type="button" class="btn-prev" onclick="history.back()">
+                        <i class="fa-solid fa-arrow-left"></i> Previous
+                    </button>
                     <button type="submit" class="btn-next">Next</button>
                 </div>
             </form>
         </div>
     </div>
+    <script>
+document.getElementById('flowForm').addEventListener('submit', function () {
+    const selectedService = document.querySelector('input[name="service"]:checked');
+    if (!selectedService) return;
+
+    const draftKey = 'magarbo_booking_draft_v1';
+    const themeBackupKey = 'magarbo_theme_request_backup_v1';
+
+    const rawDraft = localStorage.getItem(draftKey);
+    if (!rawDraft) return;
+
+    try {
+        const draft = JSON.parse(rawDraft);
+
+        if (selectedService.value === 'Catering Only') {
+
+            localStorage.setItem(themeBackupKey, JSON.stringify({
+                request: draft.request || '',
+                selected_theme_id: draft.selected_theme_id || '',
+                selected_theme: draft.selected_theme || '',
+                selected_theme_text: draft.selected_theme_text || ''
+            }));
+
+            draft.request = '';
+            draft.selected_theme_id = '';
+            draft.selected_theme = '';
+            draft.selected_theme_text = '';
+
+            localStorage.setItem(draftKey, JSON.stringify(draft));
+        } else {
+
+            const rawBackup = localStorage.getItem(themeBackupKey);
+
+            if (rawBackup) {
+                const backup = JSON.parse(rawBackup);
+
+                draft.request = backup.request || draft.request || '';
+                draft.selected_theme_id = backup.selected_theme_id || draft.selected_theme_id || '';
+                draft.selected_theme = backup.selected_theme || draft.selected_theme || '';
+                draft.selected_theme_text = backup.selected_theme_text || draft.selected_theme_text || '';
+
+                localStorage.setItem(draftKey, JSON.stringify(draft));
+            }
+        }
+
+    } catch (e) {
+        console.log('Draft update failed:', e);
+    }
+});
+</script>
 </body>
 </html>

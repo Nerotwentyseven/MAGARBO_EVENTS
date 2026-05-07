@@ -123,13 +123,9 @@ function getCategoryMeta($categoryName) {
 <body>
 <div class="container">
     <header>
-        <div class="back-action" onclick="window.location.href='index.php'">
-            <i class="fa-solid fa-arrow-left"></i>
-            <span>Back to Home</span>
-        </div>
         <div class="title-section">
-            <h1>Select Your Menu</h1>
-            <p>Choose from our delicious menu options for your package</p>
+            <h1>Book Your Event with Magarbo Events</h1>
+            <p>Choose Your Menu</p>
         </div>
         <div class="steps">
             <div class="step active">1</div>
@@ -208,6 +204,10 @@ function getCategoryMeta($categoryName) {
                         Continue to Event Details
                     </button>
                 </form>
+                <button type="button" class="btn-prev" onclick="history.back()">
+                <i class="fa-solid fa-arrow-left"></i>
+                    Previous
+                </button>
             </div>
         </div>
     </div>

@@ -29,7 +29,8 @@ $isGoogleOnly = (($user['auth_provider'] ?? 'local') === 'google' && (int)($user
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Set Password | Magarbo Events</title>
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="login.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <main class="login-wrapper">
@@ -41,22 +42,44 @@ $isGoogleOnly = (($user['auth_provider'] ?? 'local') === 'google' && (int)($user
                 <form action="save_set_password.php" method="POST">
                     <div class="form-group">
                         <label>New Password</label>
-                        <input type="password" name="new_password" required placeholder="At least 8 characters">
+                        <div class="password-wrapper">
+                            <input type="password" id="new_password" name="new_password" required placeholder="At least 8 characters">
+                            <i class="fa-solid fa-eye toggle-password" onclick="togglePassword('new_password', this)"></i>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label>Confirm New Password</label>
-                        <input type="password" name="confirm_password" required placeholder="Repeat new password">
+                        <div class="password-wrapper">
+                            <input type="password" id="confirm_password" name="confirm_password" required placeholder="Repeat new password">
+                            <i class="fa-solid fa-eye toggle-password" onclick="togglePassword('confirm_password', this)"></i>
+                        </div>
                     </div>
 
                     <button type="submit" class="btn-primary">Save Password</button>
                 </form>
 
-                <p style="margin-top:12px;">
-                    <a href="profile.php?view=profile">Back to Profile</a>
-                </p>
+                <div class="back-btn-wrapper">
+                    <a href="profile.php?view=profile" class="btn-back">
+                        ← Back to Profile
+                    </a>
             </div>
-        </div>
+         </div>
     </main>
+<script>
+function togglePassword(inputId, icon) {
+    const input = document.getElementById(inputId);
+
+    if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+    } else {
+        input.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+    }
+}
+</script>
 </body>
 </html>

@@ -1,13 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-    --primary-gold: #BC8E2C;      /* Exact gold from your design */
+    --primary-gold: #BC8E2C;      
     --primary-gold-hover: #A37B1F;
-    --bg-body: #F1F3F6;           /* Grayish background seen in screenshots */
+    --bg-body: #F1F3F6;          
     --bg-white: #ffffff;
     --text-dark: #1f2937;
     --text-gray: #6b7280;
-    --input-bg: #F4EBD0;          /* The specific beige color for your inputs */
+    --input-bg: #F4EBD0;        
     --border-color: #e5e7eb;
     --radius-card: 16px;
     --radius-input: 8px;
@@ -446,5 +446,121 @@ body.alert-open {
         width: 60px;
         height: 60px;
         font-size: 26px;
+    }
+}
+
+.login-card {
+    max-width: 420px;
+    margin: auto;
+    padding: 32px 28px;
+    border-radius: 18px;
+}
+
+.login-card h2 {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.login-card p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding: 13px 45px 13px 14px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: 0.2s;
+}
+
+.password-wrapper input:focus {
+    border-color: #BF9225;
+    box-shadow: 0 0 0 3px rgba(191, 146, 37, 0.12);
+    outline: none;
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+.toggle-password:hover {
+    color: #BF9225;
+}
+
+.btn-primary {
+    width: 100%;
+    margin-top: 10px;
+    padding: 13px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    background: #BF9225;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-primary:hover {
+    background: #a77d1d;
+}
+
+.back-btn-wrapper {
+    margin-top: 18px;
+    text-align: center;
+}
+
+.btn-back {
+    display: inline-block;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid #BF9225;
+    color: #BF9225;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+.btn-back:hover {
+    background: #BF9225;
+    color: #fff;
+}
+
+@media (max-width: 480px) {
+    .login-card {
+        padding: 24px 18px;
+        border-radius: 14px;
+    }
+
+    .login-card h2 {
+        font-size: 24px;
     }
 }

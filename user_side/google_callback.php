@@ -78,7 +78,12 @@ try {
 
         $update = mysqli_prepare($conn, "
             UPDATE users
-            SET google_id = ?, email_verified = 1
+            SET google_id = ?,
+                email_verified = 1,
+                auth_provider = CASE
+                    WHEN password_set = 1 THEN 'both'
+                    ELSE 'google'
+                END
             WHERE id = ?
         ");
         mysqli_stmt_bind_param($update, "si", $googleId, $userId);
@@ -88,13 +93,22 @@ try {
         $_SESSION['user_email'] = $email;
         $_SESSION['full_name'] = trim($user['firstname'] . ' ' . $user['lastname']);
     } else {
-        $randomPassword = password_hash(bin2hex(random_bytes(16)), PASSWORD_DEFAULT);
-
         $insert = mysqli_prepare($conn, "
-            INSERT INTO users (firstname, lastname, email, password, google_id, email_verified, status)
-            VALUES (?, ?, ?, ?, ?, 1, 'Active')
-        ");
-        mysqli_stmt_bind_param($insert, "sssss", $firstname, $lastname, $email, $randomPassword, $googleId);
+        INSERT INTO users (
+            firstname,
+            lastname,
+            email,
+            password,
+            google_id,
+            auth_provider,
+            password_set,
+            email_verified,
+            status
+        )
+        VALUES (?, ?, ?, '', ?, 'google', 0, 1, 'Active')
+    ");
+
+mysqli_stmt_bind_param($insert, "ssss", $firstname, $lastname, $email, $googleId);
         mysqli_stmt_execute($insert);
 
         $userId = mysqli_insert_id($conn);

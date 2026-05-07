@@ -12,55 +12,15 @@ body {
     max-width: 900px;
 }
 
-.back-home {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    color: #BF9225;
-    font-weight: 600;
-    font-size: 14px;
-    text-decoration: none;
-    margin-bottom: 30px;
-}
-
-.back-home i {
-    color: #BF9225;
-    font-size: 14px;
-}
-
-.back-home:hover {
-    color: #BF9225;
-    opacity: 1;
-}
-
-@media (max-width: 768px) {
-    .back-home {
-        font-size: 13px;
-        gap: 8px;
-    }
-}
-
-@media (max-width: 480px) {
-    .back-home {
-        font-size: 13px;
-        gap: 6px;
-    }
-
-    .back-home i {
-        font-size: 13px;
-    }
-}
-
 .header-section h1 {
     color: #BF9225;
+    font-weight: 700;
     font-size: 28px;
     margin: 0;
 }
 
 .header-section p {
-    color: #BF9225;
-    opacity: 0.7;
+    color: #666;
     font-size: 16px;
     margin-top: 5px;
 }

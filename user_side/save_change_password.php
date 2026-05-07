@@ -34,7 +34,7 @@ if (strlen($new_password) < 8) {
     exit();
 }
 
-$stmt = mysqli_prepare($conn, "SELECT password FROM users WHERE id = ? LIMIT 1");
+$stmt = mysqli_prepare($conn, "SELECT password, password_set FROM users WHERE id = ? LIMIT 1");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $res = mysqli_stmt_get_result($stmt);
@@ -42,6 +42,11 @@ $user = mysqli_fetch_assoc($res);
 
 if (!$user) {
     echo "<script>alert('User not found.'); window.location='login.php';</script>";
+    exit();
+}
+
+if ((int)($user['password_set'] ?? 0) === 0) {
+    echo "<script>alert('Please set your password first.'); window.location='set_password.php';</script>";
     exit();
 }
 

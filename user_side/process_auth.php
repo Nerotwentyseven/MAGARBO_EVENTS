@@ -54,8 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 
-    if (strlen($password) < 6) {
-        setAlert('error', 'Weak Password', 'Password must be at least 6 characters long.', 'register');
+    if (strlen($password) < 8) {
+        setAlert('error', 'Weak Password', 'Password must be at least 8 characters long.', 'register');
         header("Location: login.php");
         exit();
     }

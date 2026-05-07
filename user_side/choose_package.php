@@ -104,9 +104,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         :root { --gold: #BF9225; --gold-hover: #a37b1f; --bg: #F0F2F5; }
         body { font-family: 'Arial', sans-serif; background-color: var(--bg); margin: 0; padding: 0; color: #333; }
         .container { max-width: 1100px; margin: 20px auto; padding: 20px; }
-        .header-section { margin-bottom: 30px; text-align: center; }
-        .header-section h1 { color: var(--gold); font-size: 32px; font-weight: bold; margin-bottom: 10px; }
-        .header-section p { color: #666; font-size: 16px; }
+        .header-section {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        .header-section h1 {
+            color: var(--gold);
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .header-section p {
+            color: #666;
+            font-size: 16px;
+            margin-top: 5px;
+        }
 
         .stepper { display: flex; justify-content: center; gap: 40px; margin: 30px 0; }
         .step { width: 45px; height: 45px; border-radius: 50%; background: #9da3a8; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; }
@@ -154,7 +167,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .btn-modal-select { flex: 1; padding: 12px; border: none; background: var(--gold); color: white; border-radius: 10px; font-weight: bold; cursor: pointer; }
 
         .bottom-nav { border-top: 1px solid #EEE; padding: 20px 0; display: flex; justify-content: space-between; align-items: center; }
-        .btn-prev { padding: 12px 30px; border-radius: 8px; background: #D9D9D9; border: none; cursor: pointer; font-weight: bold; }
+        .btn-prev {
+            background-color: #D9D9D9;
+            border: 1px solid #B0B0B0;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
         .btn-next { padding: 12px 60px; border-radius: 8px; background: var(--gold); color: white; border: none; font-weight: bold; cursor: pointer; opacity: 0.5; pointer-events: none; transition: 0.3s; }
         .btn-next.active { opacity: 1; pointer-events: auto; }
 
@@ -208,7 +232,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
 
         <div class="bottom-nav">
-            <button type="button" class="btn-prev" onclick="history.back()">Previous</button>
+            <button type="button" class="btn-prev" onclick="history.back()">
+                <i class="fa-solid fa-arrow-left"></i> Previous
+            </button>
             <button type="submit" class="btn-next" id="nextBtn">Next</button>
         </div>
     </form>

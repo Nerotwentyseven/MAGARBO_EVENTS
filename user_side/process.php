@@ -66,9 +66,9 @@ $_SESSION['temp_booking_data'] = [
 <body>
     <div class="REVIEW-AND-PAYMENT">
         <div class="header-nav">
-            <div class="back-home" onclick="location.href='index.php'">
-                <i class="fa-solid fa-arrow-left"></i>
-                <span>Back to Home</span>
+            <div class="back-home" onclick="openCancelBookingAlert()">
+                <i class="fa-solid fa-xmark"></i>
+                <span>Cancel Booking</span>
             </div>
         </div>
 
@@ -252,10 +252,66 @@ $_SESSION['temp_booking_data'] = [
             </div>
 
             <div class="form-footer">
-                <button type="button" class="btn-prev" onclick="history.back()">Previous</button>
+                <button type="button" class="btn-prev" onclick="history.back()">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Previous
+                </button>
                 <button type="button" class="btn-next" onclick="location.href='payment.php'">Proceed to Payment</button>
             </div>
         </div>
     </div>
+
+    <div id="bookingAlertOverlay" class="booking-alert-overlay">
+    <div class="booking-alert-card">
+        <div id="bookingAlertIcon" class="booking-alert-icon info-mode">
+            <i class="fa-solid fa-circle-question"></i>
+        </div>
+
+        <h3 id="bookingAlertTitle">Cancel Booking?</h3>
+        <p id="bookingAlertMessage">Are you sure?</p>
+
+        <div id="bookingAlertActions" class="booking-alert-actions"></div>
+    </div>
+</div>
+    
+    <script>
+function openCancelBookingAlert() {
+
+    const overlay = document.getElementById('bookingAlertOverlay');
+    const icon = document.getElementById('bookingAlertIcon');
+    const title = document.getElementById('bookingAlertTitle');
+    const message = document.getElementById('bookingAlertMessage');
+    const actions = document.getElementById('bookingAlertActions');
+
+    icon.className = 'booking-alert-icon info-mode';
+    icon.innerHTML = '<i class="fa-solid fa-circle-question"></i>';
+
+    title.innerText = 'Cancel Booking?';
+
+    message.innerText =
+        'Are you sure you want to cancel this booking and go back to homepage?';
+
+    actions.innerHTML = `
+        <button type="button"
+            class="booking-alert-btn"
+            onclick="closeBookingAlert()">
+            No
+        </button>
+
+        <button type="button"
+            class="booking-alert-btn ok"
+            onclick="window.location.href='index.php'">
+            Confirm
+        </button>
+    `;
+
+    overlay.style.display = 'flex';
+}
+
+function closeBookingAlert() {
+    document.getElementById('bookingAlertOverlay').style.display = 'none';
+}
+</script>                                
+
 </body>
 </html>
