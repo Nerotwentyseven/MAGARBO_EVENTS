@@ -2,6 +2,7 @@
 .env
 config.php
 db_config.php
+user_side/gemini_config.php
 
 # Dependencies
 /vendor/

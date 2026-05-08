@@ -185,7 +185,10 @@ $payload = [
     ]]
 ];
 
-$endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/' . rawurlencode(GEMINI_MODEL) . ':generateContent';
+$endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/' 
+    . rawurlencode(GEMINI_MODEL) 
+    . ':generateContent?key=' 
+    . urlencode(GEMINI_API_KEY);
 
 $ch = curl_init($endpoint);
 curl_setopt_array($ch, [
@@ -193,7 +196,7 @@ curl_setopt_array($ch, [
     CURLOPT_POST => true,
     CURLOPT_HTTPHEADER => [
         'Content-Type: application/json',
-        'x-goog-api-key: ' . GEMINI_API_KEY
+        
     ],
     CURLOPT_POSTFIELDS => json_encode($payload),
     CURLOPT_TIMEOUT => 30
@@ -208,46 +211,59 @@ if ($response === false || $httpCode >= 400) {
 
     $errorData = json_decode($response, true);
     $status = $errorData['error']['status'] ?? '';
+    $errorMessage = $errorData['error']['message'] ?? '';
 
     if ($status === 'RESOURCE_EXHAUSTED') {
 
-        $backupSuggestion = '';
-
         if (!empty($requests)) {
-            $backupSuggestion = $requests[0];
-        } else {
-            $backupSuggestion = 'Please provide your preferred event setup, decorations, color motif, and overall style.';
+            echo json_encode([
+                'success' => true,
+                'suggestion' => $requests[0],
+                'source' => 'quota_fallback'
+            ]);
+            exit();
         }
 
         echo json_encode([
             'success' => true,
-            'suggestion' => $backupSuggestion,
-            'source' => 'quota_cached',
-            'message' => 'AI quota reached. Temporary suggestion used.'
+            'suggestion' => 'Please provide your preferred event setup, decorations, color motif, and overall style.',
+            'source' => 'quota_default'
         ]);
         exit();
     }
 
+    error_log("Gemini Error: HTTP {$httpCode} | {$errorMessage} | {$response}");
+
     echo json_encode([
         'success' => false,
         'message' => 'Gemini API failed.',
-        'source' => 'gemini_error',
-        'http_code' => $httpCode,
-        'curl_error' => $curlError,
-        'raw_response' => $response
+        'debug' => $errorMessage,
+        'source' => 'gemini_error'
     ]);
     exit();
 }
 
 $data = json_decode($response, true);
-$aiSuggestion = trim($data['candidates'][0]['content']['parts'][0]['text'] ?? '');
+$aiSuggestion = trim(
+    $data['candidates'][0]['content']['parts'][0]['text']
+    ?? ''
+);
 
 if ($aiSuggestion === '') {
+
+    if (!empty($requests)) {
+        echo json_encode([
+            'success' => true,
+            'suggestion' => $requests[0],
+            'source' => 'empty_fallback'
+        ]);
+        exit();
+    }
+
     echo json_encode([
-        'success' => false,
-        'message' => 'Gemini returned empty suggestion.',
-        'source' => 'empty_gemini_response',
-        'raw_response' => $response
+        'success' => true,
+        'suggestion' => 'Please provide your preferred event setup, decorations, color motif, and overall style.',
+        'source' => 'empty_default'
     ]);
     exit();
 }

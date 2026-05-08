@@ -150,15 +150,17 @@ if ($themeRes) {
                 <div class="form-grid">
                     <div class="field-group">
                         <label>Event Category</label>
-                        <input type="text" name="event_type" id="categoryInput" list="categoryOptions" placeholder="Select or type category" oninput="handleCategoryInput(this.value)" onfocus="this.select()" required>
-                        <datalist id="categoryOptions">
-                            <option value="Anniversary">
-                            <option value="Birthday">
-                            <option value="Catering">
-                            <option value="Christening">
-                            <option value="Corporate">
-                            <option value="Wedding">
-                        </datalist>
+                        <div class="suggest-input-wrap">
+                            <input type="text" name="event_type" id="categoryInput"
+                                placeholder="Select or type category"
+                                autocomplete="off"
+                                oninput="handleCategoryTyping(this.value, 'category')"
+                                onfocus="showFieldSuggestions('category')"
+                                onclick="showFieldSuggestions('category')"
+                                required>
+
+                            <div class="field-suggestions" id="categorySuggestions"></div>
+                        </div>
                     </div>
 
                     <div class="field-group">
@@ -238,14 +240,16 @@ if ($themeRes) {
                 <div id="religionSection" class="special-section" style="display: none; margin-top: 20px;">
                     <div class="info-box">
                         <label>Religious Customization</label>
-                        <input type="text" name="religion" id="religionSelect" list="religionOptions" placeholder="Select or type religion" onfocus="this.select()">
+                        <div class="suggest-input-wrap">
+                            <input type="text" name="religion" id="religionSelect"
+                                placeholder="Select or type religion"
+                                autocomplete="off"
+                                oninput="handleCategoryTyping(this.value, 'religion')"
+                                onfocus="showFieldSuggestions('religion')"
+                                onclick="showFieldSuggestions('religion')">
 
-                        <datalist id="religionOptions">
-                            <option value="Catholic">
-                            <option value="Christian">
-                            <option value="Iglesia ni Cristo">
-                            <option value="Muslim">
-                        </datalist>
+                            <div class="field-suggestions" id="religionSuggestions"></div>
+                        </div>
 
                     </div>
                 </div>
@@ -560,6 +564,7 @@ if ($themeRes) {
                         updateVenueField();
                     }
 
+                    saveBookingDraft();
                     closeAllCustomDropdowns();
                 };
 
@@ -942,10 +947,11 @@ if ($themeRes) {
 
                         requestField.placeholder = 'Mention themes, colors, or specific needs...';
                         openBookingAlert(
-                            'Suggestion Failed',
-                            data.message || 'Failed to generate request suggestion.',
-                            'error'
-                        );
+    'Suggestion Failed',
+    (data.message || 'Failed to generate request suggestion.') +
+    (data.debug ? '\n\nDebug: ' + data.debug : ''),
+    'error'
+);
                     }
                     } catch (error) {
                         console.error(error);
@@ -1197,12 +1203,55 @@ if ($themeRes) {
                 request: document.getElementById('requestField')?.value || '',
                 selected_theme_id: document.getElementById('selectedThemeIdInput')?.value || '',
                 selected_theme: document.getElementById('selectedThemeInput')?.value || '',
-                selected_theme_text: document.getElementById('selectedThemeText')?.innerText || ''
+                selected_theme_text: document.getElementById('selectedThemeText')?.innerText || '',
+                province_code: document.getElementById('provinceSelect')?.value || '',
+                province_name: selectedProvinceName || '',
+                municipality_code: document.getElementById('municipalitySelect')?.value || '',
+                municipality_name: selectedMunicipalityName || '',
+                barangay_name: selectedBarangayName || '',
+                street: document.getElementById('streetInput')?.value || ''
             };
         }
 
         function saveBookingDraft() {
             localStorage.setItem(BOOKING_DRAFT_KEY, JSON.stringify(getBookingDraftData()));
+        }
+
+        async function restoreLocationDraft(draft) {
+            if (!draft) return;
+
+            const provinceSelect = document.getElementById('provinceSelect');
+            const municipalitySelect = document.getElementById('municipalitySelect');
+            const barangaySelect = document.getElementById('barangaySelect');
+            const streetInput = document.getElementById('streetInput');
+
+            if (draft.province_code && draft.province_name) {
+                provinceSelect.value = draft.province_code;
+                selectedProvinceName = draft.province_name;
+                document.getElementById('provinceTriggerText').textContent = draft.province_name;
+
+                await handleProvinceChange(draft.province_code);
+            }
+
+            if (draft.municipality_code && draft.municipality_name) {
+                municipalitySelect.value = draft.municipality_code;
+                selectedMunicipalityName = draft.municipality_name;
+                document.getElementById('municipalityTriggerText').textContent = draft.municipality_name;
+
+                await handleMunicipalityChange(draft.municipality_code);
+            }
+
+            if (draft.barangay_name) {
+                barangaySelect.value = draft.barangay_name;
+                selectedBarangayName = draft.barangay_name;
+                document.getElementById('barangayTriggerText').textContent = draft.barangay_name;
+            }
+
+            if (draft.street && streetInput) {
+                streetInput.value = draft.street;
+            }
+
+            updateVenueField();
         }
 
         function loadBookingDraft() {
@@ -1262,6 +1311,7 @@ if ($themeRes) {
                 selectedThemeText.innerText = draft.selected_theme_text;
                 selectedThemeWrapper.style.display = 'flex';
             }
+            restoreLocationDraft(draft);
         }
 
         function clearBookingDraft() {
@@ -1274,7 +1324,8 @@ if ($themeRes) {
                 document.getElementById('eventDate'),
                 document.querySelector('input[name="event_time"]'),
                 document.getElementById('religionSelect'),
-                document.getElementById('requestField')
+                document.getElementById('requestField'),
+                document.getElementById('streetInput')
             ];
 
             fields.forEach(field => {
@@ -1286,24 +1337,107 @@ if ($themeRes) {
             const bookingForm = document.getElementById('bookingForm');
 
             if (bookingForm) {
-                const bookingForm = document.getElementById('bookingForm');
-
-        if (bookingForm) {
-            bookingForm.addEventListener('submit', function () {
-                saveBookingDraft();
-            });
-        }
+                bookingForm.addEventListener('submit', function () {
+                    saveBookingDraft();
+                });
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            loadBookingDraft();
-            setupBookingDraftAutosave();
+        const fieldSuggestionData = {
+            category: ['Anniversary', 'Birthday', 'Catering', 'Christening', 'Corporate', 'Wedding'],
+            religion: ['Catholic', 'Christian', 'Iglesia ni Cristo', 'Muslim']
+        };
+
+        function showFieldSuggestions(type) {
+            const inputId = type === 'category' ? 'categoryInput' : 'religionSelect';
+            const boxId = type === 'category' ? 'categorySuggestions' : 'religionSuggestions';
+
+            const input = document.getElementById(inputId);
+            const box = document.getElementById(boxId);
+
+            if (!input || !box) return;
+
+            renderFieldSuggestions(type, '');
+            box.classList.add('show');
+        }
+
+        function hideFieldSuggestions(type) {
+            const boxId = type === 'category' ? 'categorySuggestions' : 'religionSuggestions';
+            const box = document.getElementById(boxId);
+
+            if (box) box.classList.remove('show');
+        }
+
+        function handleCategoryTyping(value, type) {
+            renderFieldSuggestions(type, value);
+
+            if (type === 'category') {
+                handleCategoryInput(value);
+            }
+
+            saveBookingDraft();
+        }
+
+        function renderFieldSuggestions(type, keyword = '') {
+            const boxId = type === 'category' ? 'categorySuggestions' : 'religionSuggestions';
+            const inputId = type === 'category' ? 'categoryInput' : 'religionSelect';
+
+            const box = document.getElementById(boxId);
+            const input = document.getElementById(inputId);
+
+            if (!box || !input) return;
+
+            const list = fieldSuggestionData[type] || [];
+            const search = String(keyword || '').toLowerCase().trim();
+
+            const filtered = list.filter(item =>
+                item.toLowerCase().includes(search)
+            );
+
+            box.innerHTML = '';
+
+            if (!filtered.length) {
+                box.innerHTML = `<div class="field-suggestion-empty">No suggestions found</div>`;
+                return;
+            }
+
+            filtered.forEach(item => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'field-suggestion-item';
+                btn.textContent = item;
+
+                btn.onclick = function () {
+                    input.value = item;
+
+                    if (type === 'category') {
+                        handleCategoryInput(item);
+                    }
+
+                    hideFieldSuggestions(type);
+                    saveBookingDraft();
+                };
+
+                box.appendChild(btn);
+            });
+        }
+
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.suggest-input-wrap')) {
+                hideFieldSuggestions('category');
+                hideFieldSuggestions('religion');
+            }
         });
 
-        renderCalendar();
-        loadProvinces();
-        updateVenueField();
+        document.addEventListener('DOMContentLoaded', async function () {
+            renderCalendar();
+
+            await loadProvinces();
+            loadBookingDraft();
+
+            setupBookingDraftAutosave();
+            updateVenueField();
+        });
     </script>
 </body>
 </html>
