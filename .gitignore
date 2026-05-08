@@ -1,7 +1,6 @@
 # Sensitive files
 .env
-config.php
-db_config.php
+db_connection.php
 user_side/gemini_config.php
 
 # Dependencies
