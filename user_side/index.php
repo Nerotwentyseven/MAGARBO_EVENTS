@@ -5,6 +5,26 @@ $pageTitle = "Magarbo Events | Making Every Occasion Grand";
 include 'header.php';
 require_once '../db_connection.php';
 
+$targetReviewId = null;
+
+if (isset($_GET['t'])) {
+
+    $token = $_GET['t'];
+
+    $stmt = mysqli_prepare($conn,
+        "SELECT id FROM reviews WHERE review_token = ?"
+    );
+
+    mysqli_stmt_bind_param($stmt, "s", $token);
+    mysqli_stmt_execute($stmt);
+
+    $res = mysqli_stmt_get_result($stmt);
+
+    if ($row = mysqli_fetch_assoc($res)) {
+        $targetReviewId = $row['id'];
+    }
+}
+
 $packages = [];
 
 $totalPackageBookings = 0;
@@ -86,10 +106,13 @@ if ($avgRes && $avgRow = mysqli_fetch_assoc($avgRes)) {
 $reviews = [];
 
 $reviewSql = "SELECT r.id, r.user_id, r.rating, r.comment, r.created_at,
-                     u.firstname, u.lastname
+                     u.firstname, u.lastname,
+                     GROUP_CONCAT(ri.image_path ORDER BY ri.id ASC SEPARATOR '|||') AS images
               FROM reviews r
               JOIN users u ON r.user_id = u.id
+              LEFT JOIN review_images ri ON ri.review_id = r.id
               WHERE r.status = 'Visible'
+              GROUP BY r.id
               ORDER BY r.id DESC
               LIMIT 3";
 
@@ -97,6 +120,9 @@ $reviewRes = mysqli_query($conn, $reviewSql);
 
 if ($reviewRes && mysqli_num_rows($reviewRes) > 0) {
     while ($row = mysqli_fetch_assoc($reviewRes)) {
+        $full_name = trim(($row['firstname'] ?? '') . ' ' . ($row['lastname'] ?? ''));
+        $images = !empty($row['images']) ? explode('|||', $row['images']) : [];
+
         $full_name = trim(($row['firstname'] ?? '') . ' ' . ($row['lastname'] ?? ''));
         if ($full_name === '') {
             $full_name = "User";
@@ -116,13 +142,16 @@ if ($reviewRes && mysqli_num_rows($reviewRes) > 0) {
         }
 
         $reviews[] = [
-            'id'      => $row['id'],
-            'user_id' => $row['user_id'],
-            'initial' => $initial,
-            'name'    => $full_name,
-            'time'    => date("F j, Y", strtotime($row['created_at'])),
-            'comment' => $row['comment'],
-            'rating'  => (int)$row['rating']
+            'id'         => $row['id'],
+            'user_id'    => $row['user_id'],
+            'initial'    => $initial,
+            'name'       => $full_name,
+            'time'       => date("F j, Y", strtotime($row['created_at'])),
+            'comment'    => $row['comment'],
+            'rating'     => (int)$row['rating'],
+            'images' => $images,
+            'image_path' => $row['image_path'] ?? null,
+            'review_link'=> "review.php#review-" . $row['id']
         ];
     }
 }
@@ -369,12 +398,21 @@ function closeLoginRequiredModal() {
                 $is_my_comment = (isset($_SESSION['user_id']) && $_SESSION['user_id'] == $r['user_id']);
             ?>
                 <div class="review-card" style="position: relative;">
+
+                
                     <div class="card-top-row">
                         <div class="stars-gold-small">
                             <?php for ($i = 1; $i <= 5; $i++): ?>
                                 <i class="fa-solid fa-star" style="color: <?= $i <= $r['rating'] ? '#bf9225' : '#ddd'; ?>"></i>
                             <?php endfor; ?>
                         </div>
+
+                        <?php if (!empty($r['image_path'])): ?>
+                    <a href="<a href="review.php" onclick="goToReview(event, <?= (int)$r['id'] ?>)">" style="display:inline-block;">
+                        <img src="../<?= htmlspecialchars($r['image_path']) ?>" 
+                            style="width:35px; height:35px; object-fit:cover; border-radius:6px; margin-top:6px; opacity:0.9;">
+                    </a>
+                <?php endif; ?>
 
                         <div style="display: flex; gap: 10px; align-items: center;">
                             <?php if ($is_my_comment): ?>
@@ -386,6 +424,28 @@ function closeLoginRequiredModal() {
                         </div>
                     </div>
                     <p class="review-text">"<?php echo htmlspecialchars($r['comment']); ?>"</p>
+                    <?php if (!empty($r['images'])): ?>
+                        <a href="<?= htmlspecialchars($r['review_link']) ?>" class="review-img-group">
+
+                            <?php 
+                            $count = 0;
+                            foreach ($r['images'] as $img): 
+                                if ($count >= 3) break;
+                            ?>
+                                <img src="../<?= htmlspecialchars($img) ?>" class="review-thumb">
+                            <?php 
+                                $count++;
+                            endforeach; 
+                            ?>
+
+                            <?php if (count($r['images']) > 3): ?>
+                                <div class="more-overlay">
+                                    +<?= count($r['images']) - 3 ?>
+                                </div>
+                            <?php endif; ?>
+
+                        </a>
+                    <?php endif; ?>
                     <div class="card-footer">
                         <div class="client-profile">
                             <div class="client-avatar"><?php echo htmlspecialchars($r['initial']); ?></div>
@@ -458,6 +518,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+function goToReview(event, id) {
+    event.preventDefault();
+    sessionStorage.setItem("scrollToReview", id);
+    window.location.href = "review.php";
+}
 </script>
 
 <?php include 'footer.php'; ?>

@@ -179,28 +179,98 @@ if ($imagesQuery) {
     </main>
 
     <div id="imagePreviewModal" class="image-preview-modal">
+
         <span class="close-preview" onclick="closePreview()">&times;</span>
+
+        <button class="viewer-nav prev" onclick="changePreview(-1)">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
         <div id="previewContent"></div>
+
+        <button class="viewer-nav next" onclick="changePreview(1)">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
     </div>
 
     <script>
-        function openPreview(src, type = 'image') {
-            const previewContent = document.getElementById('previewContent');
+        let galleryImages = [];
+        let currentIndex = 0;
 
-            if (type === 'video') {
+        function openPreview(src, type = 'image') {
+
+            const items = document.querySelectorAll('.gallery-item img, .gallery-item video');
+
+            galleryImages = [];
+
+            items.forEach(el => {
+
+                if (el.tagName === 'IMG') {
+                    galleryImages.push({
+                        src: new URL(el.src, window.location.href).href,
+                        type: 'image'
+                    });
+                }
+
+                if (el.tagName === 'VIDEO') {
+                    const source = el.querySelector('source');
+                    if (source) {
+                        galleryImages.push({
+                            src: new URL(source.src, window.location.href).href,
+                            type: 'video'
+                        });
+                    }
+                }
+            });
+
+            const normalizedSrc = new URL(src, window.location.href).href;
+
+            currentIndex = galleryImages.findIndex(i => i.src === normalizedSrc);
+
+            if (currentIndex === -1) {
+                currentIndex = 0;
+            }
+            
+            renderPreview();
+
+            document.getElementById('imagePreviewModal').style.display = 'flex';
+        }
+
+        function renderPreview() {
+            const previewContent = document.getElementById('previewContent');
+            const item = galleryImages[currentIndex];
+
+            if (!item) return;
+
+            if (item.type === 'video') {
                 previewContent.innerHTML = `
-                    <video controls autoplay playsinline style="max-width:90vw; max-height:90vh; border-radius:12px;">
-                        <source src="${src}" type="video/mp4">
-                        Your browser does not support the video tag.
+                    <video controls playsinline preload="metadata"
+                        style="max-width:90vw; max-height:90vh; border-radius:14px;">
+                        <source src="${item.src}" type="video/mp4">
                     </video>
                 `;
             } else {
                 previewContent.innerHTML = `
-                    <img src="${src}" alt="Preview" style="max-width:90vw; max-height:90vh; border-radius:12px;">
+                    <img src="${item.src}"
+                        style="max-width:90vw; max-height:90vh; border-radius:14px;">
                 `;
             }
+        }
 
-            document.getElementById('imagePreviewModal').style.display = 'flex';
+        function changePreview(direction) {
+
+            currentIndex += direction;
+
+            if (currentIndex < 0) {
+                currentIndex = galleryImages.length - 1;
+            }
+
+            if (currentIndex >= galleryImages.length) {
+                currentIndex = 0;
+            }
+
+            renderPreview();
         }
 
         function closePreview() {
@@ -208,7 +278,7 @@ if ($imagesQuery) {
             document.getElementById('previewContent').innerHTML = '';
         }
 
-        document.getElementById('imagePreviewModal').addEventListener('click', function(e) {
+        document.getElementById('imagePreviewModal').addEventListener('click', function (e) {
             if (e.target === this) {
                 closePreview();
             }
@@ -237,8 +307,6 @@ if ($imagesQuery) {
                 pingUserHeartbeat();
             }
         });
-
     </script>
-
 </body>
 </html>

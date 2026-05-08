@@ -305,7 +305,7 @@ if (isset($_SESSION['user_id'])) {
             document.body.classList.remove('menu-open');
         }
 
-        window.onclick = function (e) {
+        document.addEventListener('click', function (e) {
             if (e.target.className === 'modal-overlay') e.target.style.display = 'none';
 
             if (

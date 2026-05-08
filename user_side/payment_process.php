@@ -258,6 +258,9 @@ mysqli_stmt_close($rebuildStmt);
 <body>
     <div class="success-card">
         <?php if ($success): ?>
+            <script>
+                localStorage.removeItem('magarbo_booking_draft_v1');
+            </script>
             <div class="icon"><i class="fa-solid fa-circle-check"></i></div>
             <h1>Booking Received!</h1>
             <p>Your down payment has been processed. Our admin will review your booking shortly. Check your profile for updates.</p>
@@ -276,5 +279,6 @@ mysqli_stmt_close($rebuildStmt);
             <a href="payment.php" class="btn-profile" style="background: #333;">Back to Payment</a>
         <?php endif; ?>
     </div>
+    
 </body>
 </html>

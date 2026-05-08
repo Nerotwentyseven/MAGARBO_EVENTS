@@ -357,6 +357,7 @@ if ($themeRes) {
         let selectedProvinceName = '';
         let selectedMunicipalityName = '';
         let selectedBarangayName = '';
+        
 
         function openCancelBookingAlert() {
     openBookingAlert(
@@ -947,11 +948,10 @@ if ($themeRes) {
 
                         requestField.placeholder = 'Mention themes, colors, or specific needs...';
                         openBookingAlert(
-    'Suggestion Failed',
-    (data.message || 'Failed to generate request suggestion.') +
-    (data.debug ? '\n\nDebug: ' + data.debug : ''),
-    'error'
-);
+                            'Suggestion Failed',
+                            data.message || 'Failed to generate request suggestion.',
+                            'error'
+                        );
                     }
                     } catch (error) {
                         console.error(error);
@@ -1193,6 +1193,7 @@ if ($themeRes) {
         }
 
         const BOOKING_DRAFT_KEY = 'magarbo_booking_draft_v1';
+        let isRestoringBookingDraft = false;
 
         function getBookingDraftData() {
             return {
@@ -1214,7 +1215,15 @@ if ($themeRes) {
         }
 
         function saveBookingDraft() {
-            localStorage.setItem(BOOKING_DRAFT_KEY, JSON.stringify(getBookingDraftData()));
+
+            if (isRestoringBookingDraft) {
+                return;
+            }
+
+            localStorage.setItem(
+                BOOKING_DRAFT_KEY,
+                JSON.stringify(getBookingDraftData())
+            );
         }
 
         async function restoreLocationDraft(draft) {
@@ -1254,14 +1263,18 @@ if ($themeRes) {
             updateVenueField();
         }
 
-        function loadBookingDraft() {
+        async function loadBookingDraft() {
             const rawDraft = localStorage.getItem(BOOKING_DRAFT_KEY);
             if (!rawDraft) return;
+
 
             let draft;
 
             try {
                 draft = JSON.parse(rawDraft);
+
+                isRestoringBookingDraft = true;
+
             } catch (e) {
                 localStorage.removeItem(BOOKING_DRAFT_KEY);
                 return;
@@ -1311,7 +1324,11 @@ if ($themeRes) {
                 selectedThemeText.innerText = draft.selected_theme_text;
                 selectedThemeWrapper.style.display = 'flex';
             }
-            restoreLocationDraft(draft);
+            await restoreLocationDraft(draft);
+
+            isRestoringBookingDraft = false;
+
+            saveBookingDraft();
         }
 
         function clearBookingDraft() {
@@ -1430,13 +1447,17 @@ if ($themeRes) {
         });
 
         document.addEventListener('DOMContentLoaded', async function () {
+
             renderCalendar();
 
             await loadProvinces();
-            loadBookingDraft();
+            await loadBookingDraft();
 
             setupBookingDraftAutosave();
+
             updateVenueField();
+
+            saveBookingDraft();
         });
     </script>
 </body>

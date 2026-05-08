@@ -157,8 +157,5 @@ if ($status === 'Pending' || $status === 'Paid') {
             </div>
         </div>
     </div>
-    <script>
-localStorage.removeItem('magarbo_booking_draft_v1');
-</script>
 </body>
 </html>

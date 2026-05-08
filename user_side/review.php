@@ -33,10 +33,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
     $comment = trim($_POST['comment'] ?? '');
 
     if ($rating >= 1 && $rating <= 5 && $comment !== '') {
-        $insertStmt = mysqli_prepare($conn, "INSERT INTO reviews (user_id, rating, comment) VALUES (?, ?, ?)");
-        mysqli_stmt_bind_param($insertStmt, "iis", $user_id, $rating, $comment);
-        mysqli_stmt_execute($insertStmt);
+
+    $review_token = bin2hex(random_bytes(16));
+
+    $insertStmt = mysqli_prepare($conn,
+        "INSERT INTO reviews (user_id, rating, comment, review_token)
+        VALUES (?, ?, ?, ?)"
+    );
+
+    mysqli_stmt_bind_param($insertStmt, "iiss",
+        $user_id,
+        $rating,
+        $comment,
+        $review_token
+    );
+
+    mysqli_stmt_execute($insertStmt);
+
+    $review_id = mysqli_insert_id($conn);
+
+    if (!empty($_FILES['review_photos']['name'][0])) {
+
+        $allowedImage = ['jpg', 'jpeg', 'png', 'webp'];
+
+        $countStmt = mysqli_query($conn,
+            "SELECT COUNT(*) as total FROM review_images WHERE review_id = $review_id"
+        );
+
+        $rowCount = mysqli_fetch_assoc($countStmt);
+        $totalExisting = (int)$rowCount['total'];
+
+        $totalFiles = count($_FILES['review_photos']['name']);
+
+        for ($i = 0; $i < $totalFiles; $i++) {
+
+            if ($totalExisting >= 5) break;
+
+            $tmpName = $_FILES['review_photos']['tmp_name'][$i];
+            $fileName = $_FILES['review_photos']['name'][$i];
+
+            $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+            if (in_array($ext, $allowedImage)) {
+                $fileType = 'image';
+            } else {
+                continue;
+            }
+
+            $newName = uniqid('review_', true) . '.' . $ext;
+            $uploadPath = '../uploads/reviews/' . $newName;
+
+            if (!file_exists('../uploads/reviews')) {
+                mkdir('../uploads/reviews', 0777, true);
+            }
+
+            if (move_uploaded_file($tmpName, $uploadPath)) {
+
+                $dbPath = 'uploads/reviews/' . $newName;
+
+                $imgStmt = mysqli_prepare($conn,
+                    "INSERT INTO review_images (review_id, image_path, file_type)
+                    VALUES (?, ?, ?)"
+                );
+
+                mysqli_stmt_bind_param($imgStmt,
+                    "iss",
+                    $review_id,
+                    $dbPath,
+                    $fileType
+                );
+
+                mysqli_stmt_execute($imgStmt);
+
+                $totalExisting++;
+            }
+        }
     }
+}
 
     header("Location: review.php");
     exit();
@@ -44,6 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
 
 $reviews = [];
 $sql = "SELECT r.id, r.user_id, r.rating, r.comment, r.created_at,
+               r.review_token,
                u.firstname, u.lastname
         FROM reviews r
         JOIN users u ON r.user_id = u.id
@@ -78,11 +152,13 @@ if ($res && mysqli_num_rows($res) > 0) {
             'rating'  => (int)$row['rating'],
             'comment' => $row['comment'],
             'time'    => $row['created_at'],
-            'initial' => $initial
+            'initial' => $initial,
+            'review_token' => $row['review_token'],
+        'review_link'  => "review.php?t=" . $row['review_token']
         ];
     }
 }
-
+ 
 $total_reviews = count($reviews);
 $total_rating = 0;
 $rating_count = [5 => 0, 4 => 0, 3 => 0, 2 => 0, 1 => 0];
@@ -223,7 +299,9 @@ $average_rating = $total_reviews > 0 ? round($total_rating / $total_reviews, 1) 
         $time = !empty($r['time']) ? date("F j, Y", strtotime($r['time'])) : date("F j, Y");
         $is_my_comment = ($user_id == $r['user_id']);
     ?>
-    <div class="review-card-item" data-rating="<?= (int)$r['rating'] ?>">
+    <div class="review-card-item"
+     id="review-<?= (int)$r['id'] ?>"
+     data-rating="<?= (int)$r['rating'] ?>">
         <div class="item-header">
             <div class="user-meta">
                 <div class="avatar-circle"><?= htmlspecialchars($r['initial']) ?></div>
@@ -245,24 +323,49 @@ $average_rating = $total_reviews > 0 ? round($total_rating / $total_reviews, 1) 
 
         <div class="item-body">
             <i class="fa-solid fa-quote-left quote-gold"></i>
-            <p>"<?= htmlspecialchars($r['comment']) ?>"</p>
+
+            <div class="review-content-area">
+
+                <p>"<?= htmlspecialchars($r['comment']) ?>"</p>
+
+                <?php
+                $imgQuery = mysqli_query($conn,
+                    "SELECT * FROM review_images
+                    WHERE review_id = " . (int)$r['id']
+                );
+                ?>
+
+                <?php if ($imgQuery && mysqli_num_rows($imgQuery) > 0): ?>
+                    <div class="review-gallery">
+
+                        <?php while($img = mysqli_fetch_assoc($imgQuery)): ?>
+
+                            <img src="../<?= htmlspecialchars($img['image_path']) ?>"
+                                class="review-photo"
+                                onclick="openImageViewer(this.src)">
+
+                        <?php endwhile; ?>
+
+                    </div>
+                <?php endif; ?>
+
+            </div>
         </div>
     </div>
     <?php endforeach; ?>
-<?php else: ?>
-    <div class="review-card-item">
-        <div class="item-body">
-            <p style="margin:0;">No reviews yet.</p>
+    <?php else: ?>
+        <div class="review-card-item">
+            <div class="item-body">
+                <p style="margin:0;">No reviews yet.</p>
+            </div>
         </div>
-    </div>
-<?php endif; ?>
+    <?php endif; ?>
 </div>
-
 </div>
 </div>
 
 <div class="review-modal" id="reviewModal">
-<form class="review-form" method="POST">
+<form class="review-form" method="POST" enctype="multipart/form-data">
     <h3>Write a Review</h3>
 
     <select name="rating" required>
@@ -275,6 +378,28 @@ $average_rating = $total_reviews > 0 ? round($total_rating / $total_reviews, 1) 
     </select>
 
     <textarea name="comment" placeholder="Write your review..." rows="4" required></textarea>
+
+    <div class="photo-upload-box">
+        <label for="reviewPhotos" class="upload-label">
+            <i class="fa-solid fa-camera"></i>
+            Upload Photos
+        </label>
+
+        <button type="button" id="addMoreBtn"
+        style="display:none; margin-top:10px;"
+        onclick="document.getElementById('reviewPhotos').click()">
+        + Add More Photo / Video
+        </button>
+
+        <input type="file"
+        id="reviewPhotos"
+        name="review_photos[]"
+        accept="image/*"
+        multiple
+        hidden>
+
+        <div id="photoPreviewContainer"></div>
+    </div>
 
     <div style="display:flex; gap:10px;">
         <button type="submit" name="submit_review">Submit</button>
@@ -313,6 +438,24 @@ $average_rating = $total_reviews > 0 ? round($total_rating / $total_reviews, 1) 
             <button type="button" class="confirm-btn login-confirm" onclick="window.location.href='login.php'">Login</button>
         </div>
     </div>
+</div>
+
+<div id="imageViewerModal" class="image-viewer-modal">
+
+    <span class="close-image-viewer" onclick="closeImageViewer()">
+        &times;
+    </span>
+
+    <button class="viewer-nav prev" onclick="changeViewerImage(-1)">
+        <i class="fa-solid fa-chevron-left"></i>
+    </button>
+
+    <img id="viewerImage" class="viewer-image">
+
+    <button class="viewer-nav next" onclick="changeViewerImage(1)">
+        <i class="fa-solid fa-chevron-right"></i>
+    </button>
+
 </div>
 
 <script>
@@ -389,6 +532,174 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+const reviewPhotos = document.getElementById('reviewPhotos');
+const previewContainer = document.getElementById('photoPreviewContainer');
+const addMoreBtn = document.getElementById('addMoreBtn');
+
+let selectedFiles = new DataTransfer();
+
+if (reviewPhotos) {
+
+    reviewPhotos.addEventListener('change', function () {
+
+        const newFiles = Array.from(this.files);
+
+        for (let file of newFiles) {
+
+            if (selectedFiles.files.length >= 5) {
+                alert("Maximum of 5 photos.");
+                break;
+            }
+
+            selectedFiles.items.add(file);
+        }
+
+        this.files = selectedFiles.files;
+
+        renderPreview();
+        toggleAddMoreButton();
+    });
+}
+
+function renderPreview() {
+
+    previewContainer.innerHTML = '';
+
+    Array.from(selectedFiles.files).forEach(file => {
+
+        const wrapper = document.createElement('div');
+
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+
+            if (file.type.startsWith('image')) {
+
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.classList.add('preview-image');
+                wrapper.appendChild(img);
+
+            } else {
+
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.classList.add('preview-image');
+
+                wrapper.appendChild(img);
+            }
+
+            previewContainer.appendChild(wrapper);
+        };
+
+        reader.readAsDataURL(file);
+    });
+}
+
+function toggleAddMoreButton() {
+
+    if (!addMoreBtn) return;
+
+    if (selectedFiles.files.length === 0) {
+        addMoreBtn.style.display = "none";
+    } 
+    else if (selectedFiles.files.length >= 5) {
+        addMoreBtn.style.display = "none";
+    } 
+    else {
+        addMoreBtn.style.display = "block";
+    }
+}
+
+let currentGalleryImages = [];
+let currentImageIndex = 0;
+
+function openImageViewer(src) {
+
+    const clickedImage = event.target;
+
+    const gallery =
+        clickedImage.closest('.review-gallery');
+
+    const images =
+        gallery.querySelectorAll('.review-photo');
+
+    currentGalleryImages = [];
+
+    images.forEach(img => {
+        currentGalleryImages.push(img.src);
+    });
+
+    currentImageIndex =
+        currentGalleryImages.indexOf(src);
+
+    document.getElementById('viewerImage').src = src;
+
+    document.getElementById('imageViewerModal')
+        .style.display = 'flex';
+}
+
+function closeImageViewer() {
+
+    document.getElementById('imageViewerModal')
+        .style.display = 'none';
+}
+
+function changeViewerImage(direction) {
+
+    currentImageIndex += direction;
+
+    if (currentImageIndex < 0) {
+        currentImageIndex =
+            currentGalleryImages.length - 1;
+    }
+
+    if (currentImageIndex >= currentGalleryImages.length) {
+        currentImageIndex = 0;
+    }
+
+    document.getElementById('viewerImage').src =
+        currentGalleryImages[currentImageIndex];
+}
+
+document.getElementById('imageViewerModal')
+.addEventListener('click', function(e) {
+
+    if (e.target.id === 'imageViewerModal') {
+        closeImageViewer();
+    }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const hash = window.location.hash;
+
+    if (!hash) return;
+
+    const target = document.querySelector(hash);
+
+    if (!target) return;
+
+    setTimeout(() => {
+
+        target.classList.add("highlight");
+
+        const headerOffset = 120;
+        const elementPosition = target.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = elementPosition - headerOffset;
+
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+        });
+
+        setTimeout(() => {
+            target.classList.remove("highlight");
+        }, 3000);
+
+    }, 200);
+});
+
 </script>
 
 </body>
