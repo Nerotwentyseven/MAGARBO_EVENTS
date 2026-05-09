@@ -449,6 +449,11 @@ if ($action === 'fetch_orders_admin') {
         ELSE NULL
     END ASC,
 
+    CASE
+        WHEN b.booking_status = 'Cancelled' THEN b.cancelled_at
+        ELSE NULL
+    END DESC,
+
     b.id ASC";
 
     $result = mysqli_query($conn, $sql);
@@ -581,7 +586,7 @@ if ($action === 'fetch_orders_admin') {
 
                         <a href="update_status.php?id=<?php echo $o['id']; ?>&status=Cancelled"
                         class="btn-action-icon times"
-                        onclick="return openConfirm(event, this.href, 'Reject this booking?')">
+                        onclick="return openConfirm(event, this.href, 'Cancel this booking?')">
                             <i class="fas fa-times"></i>
                         </a>
                     <?php endif; ?>
@@ -592,11 +597,34 @@ if ($action === 'fetch_orders_admin') {
                     </button>
 
                     <?php if ($canUndo): ?>
-                        <a href="update_status.php?id=<?php echo $o['id']; ?>&status=UndoCancel"
-                            class="btn-action-icon undo"
-                            onclick="return openConfirm(event, this.href, 'Undo this cancelled order?')">
-                            <i class="fas fa-rotate-left"></i>
-                        </a>
+                        <?php
+                        // Check kung fully booked na ang date bago ipakita ang undo button
+                        $undoCheckSql = "SELECT COUNT(*) as total FROM bookings 
+                                        WHERE event_date = ? 
+                                        AND booking_status = 'Approved' 
+                                        AND id != ?";
+                        $undoStmt = mysqli_prepare($conn, $undoCheckSql);
+                        mysqli_stmt_bind_param($undoStmt, "si", $o['event_date'], $o['id']);
+                        mysqli_stmt_execute($undoStmt);
+                        $undoRes = mysqli_stmt_get_result($undoStmt);
+                        $undoRow = mysqli_fetch_assoc($undoRes);
+                        mysqli_stmt_close($undoStmt);
+                        $isDateFull = (int)$undoRow['total'] >= 2;
+                        ?>
+
+                        <?php if ($isDateFull): ?>
+                            <button class="btn-action-icon undo" disabled 
+                                    title="Cannot undo — event date is already fully booked"
+                                    style="opacity:0.4; cursor:not-allowed;">
+                                <i class="fas fa-rotate-left"></i>
+                            </button>
+                        <?php else: ?>
+                            <a href="update_status.php?id=<?php echo $o['id']; ?>&status=UndoCancel"
+                                class="btn-action-icon undo"
+                                onclick="return openConfirm(event, this.href, 'Undo this cancelled order?')">
+                                <i class="fas fa-rotate-left"></i>
+                            </a>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </td>
             </tr>

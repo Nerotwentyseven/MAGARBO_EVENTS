@@ -56,6 +56,11 @@ $sql = "SELECT
                 ELSE NULL
             END ASC,
 
+            CASE
+                WHEN b.booking_status = 'Cancelled' THEN b.cancelled_at
+                ELSE NULL
+            END DESC,
+
             b.id ASC";
 
 $result = mysqli_query($conn, $sql);
@@ -440,6 +445,19 @@ if ($result) {
         </div>
     </div>
 
+    <div id="errorModal" class="confirm-overlay">
+        <div class="confirm-card">
+            <div class="confirm-icon-wrap" style="background:#fef2f2; color:#dc2626;">
+                <i class="fas fa-ban"></i>
+            </div>
+            <h3>Cannot Approve</h3>
+            <p id="errorMessage">This date is already fully booked.</p>
+            <div class="confirm-actions">
+                <button type="button" class="confirm-btn approve" style="background:#dc2626;" onclick="document.getElementById('errorModal').style.display='none'">Okay</button>
+            </div>
+        </div>
+    </div>
+
     <script>
 
 function formatTime12hr(timeStr) {
@@ -677,6 +695,14 @@ window.onload = function() {
             link.classList.add('active');
         }
     });
+
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('error') === 'date_full') {
+        document.getElementById('errorMessage').innerText = 'Cannot approve this booking. The selected event date is already fully booked (maximum 2 events per day).';
+        document.getElementById('errorModal').style.display = 'flex';
+        window.history.replaceState({}, '', 'orders.php');
+    }
+
 
     refreshAdminOrders();
     startOrdersPolling();

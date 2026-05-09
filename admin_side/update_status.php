@@ -49,6 +49,12 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
                 mysqli_stmt_close($checkStmt);
 
                 if ((int)$checkRow['total'] >= 2) {
+                    if ($status === 'UndoCancel') {
+                        // Auto-cancel na lang — hindi na i-restore sa Pending, redirect na lang with error
+                        header("Location: orders.php?error=date_full");
+                        exit();
+                    }
+                    // Para sa Approved
                     header("Location: orders.php?error=date_full");
                     exit();
                 }
