@@ -82,7 +82,7 @@ if (empty($error_message) && !$success) {
                 ?: DateTime::createFromFormat('G:i', $normalized)
                 ?: DateTime::createFromFormat('H:i', $normalized);
 
-            $event_time = $t_obj ? $t_obj->format('g:i A') : $raw_time;
+            $event_time = $t_obj ? $t_obj->format('H:i:s') : $raw_time;
         } else {
             $event_time = 'N/A';
         }
