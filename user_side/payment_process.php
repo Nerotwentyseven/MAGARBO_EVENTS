@@ -72,7 +72,20 @@ if (empty($error_message) && !$success) {
         $package_name   = trim($d['package_name'] ?? '');
         $menu_selection = $d['menu_selection'] ?? '';
         $event_date     = trim($d['event_date'] ?? '');
-        $event_time     = trim($d['event_time'] ?? '');
+        $raw_time = trim($d['event_time'] ?? '');
+
+        if ($raw_time !== '' && $raw_time !== 'N/A') {
+            $normalized = strtoupper(preg_replace('/\s+/', ' ', $raw_time));
+
+            $t_obj = DateTime::createFromFormat('g:i A', $normalized)
+                ?: DateTime::createFromFormat('h:i A', $normalized)
+                ?: DateTime::createFromFormat('G:i', $normalized)
+                ?: DateTime::createFromFormat('H:i', $normalized);
+
+            $event_time = $t_obj ? $t_obj->format('g:i A') : $raw_time;
+        } else {
+            $event_time = 'N/A';
+        }
         $venue          = trim($d['venue'] ?? '');
         $total_price    = (float)($d['total_price'] ?? 0);
         $request        = trim($d['request'] ?? '');

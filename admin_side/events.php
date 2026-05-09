@@ -129,7 +129,9 @@ if ($result && mysqli_num_rows($result) > 0) {
             "type"          => strtolower($row['event_type'] ?? "general"),
             "status"        => $status,
             "date"          => $row['event_date'],
-            "time"          => $row['event_time'] ?? 'N/A',
+            "time" => (!empty($row['event_time']) && $row['event_time'] !== 'N/A')
+            ? $row['event_time']
+            : 'N/A',
             "venue"         => $row['venue'] ?? 'N/A',
             "service_type"  => $row['service_type'] ?? 'N/A',
             "total"         => $actualTotal,
@@ -348,7 +350,7 @@ usort($events, function ($a, $b) {
                         </div>
 
                             <div class="details-row">
-                                <span><i class="far fa-calendar"></i> <?php echo $e['date']; ?> | <?php echo $e['time']; ?></span>
+                                <span><i class="far fa-calendar"></i> <?php echo $e['date']; ?> | <?php echo $e['time'] !== 'N/A' ? date('g:i A', strtotime($e['time'])) : 'N/A'; ?></span>
                                 <span><i class="fas fa-map-marker-alt"></i> <?php echo $e['venue']; ?></span>
                                 <span class="price-indicator">
                                     <?php echo ($e['status'] === 'draft' || $e['total'] <= 0) ? 'Not set' : '₱' . number_format($e['total'], 2); ?>
@@ -643,6 +645,21 @@ usort($events, function ($a, $b) {
 </div>
 
 <script>
+
+    function formatTime12hr(timeStr) {
+        if (!timeStr || timeStr === 'N/A') return 'N/A';
+        if (/am|pm/i.test(timeStr)) return timeStr.trim();  // ← bumabalik agad dito kung may AM/PM na
+        
+        // 24-hour fallback
+        const parts = timeStr.split(':');
+        let hour = parseInt(parts[0], 10);
+        const minute = parts[1] || '00';
+        if (isNaN(hour)) return timeStr;
+        const period = hour >= 12 ? 'PM' : 'AM';
+        hour = hour % 12 || 12;
+        return `${hour}:${minute} ${period}`;
+    }
+
     function openModal(id) {
         document.getElementById(id).style.display = 'flex';
     }
@@ -1053,7 +1070,7 @@ function changeMenuQty(inputId, change) {
                 <div class="field"><label>Service Type</label><p>${data.service_type || 'N/A'}</p></div>
                 ${religionHTML}
                 <div class="field"><label>Venue</label><p>${formattedVenue}</p></div>
-                <div class="field"><label>Date & Time</label><p>${data.date} | ${data.time}</p></div>
+                <div class="field"><label>Date & Time</label><p>${data.date} | ${formatTime12hr(data.time)}</p></div>
                 <div class="field"><label>Package</label><p>${data.package || 'N/A'}</p></div>
                 <div class="field"><label>Selected Theme</label><p>${(data.selected_theme && String(data.selected_theme).trim() !== '') ? data.selected_theme : 'N/A'}</p></div>
                 <div class="field"><label>Status</label><p class="modal-status-text">${data.status}</p></div>

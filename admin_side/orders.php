@@ -251,7 +251,9 @@ if ($result) {
                                 "phone"     => $o['user_phone'] ?? 'N/A',
                                 "service"   => $o['service_type'] ?? 'N/A',
                                 "venue"     => $o['venue'] ?? 'N/A',
-                                "time"      => $o['event_time'] ?? 'N/A',
+                                "time" => (!empty($o['event_time']) && $o['event_time'] !== 'N/A')
+                                ? $o['event_time']
+                                : 'N/A',
                                 "religion"  => !empty($o['religion']) ? $o['religion'] : 'N/A',
                                 "package"   => !empty($o['package_name']) ? $o['package_name'] : 'N/A',
                                 "notes"     => $o['request'] ?? 'No notes',
@@ -439,6 +441,21 @@ if ($result) {
     </div>
 
     <script>
+
+function formatTime12hr(timeStr) {
+    if (!timeStr || timeStr === 'N/A') return 'N/A';
+    if (/am|pm/i.test(timeStr)) return timeStr.trim();  // ← bumabalik agad dito kung may AM/PM na
+    
+    // 24-hour fallback
+    const parts = timeStr.split(':');
+    let hour = parseInt(parts[0], 10);
+    const minute = parts[1] || '00';
+    if (isNaN(hour)) return timeStr;
+    const period = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12 || 12;
+    return `${hour}:${minute} ${period}`;
+}
+
 function openDetails(data) {
     document.getElementById('m-id').innerText = "Order Details - " + data.id;
     document.getElementById('m-name').innerText = data.name;
@@ -446,7 +463,7 @@ function openDetails(data) {
     document.getElementById('m-phone').innerText = data.phone;
     document.getElementById('m-event').innerText = data.event;
     document.getElementById('m-date').innerText = data.date;
-    document.getElementById('m-time').innerText = data.time || "N/A";
+    document.getElementById('m-time').innerText = formatTime12hr(data.time);
     let venue = data.venue || '';
 
     let parts = venue.split(',');

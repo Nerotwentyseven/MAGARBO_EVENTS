@@ -118,6 +118,8 @@ if ($themeRes) {
     <title>Magarbo Events | Professional Reservation</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="booking.css?v=<?php echo time(); ?>" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body>
     <div class="book-details-wrapper">
@@ -165,12 +167,12 @@ if ($themeRes) {
 
                     <div class="field-group">
                         <label>Preferred Time</label>
-                        <input type="time" name="event_time" required />
+                        <input type="text" name="event_time" id="eventTime" placeholder="Select time" autocomplete="off" required />
                     </div>
 
                     <div class="field-group">
                         <label>Event Date</label>
-                        <input type="date" name="event_date" id="eventDate" required min="<?php echo date('Y-m-d'); ?>" />
+                        <input type="text" name="event_date" id="eventDate" placeholder="Select date" autocomplete="off" required />
                     </div>
 
                     <div class="field-group full-width">
@@ -343,9 +345,55 @@ if ($themeRes) {
 
         let currentDisplayDate = new Date();
 
-        const bookedDates = <?php echo json_encode($booked_dates); ?>;
-        const offersDB = <?php echo json_encode($offersByCategory); ?>;
-        const isCateringOnly = <?php echo json_encode($isCateringOnly); ?>;
+const bookedDates = <?php echo json_encode($booked_dates); ?>;
+const offersDB = <?php echo json_encode($offersByCategory); ?>;
+const isCateringOnly = <?php echo json_encode($isCateringOnly); ?>;
+
+// ─── Flatpickr: Date Picker ───────────────────────────────
+const datePicker = flatpickr('#eventDate', {
+    minDate: 'today',
+    dateFormat: 'Y-m-d',
+    disableMobile: true,
+    onChange: function(selectedDates, dateStr) {
+        if (bookedDates[dateStr] && bookedDates[dateStr] >= 2) {
+            openBookingAlert(
+                'Date Unavailable',
+                'This date is already fully booked.',
+                'error'
+            );
+            datePicker.clear();
+            return;
+        }
+        if (selectedDates[0]) {
+            currentDisplayDate = new Date(selectedDates[0]);
+            renderCalendar();
+        }
+        saveBookingDraft();
+    },
+    onDayCreate: function(dObj, dStr, fp, dayElem) {
+        const d = dayElem.dateObj;
+        const dateStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        const dots = bookedDates[dateStr] || 0;
+        if (dots >= 2) {
+            dayElem.classList.add('flatpickr-fully-booked');
+            dayElem.title = 'Fully Booked';
+        } else if (dots === 1) {
+            dayElem.classList.add('flatpickr-one-booked');
+        }
+    }
+});
+
+// ─── Flatpickr: Time Picker ───────────────────────────────
+flatpickr('#eventTime', {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: 'h:i K',
+    time_24hr: false,
+    disableMobile: true,
+    onChange: function() {
+        saveBookingDraft();
+    }
+});
 
         const PSGC_PROVINCES_URL = 'https://psgc.gitlab.io/api/provinces/';
         const PSGC_BASE_URL = 'https://psgc.gitlab.io/api';
@@ -443,7 +491,7 @@ if ($themeRes) {
                 const isFull = dots >= 2;
 
                 grid.innerHTML += `
-                    <div class="day-cell ${isFull ? 'full' : ''}" onclick="${isFull ? "alert('Fully Booked')" : "selectDate('"+dateStr+"')" }">
+                    <div class="day-cell ${isFull ? 'full' : ''}" onclick="${isFull ? "openBookingAlert('Date Unavailable','This date is already fully booked.','error')" : "selectDate('"+dateStr+"')" }">
                         <span>${d}</span>
                         <div class="dots-container">${dotsHtml}</div>
                     </div>
@@ -457,31 +505,18 @@ if ($themeRes) {
         }
 
         function selectDate(date) {
-            if (bookedDates[date] && bookedDates[date] >= 2) {
-                openBookingAlert(
-                    'Date Unavailable',
-                    'This date is already fully booked.',
-                    'error'
-                );
-                document.getElementById('eventDate').value = "";
-                return;
-            }
+    if (bookedDates[date] && bookedDates[date] >= 2) {
+        openBookingAlert(
+            'Date Unavailable',
+            'This date is already fully booked.',
+            'error'
+        );
+        return;
+    }
+    datePicker.setDate(date, true);
+}
 
-            document.getElementById('eventDate').value = date;
-        }
-
-        document.getElementById('eventDate').addEventListener('change', function () {
-            const selectedDate = this.value;
-
-            if (bookedDates[selectedDate] && bookedDates[selectedDate] >= 2) {
-                openBookingAlert(
-                'Date Unavailable',
-                'This date is already fully booked.',
-                'error'
-            );
-                this.value = "";
-            }
-        });
+        
 
         function closeAllCustomDropdowns() {
             document.querySelectorAll('.custom-dropdown').forEach(drop => {
@@ -1189,6 +1224,24 @@ if ($themeRes) {
                 return false;
             }
 
+            function validateBookingForm() {
+    // ... existing validation code ...
+
+    // ─── I-fix ang time value bago mag-submit ───
+    const timeFp = document.getElementById('eventTime')?._flatpickr;
+    if (timeFp && timeFp.latestSelectedDateObj) {
+        const d = timeFp.latestSelectedDateObj;
+        let hours = d.getHours();
+        const minutes = String(d.getMinutes()).padStart(2, '0');
+        const period = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+        const correctedTime = `${hours}:${minutes} ${period}`;
+        document.getElementById('eventTime').value = correctedTime;
+    }
+
+    return true;
+}
+
             return true;
         }
 
@@ -1199,7 +1252,9 @@ if ($themeRes) {
             return {
                 event_type: document.getElementById('categoryInput')?.value || '',
                 event_date: document.getElementById('eventDate')?.value || '',
-                event_time: document.querySelector('input[name="event_time"]')?.value || '',
+                event_time: document.getElementById('eventTime')?._flatpickr?.latestSelectedDateObj
+                ? flatpickr.formatDate(document.getElementById('eventTime')._flatpickr.latestSelectedDateObj, 'h:i K')
+                : document.getElementById('eventTime')?.value || '',
                 religion: document.getElementById('religionSelect')?.value || '',
                 request: document.getElementById('requestField')?.value || '',
                 selected_theme_id: document.getElementById('selectedThemeIdInput')?.value || '',
@@ -1296,8 +1351,15 @@ if ($themeRes) {
                 handleCategoryInput(draft.event_type);
             }
 
-            if (draft.event_date && eventDate) eventDate.value = draft.event_date;
-            if (draft.event_time && eventTime) eventTime.value = draft.event_time;
+            
+            if (draft.event_time) {
+                const fp = document.getElementById('eventTime')?._flatpickr;
+                if (fp) fp.setDate(draft.event_time, true);
+            }
+            if (draft.event_date) {
+                const fp = document.getElementById('eventDate')?._flatpickr;
+                if (fp) fp.setDate(draft.event_date, true);
+            }
 
             if (draft.religion && religionSelect) {
                 religionSelect.value = draft.religion;

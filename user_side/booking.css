@@ -1516,3 +1516,176 @@ textarea.loading {
     min-height: 48px;
     display: block;
 }
+
+/* ── Flatpickr Gold Theme ── */
+.flatpickr-calendar {
+    font-family: 'Inter', sans-serif;
+    border-radius: 14px;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.14);
+    border: 1px solid #e2e8f0;
+}
+
+.flatpickr-months .flatpickr-month,
+.flatpickr-weekdays,
+span.flatpickr-weekday {
+    background: #bf9225 !important;
+    color: #fff !important;
+}
+
+.flatpickr-months .flatpickr-prev-month,
+.flatpickr-months .flatpickr-next-month {
+    fill: #fff !important;
+    color: #fff !important;
+}
+
+.flatpickr-months .flatpickr-prev-month:hover svg,
+.flatpickr-months .flatpickr-next-month:hover svg {
+    fill: #ffe099 !important;
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months,
+.flatpickr-current-month input.cur-year {
+    color: #fff !important;
+    font-weight: 700;
+}
+
+.flatpickr-day:hover {
+    background: #fff7e3 !important;
+    border-color: #bf9225 !important;
+    color: #bf9225 !important;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover {
+    background: #bf9225 !important;
+    border-color: #bf9225 !important;
+    color: #fff !important;
+    font-weight: 700;
+}
+
+.flatpickr-day.today {
+    border: 2px solid #bf9225 !important;
+    color: #bf9225 !important;
+    font-weight: 700;
+    background: transparent !important;
+}
+
+/* Override flatpickr today's default blue */
+.flatpickr-day.today {
+    border: 2px solid #bf9225 !important;
+    color: #bf9225 !important;
+    font-weight: 700;
+    background: transparent !important;
+}
+
+.flatpickr-day.today:hover {
+    background: #bf9225 !important;
+    color: #fff !important;
+    border-color: #bf9225 !important;
+}
+
+/* 1 booking — subtle gold dot sa ibaba */
+.flatpickr-day.flatpickr-one-booked {
+    position: relative;
+}
+
+.flatpickr-day.flatpickr-one-booked::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #bf9225;
+}
+
+/* 2 bookings — fully booked */
+.flatpickr-day.flatpickr-fully-booked,
+.flatpickr-day.flatpickr-fully-booked:hover {
+    background: #fee2e2 !important;
+    color: #ef4444 !important;
+    text-decoration: line-through !important;
+    cursor: not-allowed !important;
+    border-color: transparent !important;
+}
+
+/* Selected date */
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover {
+    background: #bf9225 !important;
+    border-color: #bf9225 !important;
+    color: #fff !important;
+    font-weight: 700;
+}
+
+/* Hover sa normal days */
+.flatpickr-day:hover:not(.flatpickr-disabled):not(.flatpickr-fully-booked) {
+    background: #fff7e3 !important;
+    border-color: #bf9225 !important;
+    color: #bf9225 !important;
+}
+
+.flatpickr-day.today:hover {
+    background: #bf9225 !important;
+    color: #fff !important;
+    border-color: #bf9225 !important;
+}
+
+
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.flatpickr-fully-booked,
+.flatpickr-day.flatpickr-fully-booked:hover {
+    background: #fee2e2 !important;
+    color: #ef4444 !important;
+    text-decoration: line-through !important;
+    cursor: not-allowed !important;
+    border-color: transparent !important;
+}
+
+.flatpickr-day.flatpickr-one-booked {
+    position: relative;
+}
+
+flatpickr-day.flatpickr-one-booked::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #bf9225;
+}
+
+
+
+/* Time picker */
+.flatpickr-time input:hover,
+.flatpickr-time input:focus,
+.flatpickr-time .flatpickr-am-pm:hover,
+.flatpickr-time .flatpickr-am-pm:focus {
+    background: #fff7e3 !important;
+    color: #bf9225 !important;
+}
+
+.flatpickr-time .numInputWrapper span.arrowUp:after {
+    border-bottom-color: #bf9225 !important;
+}
+
+.flatpickr-time .numInputWrapper span.arrowDown:after {
+    border-top-color: #bf9225 !important;
+}
+
+.flatpickr-time input.flatpickr-hour,
+.flatpickr-time input.flatpickr-minute {
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.flatpickr-am-pm {
+    font-weight: 700;
+    color: #bf9225 !important;
+}

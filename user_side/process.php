@@ -3,6 +3,8 @@ session_name('USERSESSID');
 session_start();
 require_once '../db_connection.php';
 
+
+
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
@@ -31,7 +33,22 @@ $total_pax    = $_SESSION['total_pax'] ?? 0;
 $menu_json    = $_SESSION['menu_cart'] ?? '[]';
 $cart_data    = json_decode($menu_json, true);
 
-$formatted_time = ($event_time !== 'N/A') ? date("g:i A", strtotime($event_time)) : 'N/A';
+if ($event_time !== 'N/A') {
+    $normalized = strtoupper(trim(preg_replace('/\s+/', ' ', $event_time)));
+
+    $t_obj = DateTime::createFromFormat('g:i A', $normalized)
+          ?: DateTime::createFromFormat('h:i A', $normalized)
+          ?: DateTime::createFromFormat('G:i', $normalized)
+          ?: DateTime::createFromFormat('H:i', $normalized);
+
+    if ($t_obj) {
+        $formatted_time = $t_obj->format('g:i A');
+    } else {
+        $formatted_time = $event_time; // fallback, huwag baguhin
+    }
+} else {
+    $formatted_time = 'N/A';
+}
 $is_styling_only = ($service_type === 'Styling & Decoration Only');
 
 $_SESSION['temp_booking_data'] = [
@@ -41,7 +58,7 @@ $_SESSION['temp_booking_data'] = [
     'package_name'      => $package,
     'menu_selection'    => $menu_json,
     'event_date'        => $event_date,
-    'event_time'        => $event_time,
+    'event_time'        => $formatted_time,
     'venue'             => $venue,
     'total_price'       => $total_cost,
     'request'           => $request,
