@@ -46,7 +46,6 @@ if ($packageResult) {
     }
 }
 
-
 $sql = "SELECT b.*, 
                COALESCE(NULLIF(b.client_name, ''), CONCAT(u.firstname,' ',u.lastname)) AS client_name,
                u.email AS client_email,
@@ -648,9 +647,8 @@ usort($events, function ($a, $b) {
 
     function formatTime12hr(timeStr) {
         if (!timeStr || timeStr === 'N/A') return 'N/A';
-        if (/am|pm/i.test(timeStr)) return timeStr.trim();  // ← bumabalik agad dito kung may AM/PM na
+        if (/am|pm/i.test(timeStr)) return timeStr.trim();
         
-        // 24-hour fallback
         const parts = timeStr.split(':');
         let hour = parseInt(parts[0], 10);
         const minute = parts[1] || '00';
