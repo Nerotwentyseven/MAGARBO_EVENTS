@@ -34,6 +34,26 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
             $theme_counted = (int)($booking['theme_counted'] ?? 0);
             $old_status = trim($booking['booking_status'] ?? '');
 
+            // Server-side check — bawal mag-approve o mag-undo kung full na ang date
+            if ($status === 'Approved' || $status === 'UndoCancel') {
+                $checkDate = $booking['event_date'];
+                $checkSql = "SELECT COUNT(*) as total FROM bookings 
+                            WHERE event_date = ? 
+                            AND booking_status = 'Approved' 
+                            AND id != ?";
+                $checkStmt = mysqli_prepare($conn, $checkSql);
+                mysqli_stmt_bind_param($checkStmt, "si", $checkDate, $booking_id);
+                mysqli_stmt_execute($checkStmt);
+                $checkRes = mysqli_stmt_get_result($checkStmt);
+                $checkRow = mysqli_fetch_assoc($checkRes);
+                mysqli_stmt_close($checkStmt);
+
+                if ((int)$checkRow['total'] >= 2) {
+                    header("Location: orders.php?error=date_full");
+                    exit();
+                }
+            }
+
             mysqli_begin_transaction($conn);
 
             try {
@@ -41,8 +61,8 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
                     $event_status = 'draft';
 
                     $query = "UPDATE bookings
-                              SET booking_status = ?, event_status = ?, cancelled_at = NULL
-                              WHERE id = ?";
+                        SET booking_status = ?, event_status = ?, cancelled_at = NULL, created_at = NOW()
+                        WHERE id = ?";
                     $stmt = mysqli_prepare($conn, $query);
 
                     if (!$stmt) {

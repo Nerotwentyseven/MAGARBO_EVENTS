@@ -228,6 +228,8 @@ if ($action === 'send_message') {
     $reply_user_id = (int) ($_POST['user_id'] ?? 0);
 
     if ($reply_user_id <= 0 || $reply_text === '') {
+
+    
         echo json_encode([
             'success' => false,
             'message' => 'Invalid input.'
@@ -548,9 +550,9 @@ if ($action === 'fetch_orders_admin') {
 
             $canUndo = false;
             if (
-                $o['booking_status'] === 'Rejected' &&
-                !empty($o['rejected_at']) &&
-                strtotime($o['rejected_at']) >= strtotime('-3 days')
+                $o['booking_status'] === 'Cancelled' &&
+                !empty($o['cancelled_at']) &&
+                strtotime($o['cancelled_at']) >= strtotime('-3 days')
             ) {
                 $canUndo = true;
             }
@@ -577,7 +579,7 @@ if ($action === 'fetch_orders_admin') {
                             <i class="fas fa-check"></i>
                         </a>
 
-                        <a href="update_status.php?id=<?php echo $o['id']; ?>&status=Rejected"
+                        <a href="update_status.php?id=<?php echo $o['id']; ?>&status=Cancelled"
                         class="btn-action-icon times"
                         onclick="return openConfirm(event, this.href, 'Reject this booking?')">
                             <i class="fas fa-times"></i>
@@ -590,9 +592,9 @@ if ($action === 'fetch_orders_admin') {
                     </button>
 
                     <?php if ($canUndo): ?>
-                        <a href="update_status.php?id=<?php echo $o['id']; ?>&status=UndoReject"
-                        class="btn-action-icon undo"
-                        onclick="return openConfirm(event, this.href, 'Undo this reject order?')">
+                        <a href="update_status.php?id=<?php echo $o['id']; ?>&status=UndoCancel"
+                            class="btn-action-icon undo"
+                            onclick="return openConfirm(event, this.href, 'Undo this cancelled order?')">
                             <i class="fas fa-rotate-left"></i>
                         </a>
                     <?php endif; ?>
