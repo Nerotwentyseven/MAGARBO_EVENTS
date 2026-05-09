@@ -10,7 +10,8 @@ if ($themeQuery && mysqli_num_rows($themeQuery) > 0) {
 }
 
 $sql = "SELECT r.*, 
-        CONCAT(u.firstname, ' ', u.lastname) AS full_name
+        CONCAT(u.firstname, ' ', u.lastname) AS full_name,
+        (SELECT COUNT(*) FROM review_images ri WHERE ri.review_id = r.id) AS photo_count
         FROM reviews r
         JOIN users u ON r.user_id = u.id
         ORDER BY r.created_at DESC, r.id DESC";
@@ -173,6 +174,7 @@ $current_page = 'review_management.php';
                         <th>Customer</th>
                         <th>Rating</th>
                         <th>Comment</th>
+                        <th>Photos</th>
                         <th>Status</th>
                         <th>Date</th>
                         <th style="text-align: center;">Actions</th>
@@ -189,10 +191,16 @@ $current_page = 'review_management.php';
                             data-deleted="<?php echo !empty($review['deleted_at']) ? '1' : '0'; ?>"
                             data-date="<?php echo !empty($review['created_at']) ? date('Y-m-d', strtotime($review['created_at'])) : ''; ?>"
                         >
+                        
                             <td><?php echo $displayReviewId; ?></td>
                             <td><?php echo htmlspecialchars($review['full_name']); ?></td>
                             <td class="rating-stars"><?php echo str_repeat('★', (int)$review['rating']); ?></td>
                             <td class="comment-cell"><?php echo htmlspecialchars($review['comment']); ?></td>
+                            <td>
+                                <span class="photo-count-tag <?php echo ($review['photo_count'] > 0) ? 'has-photos' : ''; ?>">
+                                    <i class="fa-solid fa-image"></i> <?php echo (int)$review['photo_count']; ?>
+                                </span>
+                            </td>
                             <td>
                                 <span class="status-tag <?php echo strtolower($review['status']); ?>">
                                     <?php echo strtolower($review['status']); ?>
@@ -245,7 +253,8 @@ $current_page = 'review_management.php';
                                         '<?php echo (int)$review['rating']; ?>',
                                         '<?php echo htmlspecialchars($review['status'], ENT_QUOTES); ?>',
                                         '<?php echo date("m/d/Y", strtotime($review['created_at'])); ?>',
-                                        '<?php echo htmlspecialchars($review['comment'], ENT_QUOTES); ?>'
+                                        '<?php echo htmlspecialchars($review['comment'], ENT_QUOTES); ?>',
+                                        '<?php echo $review['id']; ?>' 
                                     )">
                                     <i class="fas fa-eye"></i>
                                 </button>
@@ -302,6 +311,12 @@ $current_page = 'review_management.php';
                         <p id="det-comment">--</p>
                     </div>
                 </div>
+
+                <div class="review-box-item review-full">
+                    <label>Review Photos</label>
+                    <div id="det-images-container" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
+                        </div>
+                </div>
             </div>
 
             <button class="review-modal-btn-secondary" onclick="closeModal()">Close Window</button>
@@ -323,6 +338,20 @@ $current_page = 'review_management.php';
             <button type="button" class="confirm-btn approve" id="reviewConfirmProceedBtn">Yes</button>
         </div>
     </div>
+</div>
+
+<div id="imageViewerModal" class="image-viewer-modal">
+    <span class="close-image-viewer" onclick="closeImageViewer()">&times;</span>
+
+    <button class="viewer-nav prev" onclick="changeViewerImage(-1)">
+        <i class="fa-solid fa-chevron-left"></i>
+    </button>
+
+    <img id="viewerImage" class="viewer-image">
+
+    <button class="viewer-nav next" onclick="changeViewerImage(1)">
+        <i class="fa-solid fa-chevron-right"></i>
+    </button>
 </div>
 
 <script>
@@ -501,15 +530,85 @@ function startReviewsPolling() {
 
 
 
-function showDetails(id, name, rating, status, date, comment) {
+let currentGalleryImages = [];
+let currentImageIndex = 0;
+
+function showDetails(id, name, rating, status, date, comment, db_id) {
     document.getElementById('det-id').innerText = id;
     document.getElementById('det-name').innerText = name;
     document.getElementById('det-rating').innerText = rating + ' star(s)';
     document.getElementById('det-status').innerText = status;
     document.getElementById('det-date').innerText = date;
     document.getElementById('det-comment').innerText = comment;
-    document.getElementById('viewModal').style.display = "flex";
+
+    const container = document.getElementById('det-images-container');
+    container.innerHTML = '<p style="color:gray;"><i class="fas fa-spinner fa-spin"></i> Loading photos...</p>';
+
+    fetch('ajax.php?action=get_review_images&review_id=' + db_id)
+        .then(res => res.json())
+        .then(data => {
+            container.innerHTML = '';
+            currentGalleryImages = [];
+
+            if (data.success && data.images && data.images.length > 0) {
+                data.images.forEach((img, index) => {
+                    const fullPath = '../' + img.image_path;
+                    currentGalleryImages.push(fullPath);
+
+                    const imgTag = document.createElement('img');
+                    imgTag.src = fullPath;
+                    imgTag.style.cssText = `
+                        width: 100px;
+                        height: 100px;
+                        object-fit: cover;
+                        border-radius: 8px;
+                        border: 1px solid #ddd;
+                        cursor: pointer;
+                    `;
+
+                    imgTag.onclick = () => openImageViewer(index);
+
+                    container.appendChild(imgTag);
+                });
+            } else {
+                container.innerHTML = '<p style="color:gray; font-style:italic;">No photos uploaded for this review.</p>';
+            }
+        });
+
+    document.getElementById('viewModal').style.display = 'flex';
 }
+
+function openImageViewer(index) {
+    currentImageIndex = index;
+    document.getElementById('viewerImage').src =
+        currentGalleryImages[currentImageIndex];
+    document.getElementById('imageViewerModal').style.display = 'flex';
+}
+
+function closeImageViewer() {
+    document.getElementById('imageViewerModal').style.display = 'none';
+}
+
+function changeViewerImage(direction) {
+    currentImageIndex += direction;
+
+    if (currentImageIndex < 0) {
+        currentImageIndex = currentGalleryImages.length - 1;
+    }
+
+    if (currentImageIndex >= currentGalleryImages.length) {
+        currentImageIndex = 0;
+    }
+
+    document.getElementById('viewerImage').src =
+        currentGalleryImages[currentImageIndex];
+}
+
+document.getElementById('imageViewerModal').addEventListener('click', function(e) {
+    if (e.target.id === 'imageViewerModal') {
+        closeImageViewer();
+    }
+});
 
 function closeModal() {
     document.getElementById('viewModal').style.display = "none";

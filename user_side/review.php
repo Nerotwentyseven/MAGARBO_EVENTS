@@ -233,9 +233,9 @@ $average_rating = $total_reviews > 0 ? round($total_rating / $total_reviews, 1) 
 
 <header class="fixed-header">
 <div class="header-inner">
-    <div class="back-home" onclick="location.href='index.php'">
+    <div class="back-home" onclick="history.back()">
         <i class="fa-solid fa-arrow-left"></i>
-        <span>Back to Home</span>
+        <span>Back</span>
     </div>
     <div class="nav-title">Customer Reviews</div>
     <div style="width: 120px;"></div> 
@@ -301,7 +301,8 @@ $average_rating = $total_reviews > 0 ? round($total_rating / $total_reviews, 1) 
     ?>
     <div class="review-card-item"
      id="review-<?= (int)$r['id'] ?>"
-     data-rating="<?= (int)$r['rating'] ?>">
+     data-rating="<?= (int)$r['rating'] ?>"
+     data-token="<?= htmlspecialchars($r['review_token']) ?>">
         <div class="item-header">
             <div class="user-meta">
                 <div class="avatar-circle"><?= htmlspecialchars($r['initial']) ?></div>
@@ -458,6 +459,19 @@ $average_rating = $total_reviews > 0 ? round($total_rating / $total_reviews, 1) 
 
 </div>
 
+<div id="maxPhotosModal" class="confirm-overlay" style="display:none;">
+    <div class="confirm-card">
+        <div class="confirm-icon-wrap" style="background:#fff7e3; color:var(--gold);">
+            <i class="fas fa-camera"></i>
+        </div>
+        <h3>Photo Limit Reached</h3>
+        <p>You can only upload a maximum of 5 photos.</p>
+        <div class="confirm-actions">
+            <button type="button" class="confirm-btn login-confirm" onclick="document.getElementById('maxPhotosModal').style.display='none'">Okay</button>
+        </div>
+    </div>
+</div>
+
 <script>
 let deleteReviewUrl = '';
 
@@ -548,7 +562,7 @@ if (reviewPhotos) {
         for (let file of newFiles) {
 
             if (selectedFiles.files.length >= 5) {
-                alert("Maximum of 5 photos.");
+                document.getElementById('maxPhotosModal').style.display = 'flex';
                 break;
             }
 
@@ -672,34 +686,24 @@ document.getElementById('imageViewerModal')
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    const hash = window.location.hash;
+    const token = sessionStorage.getItem("scrollToReview");
+    if (!token) return;
 
-    if (!hash) return;
+    sessionStorage.removeItem("scrollToReview");
 
-    const target = document.querySelector(hash);
-
+    const target = document.querySelector('[data-token="' + token + '"]');
     if (!target) return;
 
     setTimeout(() => {
-
         target.classList.add("highlight");
 
-        const headerOffset = 120;
-        const elementPosition = target.getBoundingClientRect().top + window.pageYOffset;
-        const offsetPosition = elementPosition - headerOffset;
+        const headerOffset = 90;
+        const top = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+        window.scrollTo({ top: top, behavior: "smooth" });
 
-        window.scrollTo({
-            top: offsetPosition,
-            behavior: "smooth"
-        });
-
-        setTimeout(() => {
-            target.classList.remove("highlight");
-        }, 3000);
-
-    }, 200);
+        setTimeout(() => target.classList.remove("highlight"), 3000);
+    }, 100);
 });
-
 </script>
 
 </body>

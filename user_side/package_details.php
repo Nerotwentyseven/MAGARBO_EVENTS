@@ -40,13 +40,13 @@ $pageTitle = $pkg['package_name'] . " | Magarbo Events";
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($pageTitle); ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="details.css">
+    <link rel="stylesheet" href="details.css?v=<?php echo time(); ?>">
 </head>
 <body>
     <header class="navbar">
         <div class="container">
             <div class="back-link" onclick="window.history.back()">
-                <i class="fa-solid fa-arrow-left"></i> Back to Home
+                <i class="fa-solid fa-arrow-left"></i> Back
             </div>
         </div>
     </header>

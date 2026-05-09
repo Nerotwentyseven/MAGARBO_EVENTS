@@ -316,7 +316,7 @@ if (isset($_SESSION['user_id'])) {
                         const d = document.getElementById('notifDropdown');
                         if (d) d.style.display = 'none';
             }
-        };
+        });
 
         let lastNotifCount = 0;
         let notifMiniAlertTimeout = null;

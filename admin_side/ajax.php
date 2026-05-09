@@ -618,7 +618,8 @@ if ($action === 'fetch_orders_admin') {
 
 if ($action === 'fetch_reviews_admin') {
     $sql = "SELECT r.*, 
-        CONCAT(u.firstname, ' ', u.lastname) AS full_name
+        CONCAT(u.firstname, ' ', u.lastname) AS full_name,
+        (SELECT COUNT(*) FROM review_images ri WHERE ri.review_id = r.id) AS photo_count
         FROM reviews r
         JOIN users u ON r.user_id = u.id
         ORDER BY r.created_at DESC, r.id DESC";
@@ -636,41 +637,30 @@ if ($action === 'fetch_reviews_admin') {
             $data[] = $row;
             $total++;
             $totalRating += (int)$row['rating'];
-
             if ($row['status'] === 'Visible') $visible++;
             if ($row['status'] === 'Hidden') $hidden++;
         }
     }
 
     $reviewDisplayIds = [];
+    $idSql = "SELECT id, created_at FROM reviews ORDER BY DATE(created_at) DESC, created_at ASC, id ASC";
+    $idRes = mysqli_query($conn, $idSql);
+    $generatedReviewIds = [];
 
-        $idSql = "SELECT id, created_at
-                FROM reviews
-                ORDER BY DATE(created_at) DESC, created_at ASC, id ASC";
-
-        $idRes = mysqli_query($conn, $idSql);
-
-        $generatedReviewIds = [];
-
-        if ($idRes) {
-            while ($idRow = mysqli_fetch_assoc($idRes)) {
-                $dateKey = !empty($idRow['created_at'])
-                    ? date('Ymd', strtotime($idRow['created_at']))
-                    : date('Ymd');
-
-                $baseReviewId = 'REV' . $dateKey;
-
-                if (!isset($generatedReviewIds[$baseReviewId])) {
-                    $generatedReviewIds[$baseReviewId] = 1;
-                    $displayReviewId = $baseReviewId;
-                } else {
-                    $generatedReviewIds[$baseReviewId]++;
-                    $displayReviewId = $baseReviewId . '-' . $generatedReviewIds[$baseReviewId];
-                }
-
-                $reviewDisplayIds[(int)$idRow['id']] = $displayReviewId;
+    if ($idRes) {
+        while ($idRow = mysqli_fetch_assoc($idRes)) {
+            $dateKey = !empty($idRow['created_at']) ? date('Ymd', strtotime($idRow['created_at'])) : date('Ymd');
+            $baseReviewId = 'REV' . $dateKey;
+            if (!isset($generatedReviewIds[$baseReviewId])) {
+                $generatedReviewIds[$baseReviewId] = 1;
+                $displayReviewId = $baseReviewId;
+            } else {
+                $generatedReviewIds[$baseReviewId]++;
+                $displayReviewId = $baseReviewId . '-' . $generatedReviewIds[$baseReviewId];
             }
+            $reviewDisplayIds[(int)$idRow['id']] = $displayReviewId;
         }
+    }
 
     $average = $total > 0 ? round($totalRating / $total, 1) : 0;
 
@@ -678,16 +668,24 @@ if ($action === 'fetch_reviews_admin') {
     if (!empty($data)) {
         foreach ($data as $review) {
             $displayReviewId = $reviewDisplayIds[(int)$review['id']] ?? ('REV' . date('Ymd', strtotime($review['created_at'])));
-                ?>
+            ?>
             <tr 
                 data-status="<?php echo strtolower($review['status']); ?>"
                 data-deleted="<?php echo !empty($review['deleted_at']) ? '1' : '0'; ?>"
                 data-date="<?php echo !empty($review['created_at']) ? date('Y-m-d', strtotime($review['created_at'])) : ''; ?>"
+                data-photos="<?php echo $review['photo_count']; ?>"
             >
                 <td><?php echo $displayReviewId; ?></td>
                 <td><?php echo htmlspecialchars($review['full_name']); ?></td>
                 <td class="rating-stars"><?php echo str_repeat('★', (int)$review['rating']); ?></td>
                 <td class="comment-cell"><?php echo htmlspecialchars($review['comment']); ?></td>
+                
+                <td>
+                    <span class="photo-count-tag <?php echo ($review['photo_count'] > 0) ? 'has-photos' : ''; ?>">
+                        <i class="fa-solid fa-image"></i> <?php echo (int)$review['photo_count']; ?>
+                    </span>
+                </td>
+
                 <td>
                     <span class="status-tag <?php echo strtolower($review['status']); ?>">
                         <?php echo strtolower($review['status']); ?>
@@ -698,37 +696,26 @@ if ($action === 'fetch_reviews_admin') {
                     <?php if ($review['status'] === 'Visible'): ?>
                         <a href="toggle_review_status.php?id=<?php echo (int)$review['id']; ?>&status=Hidden"
                            onclick="return openReviewActionConfirm(event, this.href, 'Hide this review?', 'hide')"
-                           class="btn-action-text hide-btn">
-                            Hide
-                        </a>
+                           class="btn-action-text hide-btn">Hide</a>
                     <?php else: ?>
                         <a href="toggle_review_status.php?id=<?php echo (int)$review['id']; ?>&status=Visible"
                            onclick="return openReviewActionConfirm(event, this.href, 'Show this review?', 'show')"
-                           class="btn-action-text show-btn">
-                            Show
-                        </a>
+                           class="btn-action-text show-btn">Show</a>
                     <?php endif; ?>
 
-                    <?php
-                    $canUndo = false;
-
-                    if (!empty($review['deleted_at']) && strtotime($review['deleted_at']) >= strtotime('-3 days')) {
-                        $canUndo = true;
-                    }
+                    <?php 
+                    $canUndo = (!empty($review['deleted_at']) && strtotime($review['deleted_at']) >= strtotime('-3 days'));
+                    if (empty($review['deleted_at'])): 
                     ?>
-
-                    <?php if (empty($review['deleted_at'])): ?>
                         <a href="delete_review_admin.php?id=<?php echo (int)$review['id']; ?>"
-                        onclick="return openReviewActionConfirm(event, this.href, 'Delete this review?', 'delete')"
-                        class="btn-action-text delete-btn">
-                            Delete
-                        </a>
+                           onclick="return openReviewActionConfirm(event, this.href, 'Delete this review?', 'delete')"
+                           class="btn-action-text delete-btn">Delete</a>
                     <?php endif; ?>
 
                     <?php if ($canUndo): ?>
                         <a href="undo_review.php?id=<?php echo (int)$review['id']; ?>"
-                        onclick="return openReviewActionConfirm(event, this.href, 'Undo this deleted review?', 'undo')"
-                        class="btn-action-icon undo">
+                           onclick="return openReviewActionConfirm(event, this.href, 'Undo this deleted review?', 'undo')"
+                           class="btn-action-icon undo">
                             <i class="fas fa-rotate-left"></i>
                         </a>
                     <?php endif; ?>
@@ -739,8 +726,9 @@ if ($action === 'fetch_reviews_admin') {
                             '<?php echo htmlspecialchars($review['full_name'], ENT_QUOTES); ?>',
                             '<?php echo (int)$review['rating']; ?>',
                             '<?php echo htmlspecialchars($review['status'], ENT_QUOTES); ?>',
-                            '<?php echo date("m/d/Y", strtotime($review['created_at'])); ?>',
-                            '<?php echo htmlspecialchars($review['comment'], ENT_QUOTES); ?>'
+                            '<?php echo date('m/d/Y', strtotime($review['created_at'])); ?>',
+                            '<?php echo htmlspecialchars($review['comment'], ENT_QUOTES); ?>',
+                            '<?php echo $review['id']; ?>'
                         )">
                         <i class="fas fa-eye"></i>
                     </button>
@@ -749,7 +737,7 @@ if ($action === 'fetch_reviews_admin') {
             <?php
         }
     } else {
-        echo '<tr><td colspan="7" style="text-align:center;">No reviews found</td></tr>';
+        echo '<tr><td colspan="8" style="text-align:center;">No reviews found</td></tr>';
     }
 
     $table_html = ob_get_clean();
@@ -765,6 +753,41 @@ if ($action === 'fetch_reviews_admin') {
     exit();
 }
 
+if ($action === 'get_review_images') {
+    $review_id = (int)($_GET['review_id'] ?? 0);
+
+    if ($review_id <= 0) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Invalid review ID.'
+        ]);
+        exit();
+    }
+
+    $sql = "SELECT image_path
+            FROM review_images
+            WHERE review_id = ?
+            ORDER BY id ASC";
+
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, "i", $review_id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    $images = [];
+
+    while ($row = mysqli_fetch_assoc($result)) {
+        $images[] = [
+            'image_path' => $row['image_path']
+        ];
+    }
+
+    echo json_encode([
+        'success' => true,
+        'images' => $images
+    ]);
+    exit();
+}
 
 
 echo json_encode([

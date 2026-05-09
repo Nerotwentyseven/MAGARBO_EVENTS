@@ -106,9 +106,10 @@ if ($avgRes && $avgRow = mysqli_fetch_assoc($avgRes)) {
 $reviews = [];
 
 $reviewSql = "SELECT r.id, r.user_id, r.rating, r.comment, r.created_at,
-                     u.firstname, u.lastname,
-                     GROUP_CONCAT(ri.image_path ORDER BY ri.id ASC SEPARATOR '|||') AS images
-              FROM reviews r
+                r.review_token,
+                u.firstname, u.lastname,
+                GROUP_CONCAT(ri.image_path ORDER BY ri.id ASC SEPARATOR '|||') AS images
+            FROM reviews r
               JOIN users u ON r.user_id = u.id
               LEFT JOIN review_images ri ON ri.review_id = r.id
               WHERE r.status = 'Visible'
@@ -142,16 +143,17 @@ if ($reviewRes && mysqli_num_rows($reviewRes) > 0) {
         }
 
         $reviews[] = [
-            'id'         => $row['id'],
-            'user_id'    => $row['user_id'],
-            'initial'    => $initial,
-            'name'       => $full_name,
-            'time'       => date("F j, Y", strtotime($row['created_at'])),
-            'comment'    => $row['comment'],
-            'rating'     => (int)$row['rating'],
-            'images' => $images,
-            'image_path' => $row['image_path'] ?? null,
-            'review_link'=> "review.php#review-" . $row['id']
+            'id'          => $row['id'],
+            'user_id'     => $row['user_id'],
+            'initial'     => $initial,
+            'name'        => $full_name,
+            'time'        => date("F j, Y", strtotime($row['created_at'])),
+            'comment'     => $row['comment'],
+            'rating'      => (int)$row['rating'],
+            'images'      => $images,
+            'image_path'  => $row['image_path'] ?? null,
+            'review_token'=> $row['review_token'] ?? '',
+            'review_link' => $row['review_token'] ?? ''
         ];
     }
 }
@@ -397,7 +399,8 @@ function closeLoginRequiredModal() {
             <?php foreach ($reviews as $r): 
                 $is_my_comment = (isset($_SESSION['user_id']) && $_SESSION['user_id'] == $r['user_id']);
             ?>
-                <div class="review-card" style="position: relative;">
+                <div class="review-card" style="position: relative; cursor: pointer;" 
+                onclick="goToReview(event, '<?= htmlspecialchars($r['review_token']) ?>')">
 
                 
                     <div class="card-top-row">
@@ -408,7 +411,7 @@ function closeLoginRequiredModal() {
                         </div>
 
                         <?php if (!empty($r['image_path'])): ?>
-                    <a href="<a href="review.php" onclick="goToReview(event, <?= (int)$r['id'] ?>)">" style="display:inline-block;">
+                    <a href="review.php" onclick="goToReview(event, '<?= htmlspecialchars($r['review_token']) ?>')" style="display:inline-block;">
                         <img src="../<?= htmlspecialchars($r['image_path']) ?>" 
                             style="width:35px; height:35px; object-fit:cover; border-radius:6px; margin-top:6px; opacity:0.9;">
                     </a>
@@ -417,7 +420,7 @@ function closeLoginRequiredModal() {
                         <div style="display: flex; gap: 10px; align-items: center;">
                             <?php if ($is_my_comment): ?>
                                 <a href="delete_review.php?id=<?php echo (int)$r['id']; ?>"
-                                onclick="return openDeleteReviewModal(event, this.href)" title="Delete my comment"
+                                onclick="event.stopPropagation(); return openDeleteReviewModal(event, this.href)" title="Delete my comment"
                                 style="color: #ff4d4d; font-size: 14px;"><i class="fa-solid fa-trash"></i></a>
                             <?php endif; ?>
                             <i class="fa-solid fa-quote-right gold-quote"></i>
@@ -425,7 +428,7 @@ function closeLoginRequiredModal() {
                     </div>
                     <p class="review-text">"<?php echo htmlspecialchars($r['comment']); ?>"</p>
                     <?php if (!empty($r['images'])): ?>
-                        <a href="<?= htmlspecialchars($r['review_link']) ?>" class="review-img-group">
+                        <a href="review.php" onclick="goToReview(event, '<?= htmlspecialchars($r['review_token']) ?>')" class="review-img-group">
 
                             <?php 
                             $count = 0;
@@ -519,9 +522,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-function goToReview(event, id) {
+function goToReview(event, token) {
     event.preventDefault();
-    sessionStorage.setItem("scrollToReview", id);
+    sessionStorage.setItem("scrollToReview", token);
     window.location.href = "review.php";
 }
 </script>
