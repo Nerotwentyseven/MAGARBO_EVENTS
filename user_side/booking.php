@@ -349,7 +349,6 @@ const bookedDates = <?php echo json_encode($booked_dates); ?>;
 const offersDB = <?php echo json_encode($offersByCategory); ?>;
 const isCateringOnly = <?php echo json_encode($isCateringOnly); ?>;
 
-// ─── Flatpickr: Date Picker ───────────────────────────────
 const datePicker = flatpickr('#eventDate', {
     minDate: 'today',
     dateFormat: 'Y-m-d',
@@ -383,7 +382,6 @@ const datePicker = flatpickr('#eventDate', {
     }
 });
 
-// ─── Flatpickr: Time Picker ───────────────────────────────
 flatpickr('#eventTime', {
     enableTime: true,
     noCalendar: true,
@@ -1225,22 +1223,20 @@ flatpickr('#eventTime', {
             }
 
             function validateBookingForm() {
-    // ... existing validation code ...
 
-    // ─── I-fix ang time value bago mag-submit ───
-    const timeFp = document.getElementById('eventTime')?._flatpickr;
-    if (timeFp && timeFp.latestSelectedDateObj) {
-        const d = timeFp.latestSelectedDateObj;
-        let hours = d.getHours();
-        const minutes = String(d.getMinutes()).padStart(2, '0');
-        const period = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12 || 12;
-        const correctedTime = `${hours}:${minutes} ${period}`;
-        document.getElementById('eventTime').value = correctedTime;
-    }
+                const timeFp = document.getElementById('eventTime')?._flatpickr;
+                if (timeFp && timeFp.latestSelectedDateObj) {
+                    const d = timeFp.latestSelectedDateObj;
+                    let hours = d.getHours();
+                    const minutes = String(d.getMinutes()).padStart(2, '0');
+                    const period = hours >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12 || 12;
+                    const correctedTime = `${hours}:${minutes} ${period}`;
+                    document.getElementById('eventTime').value = correctedTime;
+                }
 
-    return true;
-}
+                return true;
+            }
 
             return true;
         }
