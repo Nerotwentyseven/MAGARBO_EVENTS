@@ -29,6 +29,8 @@ if ($themeId <= 0 && $themeName === '') {
 
 $requests = [];
 $savedSuggestion = '';
+$themePhoto = '';
+$themeDetails = '';
 
 function collectRequests($res, &$requests, &$savedSuggestion) {
     while ($row = mysqli_fetch_assoc($res)) {
@@ -43,6 +45,25 @@ function collectRequests($res, &$requests, &$savedSuggestion) {
             $savedSuggestion = $suggestion;
         }
     }
+}
+
+if ($themeId > 0) {
+    $themeStmt = mysqli_prepare($conn, "
+        SELECT theme_photo, theme_details
+        FROM gallery_themes
+        WHERE id = ?
+        LIMIT 1
+    ");
+    mysqli_stmt_bind_param($themeStmt, "i", $themeId);
+    mysqli_stmt_execute($themeStmt);
+    $themeRes = mysqli_stmt_get_result($themeStmt);
+
+    if ($theme = mysqli_fetch_assoc($themeRes)) {
+        $themePhoto = trim($theme['theme_photo'] ?? '');
+        $themeDetails = trim($theme['theme_details'] ?? '');
+    }
+
+    mysqli_stmt_close($themeStmt);
 }
 
 if ($themeId > 0) {
@@ -121,6 +142,7 @@ if ($mode === 'refine') {
 
 Theme: {$cleanThemeName}
 Event type: {$eventType}
+Theme details: {$themeDetails}
 
 Past client request:
 {$requests[0]}
@@ -134,6 +156,8 @@ Rules:
 - Keep the same main idea.
 - Make it sound natural, polished, and professional.
 - Keep it to 1 to 2 sentences only.
+- Include a matching color combination or color motif.
+- If a theme image is provided, base the colors, mood, and style on the image.
 - No quotation marks.
 - No bullet points.";
 } elseif ($mode === 'combine') {
@@ -143,6 +167,7 @@ Rules:
 
 Theme: {$cleanThemeName}
 Event type: {$eventType}
+Theme details: {$themeDetails}
 
 Client requests:
 - {$allRequests}
@@ -156,6 +181,8 @@ Rules:
 - Focus on setup, decorations, mood, arrangement, and overall presentation.
 - Make it sound natural, polished, and professional.
 - Keep it to 1 to 2 sentences only.
+- Include a matching color combination or color motif.
+- If a theme image is provided, base the colors, mood, and style on the image.
 - No quotation marks.
 - No bullet points.";
 } else {
@@ -163,6 +190,7 @@ Rules:
 
 Theme: {$cleanThemeName}
 Event type: {$eventType}
+Theme details: {$themeDetails}
 
 Task:
 Create one short professional booking request suggestion.
@@ -173,15 +201,36 @@ Rules:
 - Focus on setup, decorations, mood, arrangement, and overall presentation.
 - Make it sound natural, polished, and professional.
 - Keep it to 1 to 2 sentences only.
+- Include a matching color combination or color motif.
+- If a theme image is provided, base the colors, mood, and style on the image.
 - No quotation marks.
 - No bullet points.";
 }
 
+$parts = [
+    ['text' => $prompt]
+];
+
+if ($themePhoto !== '') {
+    $themeImagePath = realpath(__DIR__ . '/../' . ltrim($themePhoto, '/'));
+
+    if ($themeImagePath && file_exists($themeImagePath)) {
+        $mimeType = mime_content_type($themeImagePath);
+
+        if (in_array($mimeType, ['image/jpeg', 'image/png', 'image/webp'])) {
+            $parts[] = [
+                'inline_data' => [
+                    'mime_type' => $mimeType,
+                    'data' => base64_encode(file_get_contents($themeImagePath))
+                ]
+            ];
+        }
+    }
+}
+
 $payload = [
     'contents' => [[
-        'parts' => [[
-            'text' => $prompt
-        ]]
+        'parts' => $parts
     ]]
 ];
 

@@ -1609,6 +1609,29 @@ span.flatpickr-weekday {
     text-decoration: line-through !important;
     cursor: not-allowed !important;
     border-color: transparent !important;
+    position: relative;
+}
+
+/* two dots */
+.flatpickr-day.flatpickr-fully-booked::before,
+.flatpickr-day.flatpickr-fully-booked::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #ef4444;
+}
+
+/* left dot */
+.flatpickr-day.flatpickr-fully-booked::before {
+    left: calc(50% - 6px);
+}
+
+/* right dot */
+.flatpickr-day.flatpickr-fully-booked::after {
+    left: calc(50% + 2px);
 }
 
 /* Selected date */
@@ -1648,7 +1671,7 @@ span.flatpickr-weekday {
     position: relative;
 }
 
-flatpickr-day.flatpickr-one-booked::after {
+.flatpickr-day.flatpickr-one-booked::after {
     content: '';
     position: absolute;
     bottom: 3px;
