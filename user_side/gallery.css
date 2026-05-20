@@ -265,6 +265,32 @@ img {
     line-height: 1;
 }
 
+.image-preview-modal {
+    background: rgba(0,0,0,0.92);
+}
+
+.image-preview-modal img,
+#previewContent video {
+    animation: viewerZoom 0.2s ease;
+
+    max-width: 90%;
+    max-height: 85vh;
+    border-radius: 18px;
+    object-fit: contain;
+}
+
+@keyframes viewerZoom {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 .filter-card::-webkit-scrollbar,
 .gallery-scroll-area::-webkit-scrollbar {
     width: 8px;

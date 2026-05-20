@@ -110,6 +110,75 @@ if ($imagesQuery) {
     <link rel="stylesheet" href="gallery.css?v=<?php echo time(); ?>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        let galleryItems = [];
+        let currentPreviewIndex = 0;
+
+        window.openPreview = function(clickedIndex) {
+            galleryItems = Array.from(document.querySelectorAll('.gallery-item')).map(card => {
+                const img = card.querySelector('img');
+                const videoSource = card.querySelector('video source');
+
+                if (img) {
+                    return {
+                        src: img.getAttribute('src'),
+                        type: 'image'
+                    };
+                }
+
+                return {
+                    src: videoSource.getAttribute('src'),
+                    type: 'video'
+                };
+            });
+
+            currentPreviewIndex = clickedIndex;
+
+            renderPreview();
+            document.getElementById('imagePreviewModal').style.display = 'flex';
+        }
+
+        function renderPreview() {
+            const previewContent = document.getElementById('previewContent');
+            const item = galleryItems[currentPreviewIndex];
+
+            if (!item) return;
+
+            if (item.type === 'video') {
+                previewContent.innerHTML = `
+                    <video controls autoplay playsinline style="max-width:90vw; max-height:90vh; border-radius:12px;">
+                        <source src="${item.src}">
+                    </video>
+                `;
+            } else {
+                previewContent.innerHTML = `
+                    <img src="${item.src}" alt="Preview" style="max-width:90vw; max-height:90vh; border-radius:12px;">
+                `;
+            }
+        }
+
+        window.changePreview = function(direction) {
+            if (!galleryItems.length) return;
+
+            currentPreviewIndex += direction;
+
+            if (currentPreviewIndex < 0) {
+                currentPreviewIndex = galleryItems.length - 1;
+            }
+
+            if (currentPreviewIndex >= galleryItems.length) {
+                currentPreviewIndex = 0;
+            }
+
+            renderPreview();
+        }
+
+        window.closePreview = function() {
+            document.getElementById('imagePreviewModal').style.display = 'none';
+            document.getElementById('previewContent').innerHTML = '';
+        }
+    </script>
    
 </head>
 <body>
@@ -142,9 +211,9 @@ if ($imagesQuery) {
         <section class="gallery-scroll-area">
             <div class="gallery-grid">
                 <?php if (!empty($images)): ?>
-                    <?php foreach ($images as $img): ?>
+                    <?php foreach ($images as $index => $img): ?>
                         <div class="gallery-item"
-                            onclick="openPreview('../<?php echo htmlspecialchars($img['photo_path']); ?>', '<?php echo htmlspecialchars($img['file_type'] ?? 'image'); ?>')">
+                            onclick="openPreview(<?php echo $index; ?>)">
 
                             <?php if (($img['file_type'] ?? 'image') === 'video'): ?>
                                 <video class="gallery-video" muted playsinline>
@@ -195,100 +264,14 @@ if ($imagesQuery) {
     </div>
 
     <script>
-        let galleryImages = [];
-        let currentIndex = 0;
-
-        function openPreview(src, type = 'image') {
-
-            const items = document.querySelectorAll('.gallery-item img, .gallery-item video');
-
-            galleryImages = [];
-
-            items.forEach(el => {
-
-                if (el.tagName === 'IMG') {
-                    galleryImages.push({
-                        src: new URL(el.src, window.location.href).href,
-                        type: 'image'
-                    });
-                }
-
-                if (el.tagName === 'VIDEO') {
-                    const source = el.querySelector('source');
-                    if (source) {
-                        galleryImages.push({
-                            src: new URL(source.src, window.location.href).href,
-                            type: 'video'
-                        });
-                    }
-                }
-            });
-
-            const normalizedSrc = new URL(src, window.location.href).href;
-
-            currentIndex = galleryImages.findIndex(i => i.src === normalizedSrc);
-
-            if (currentIndex === -1) {
-                currentIndex = 0;
-            }
-            
-            renderPreview();
-
-            document.getElementById('imagePreviewModal').style.display = 'flex';
-        }
-
-        function renderPreview() {
-            const previewContent = document.getElementById('previewContent');
-            const item = galleryImages[currentIndex];
-
-            if (!item) return;
-
-            if (item.type === 'video') {
-                previewContent.innerHTML = `
-                    <video controls playsinline preload="metadata"
-                        style="max-width:90vw; max-height:90vh; border-radius:14px;">
-                        <source src="${item.src}" type="video/mp4">
-                    </video>
-                `;
-            } else {
-                previewContent.innerHTML = `
-                    <img src="${item.src}"
-                        style="max-width:90vw; max-height:90vh; border-radius:14px;">
-                `;
-            }
-        }
-
-        function changePreview(direction) {
-
-            currentIndex += direction;
-
-            if (currentIndex < 0) {
-                currentIndex = galleryImages.length - 1;
-            }
-
-            if (currentIndex >= galleryImages.length) {
-                currentIndex = 0;
-            }
-
-            renderPreview();
-        }
-
-        function closePreview() {
-            document.getElementById('imagePreviewModal').style.display = 'none';
-            document.getElementById('previewContent').innerHTML = '';
-        }
-
-        document.getElementById('imagePreviewModal').addEventListener('click', function (e) {
-            if (e.target === this) {
-                closePreview();
-            }
+        document.getElementById('imagePreviewModal').addEventListener('click', function(e) {
+            if (e.target === this) closePreview();
         });
 
-        const isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+        window.isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
 
         function pingUserHeartbeat() {
             if (!isLoggedIn) return;
-
             fetch('ajax.php?action=heartbeat', {
                 method: 'GET',
                 cache: 'no-store',
@@ -298,14 +281,10 @@ if ($imagesQuery) {
 
         pingUserHeartbeat();
         setInterval(pingUserHeartbeat, 10000);
-
         window.addEventListener('focus', pingUserHeartbeat);
         window.addEventListener('pageshow', pingUserHeartbeat);
-
-        document.addEventListener('visibilitychange', function () {
-            if (!document.hidden) {
-                pingUserHeartbeat();
-            }
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) pingUserHeartbeat();
         });
     </script>
 </body>

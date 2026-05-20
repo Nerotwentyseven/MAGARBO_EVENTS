@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 ?>
 <script>
-const isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+window.isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
 let heartbeatInterval = null;
 
 function pingUserHeartbeat() {

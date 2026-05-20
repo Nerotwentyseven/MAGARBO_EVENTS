@@ -195,6 +195,32 @@ ul { list-style: none; }
   display: inline-block;
 }
 
+.menu-card .menu-card-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: flex-start !important;
+  gap: 12px;
+}
+
+.menu-card .badge {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  background-color: var(--primary-gold) !important;
+  color: #fff !important;
+  position: static !important;
+  transform: none !important;
+}
+
+.menu-card .price-info {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  text-align: right !important;
+  margin-left: auto !important;
+  position: static !important;
+}
+
 .price-info {
   text-align: right;
   line-height: 1.2;
