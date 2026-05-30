@@ -3,6 +3,47 @@ session_name('ADMINSESSID');
 session_start();
 require_once '../db_connection.php';
 
+function normalizePhonePH($phone) {
+    $digits = preg_replace('/\D/', '', $phone);
+
+    if (strlen($digits) === 11 && substr($digits, 0, 2) === '09') {
+        return '63' . substr($digits, 1);
+    }
+
+    if (strlen($digits) === 12 && substr($digits, 0, 2) === '63') {
+        return $digits;
+    }
+
+    return '';
+}
+
+function sendBookingSms($phone, $message) {
+    $semaphoreApiKey = '6f4ef2e2ec634fad72c59a89950c7f82';
+
+    $number = normalizePhonePH($phone);
+
+    if ($number === '') {
+        return false;
+    }
+
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, 'https://api.semaphore.co/api/v4/messages');
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+        'apikey' => $semaphoreApiKey,
+        'number' => $number,
+        'message' => $message,
+        'sendername' => 'MAGARBO'
+    ]));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    return $response !== false;
+}
+
 if (isset($_GET['id']) && isset($_GET['status'])) {
     $booking_id = (int) $_GET['id'];
     $status = trim($_GET['status']);
@@ -11,9 +52,13 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
 
     if (in_array($status, $allowed_status, true)) {
 
-        $get_booking_sql = "SELECT id, user_id, event_type, event_date, selected_theme_id, theme_counted, booking_status, cancelled_at
-                            FROM bookings
-                            WHERE id = ?";
+        $get_booking_sql = "SELECT 
+                                b.id, b.user_id, b.event_type, b.event_date, b.selected_theme_id, 
+                                b.theme_counted, b.booking_status, b.cancelled_at,
+                                u.firstname, u.lastname, u.phone
+                            FROM bookings b
+                            INNER JOIN users u ON b.user_id = u.id
+                            WHERE b.id = ?";
         $stmt_get = mysqli_prepare($conn, $get_booking_sql);
 
         if (!$stmt_get) {
@@ -33,8 +78,9 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
             $selected_theme_id = (int)($booking['selected_theme_id'] ?? 0);
             $theme_counted = (int)($booking['theme_counted'] ?? 0);
             $old_status = trim($booking['booking_status'] ?? '');
+            $user_phone = trim($booking['phone'] ?? '');
+            $customer_name = trim(($booking['firstname'] ?? '') . ' ' . ($booking['lastname'] ?? ''));
 
-            // Server-side check — bawal mag-approve o mag-undo kung full na ang date
             if ($status === 'Approved' || $status === 'UndoCancel') {
                 $checkDate = $booking['event_date'];
                 $checkSql = "SELECT COUNT(*) as total FROM bookings 
@@ -49,12 +95,6 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
                 mysqli_stmt_close($checkStmt);
 
                 if ((int)$checkRow['total'] >= 2) {
-                    if ($status === 'UndoCancel') {
-                        // Auto-cancel na lang — hindi na i-restore sa Pending, redirect na lang with error
-                        header("Location: orders.php?error=date_full");
-                        exit();
-                    }
-                    // Para sa Approved
                     header("Location: orders.php?error=date_full");
                     exit();
                 }
@@ -144,9 +184,11 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
                     }
 
                     mysqli_stmt_bind_param($incTheme, "i", $selected_theme_id);
+
                     if (!mysqli_stmt_execute($incTheme)) {
                         throw new Exception(mysqli_stmt_error($incTheme));
                     }
+
                     mysqli_stmt_close($incTheme);
 
                     $markCounted = mysqli_prepare(
@@ -161,9 +203,11 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
                     }
 
                     mysqli_stmt_bind_param($markCounted, "i", $booking_id);
+
                     if (!mysqli_stmt_execute($markCounted)) {
                         throw new Exception(mysqli_stmt_error($markCounted));
                     }
+
                     mysqli_stmt_close($markCounted);
                 }
 
@@ -202,9 +246,11 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
                         }
 
                         mysqli_stmt_bind_param($updPay, "i", $payment_row_id);
+
                         if (!mysqli_stmt_execute($updPay)) {
                             throw new Exception(mysqli_stmt_error($updPay));
                         }
+
                         mysqli_stmt_close($updPay);
                     }
 
@@ -222,9 +268,11 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
                         }
 
                         mysqli_stmt_bind_param($updPay, "i", $payment_row_id);
+
                         if (!mysqli_stmt_execute($updPay)) {
                             throw new Exception(mysqli_stmt_error($updPay));
                         }
+
                         mysqli_stmt_close($updPay);
                     }
                 }
@@ -233,14 +281,17 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
                     $type = 'booking_approved';
                     $title = 'Booking Approved';
                     $message = "Your {$event_type} booking on {$event_date} has been approved.";
+                    $smsMessage = "Hi {$customer_name}, your {$event_type} booking on {$event_date} has been approved by Magarbo Events. Thank you!";
                 } elseif ($status === 'Cancelled') {
                     $type = 'booking_cancelled';
                     $title = 'Booking Cancelled';
                     $message = "Your {$event_type} booking on {$event_date} has been cancelled.";
+                    $smsMessage = "Hi {$customer_name}, your {$event_type} booking on {$event_date} has been rejected/cancelled by Magarbo Events.";
                 } else {
                     $type = 'booking_restored';
                     $title = 'Booking Restored';
                     $message = "Your {$event_type} booking on {$event_date} has been restored to pending.";
+                    $smsMessage = "Hi {$customer_name}, your {$event_type} booking on {$event_date} has been restored to Pending by Magarbo Events.";
                 }
 
                 $link = 'profile.php?view=upcoming';
@@ -269,15 +320,21 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
                     }
 
                     mysqli_stmt_bind_param($stmt_notif, "issss", $user_id, $type, $title, $message, $link);
+
                     if (!mysqli_stmt_execute($stmt_notif)) {
                         throw new Exception(mysqli_stmt_error($stmt_notif));
                     }
+
                     mysqli_stmt_close($stmt_notif);
                 }
 
                 mysqli_stmt_close($stmt_check);
 
                 mysqli_commit($conn);
+
+                if ($user_phone !== '' && $old_status !== $status) {
+                    sendBookingSms($user_phone, $smsMessage);
+                }
 
                 header("Location: orders.php?success=status_updated");
                 exit();

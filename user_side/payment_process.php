@@ -276,7 +276,7 @@ mysqli_stmt_close($rebuildStmt);
             </script>
             <div class="icon"><i class="fa-solid fa-circle-check"></i></div>
             <h1>Booking Received!</h1>
-            <p>Your down payment has been processed. Our admin will review your booking shortly. Check your profile for updates.</p>
+            <p> Your down payment has been processed successfully. Please wait while our admin reviews your booking. Booking updates will be sent to your profile notifications and registered mobile number. </p>
             <a href="profile.php" class="btn-profile">View My Bookings</a>
         <?php else: ?>
             <div class="icon" style="color: #e74c3c;"><i class="fa-solid fa-circle-xmark"></i></div>
