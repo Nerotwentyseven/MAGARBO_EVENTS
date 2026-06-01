@@ -1977,4 +1977,17 @@ html {
     display: inline-flex !important;
   }
 }
+
+.nav-links a.active {
+  color: var(--primary-gold);
+}
+
+.nav-links a.active::after {
+  display: none;
+}
+
+.mobile-menu a.active {
+  background: #faf5e8;
+  color: #bf9225 !important;
+}
         

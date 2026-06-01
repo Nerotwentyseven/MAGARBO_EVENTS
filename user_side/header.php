@@ -1,6 +1,8 @@
 <?php
 require_once '../db_connection.php';
 
+$currentPage = basename($_SERVER['PHP_SELF']);
+
 if (isset($_SESSION['user_id'])) {
     $user_id = (int) $_SESSION['user_id'];
     mysqli_query($conn, "UPDATE users SET last_active = NOW() WHERE id = $user_id");
@@ -69,12 +71,12 @@ if (isset($_SESSION['user_id'])) {
 
     <nav class="desktop-nav">
         <ul class="nav-links">
-            <li><a href="index.php#home" onclick="handleHomeClick(event)">Home</a></li>
-            <li><a href="packages.php" onclick="handlePackagesClick(event)">Packages</a></li>
-            <li><a href="gallery.php" onclick="handleGalleryClick(event)">Gallery</a></li>
-            <li><a href="menu.php" onclick="handleMenuClick(event)">Menu</a></li>
-            <li><a href="index.php#about">About Us</a></li>
-            <li><a href="index.php#contact">Contact Us</a></li>
+            <li><a data-nav="home" href="index.php#home" class="<?= ($currentPage === 'index.php' || $currentPage === '') ? 'active' : ''; ?>" onclick="handleHomeClick(event)">Home</a></li>
+            <li><a data-nav="packages" href="packages.php" class="<?= ($currentPage === 'packages.php') ? 'active' : ''; ?>" onclick="handlePackagesClick(event)">Packages</a></li>
+            <li><a data-nav="gallery" href="gallery.php" class="<?= ($currentPage === 'gallery.php') ? 'active' : ''; ?>" onclick="handleGalleryClick(event)">Gallery</a></li>
+            <li><a data-nav="menu" href="menu.php" class="<?= ($currentPage === 'menu.php') ? 'active' : ''; ?>" onclick="handleMenuClick(event)">Menu</a></li>
+            <li><a data-nav="about" href="index.php#about">About Us</a></li>
+            <li><a data-nav="contact" href="index.php#contact">Contact Us</a></li>
         </ul>
     </nav>
 
@@ -149,12 +151,12 @@ if (isset($_SESSION['user_id'])) {
                     <?php endif; ?>
                 </a>
             <?php endif; ?>
-            <a href="index.php#home" onclick="closeMobileMenu()">Home</a>
-            <a href="packages.php" onclick="handlePackagesClick(event)">Packages</a>
-            <a href="gallery.php" onclick="handleGalleryClick(event)">Gallery</a>
-            <a href="menu.php" onclick="handleMenuClick(event)">Menu</a>
-            <a href="index.php#about" onclick="closeMobileMenu()">About Us</a>
-            <a href="index.php#contact" onclick="closeMobileMenu()">Contact Us</a>
+            <a data-nav="home" href="index.php#home" class="<?= ($currentPage === 'index.php' || $currentPage === '') ? 'active' : ''; ?>" onclick="closeMobileMenu()">Home</a>
+            <a data-nav="packages" href="packages.php" class="<?= ($currentPage === 'packages.php') ? 'active' : ''; ?>" onclick="handlePackagesClick(event)">Packages</a>
+            <a data-nav="gallery" href="gallery.php" class="<?= ($currentPage === 'gallery.php') ? 'active' : ''; ?>" onclick="handleGalleryClick(event)">Gallery</a>
+            <a data-nav="menu" href="menu.php" class="<?= ($currentPage === 'menu.php') ? 'active' : ''; ?>" onclick="handleMenuClick(event)">Menu</a>
+            <a data-nav="about" href="index.php#about" onclick="closeMobileMenu()">About Us</a>
+            <a data-nav="contact" href="index.php#contact" onclick="closeMobileMenu()">Contact Us</a>
 
             <div class="mobile-menu-divider"></div>
 
@@ -487,4 +489,40 @@ if (isset($_SESSION['user_id'])) {
 
         window.addEventListener('pagehide', stopUserHeartbeat);
         window.addEventListener('beforeunload', stopUserHeartbeat);
+
+        function setActiveNav() {
+            const currentPage = window.location.pathname.split('/').pop() || 'index.php';
+            let activeKey = 'home';
+
+            if (currentPage === 'packages.php') activeKey = 'packages';
+            else if (currentPage === 'gallery.php') activeKey = 'gallery';
+            else if (currentPage === 'menu.php') activeKey = 'menu';
+            else {
+                const about = document.getElementById('about');
+                const contact = document.getElementById('contact');
+
+                const scrollPosition = window.scrollY + 160;
+                const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 80;
+
+                if (contact && (scrollPosition >= contact.offsetTop || nearBottom)) {
+                    activeKey = 'contact';
+                } else if (about && scrollPosition >= about.offsetTop) {
+                    activeKey = 'about';
+                } else {
+                    activeKey = 'home';
+                }
+            }
+
+            document.querySelectorAll('[data-nav]').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            document.querySelectorAll(`[data-nav="${activeKey}"]`).forEach(link => {
+                link.classList.add('active');
+            });
+        }
+
+        window.addEventListener('load', setActiveNav);
+        window.addEventListener('scroll', setActiveNav);
+        window.addEventListener('hashchange', setActiveNav);
     </script>
