@@ -355,7 +355,6 @@ if ($calendarResult && mysqli_num_rows($calendarResult) > 0) {
             div.className = 'cal-day';
             div.innerHTML = `<span>${day}</span>`;
 
-            // Highlight current date
             const today = new Date();
 
             if (
