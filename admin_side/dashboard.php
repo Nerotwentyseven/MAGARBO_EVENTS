@@ -355,6 +355,17 @@ if ($calendarResult && mysqli_num_rows($calendarResult) > 0) {
             div.className = 'cal-day';
             div.innerHTML = `<span>${day}</span>`;
 
+            // Highlight current date
+            const today = new Date();
+
+            if (
+                day === today.getDate() &&
+                month === today.getMonth() &&
+                year === today.getFullYear()
+            ) {
+                div.classList.add('today');
+            }
+
             const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
             const dayEvents = dbEvents[dateStr] || [];
 

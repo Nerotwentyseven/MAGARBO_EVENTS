@@ -172,6 +172,18 @@ body {
     gap: 8px;
 }
 
+.cal-day.today {
+    background: #d4af37;
+    color: white;
+    font-weight: 700;
+    border-color: #d4af37;
+}
+
+.cal-day.today:hover {
+    background: #c9a227;
+    color: white;
+}
+
 .cal-day {
     padding: 12px;
     border: 1px solid var(--border-color);

@@ -64,7 +64,7 @@
     }
 }
 
-    $query_bookings = "SELECT * FROM bookings WHERE user_id = ? ORDER BY event_date ASC";
+    $query_bookings = "SELECT * FROM bookings WHERE user_id = ? ORDER BY id DESC";
     $stmt_b = mysqli_prepare($conn, $query_bookings);
     mysqli_stmt_bind_param($stmt_b, "i", $user_id);
     mysqli_stmt_execute($stmt_b);
