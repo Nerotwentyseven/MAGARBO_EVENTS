@@ -554,7 +554,18 @@
                 </div>
 
                 <div id="appointments" class="section">
-                    <h3 style="margin-bottom:20px;">My Appointments</h3>
+
+                    <div class="appointments-header">
+                        <div>
+                            <h3>My Appointments</h3>
+                            <p>Manage your consultation appointments.</p>
+                        </div>
+
+                        <button type="button" class="btn-schedule" onclick="openAptModal()">
+                            <i class="fa-solid fa-plus"></i>
+                            Schedule New
+                        </button>
+                    </div>
 
                     <form method="POST" id="appointmentsDeleteForm">
                         <div class="completed-action-bar" style="margin-bottom:16px;">
@@ -627,7 +638,6 @@
                         <input type="hidden" name="delete_selected_appointments" value="1">
                     </form>
 
-                    <button class="btn-schedule" onclick="openAptModal()">+ Schedule New</button>
                 </div>
                 <!-- MESSAGE -->
                 <div id="message" class="section">

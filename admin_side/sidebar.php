@@ -64,67 +64,22 @@ $total_admin_notifs = $unread_messages + $pending_appointments + $pending_orders
                 <div class="role">Admin Panel</div>
             </div>
             
-            <div class="notif-wrapper" style="position: relative;">
-                <i class="fas fa-bell bell-icon" onclick="toggleNotifications(event)" style="cursor:pointer; position:relative;"></i>
+            <div class="notif-wrapper">
+    <i class="fas fa-bell bell-icon" onclick="toggleNotifications(event)"></i>
 
-                <?php if ($total_admin_notifs > 0): ?>
-                <span class="notif-badge" style="
-                        position:absolute;
-                        top:-6px;
-                        right:-8px;
-                        background:#ef4444;
-                        color:#fff;
-                        font-size:11px;
-                        min-width:18px;
-                        height:18px;
-                        border-radius:999px;
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
-                        padding:0 5px;
-                        font-weight:700;
-                    ">
-                        <?php echo $total_admin_notifs; ?>
-                    </span>
-                <?php endif; ?>
+    <span id="adminNotifBadge" class="notif-badge">0</span>
 
-                <div id="notif-dropdown" class="notif-dropdown">
-                    <div class="notif-title">Recent Updates</div>
-                    <div class="notif-list">
+    <div id="notif-dropdown" class="notif-dropdown">
+        <div class="notif-title">Notifications</div>
 
-                        <div id="messageNotifRow">
-                        <?php if ($unread_messages > 0): ?>
-                            <a href="messages.php" class="notif-item" style="display:block; text-decoration:none; color:inherit;">
-                                <strong>New customer messages</strong><br>
-                                <small><?php echo $unread_messages; ?> unread customer message<?php echo $unread_messages > 1 ? 's' : ''; ?> waiting for response</small>
-                            </a>
-                        <?php endif; ?>
-                    </div>
-
-                        <?php if ($pending_appointments > 0): ?>
-                            <a href="appointments.php" class="notif-item" style="display:block; text-decoration:none; color:inherit;">
-                                <strong>Pending appointments</strong><br>
-                                <small>Needs approval or update</small>
-                            </a>
-                        <?php endif; ?>
-
-                        <?php if ($pending_orders > 0): ?>
-                            <a href="orders.php" class="notif-item" style="display:block; text-decoration:none; color:inherit;">
-                                <strong>Pending orders</strong><br>
-                                <small>Booking requests waiting for approval</small>
-                            </a>
-                        <?php endif; ?>
-
-                        <?php if ($total_admin_notifs === 0): ?>
-                            <div class="notif-item">
-                                <strong>No new notifications</strong><br>
-                                <small>Everything is up to date</small>
-                            </div>
-                        <?php endif; ?>
-
-                    </div>
-                </div>
+        <div class="notif-list" id="adminNotifList">
+            <div class="notif-item">
+                <strong>Loading...</strong><br>
+                <small>Checking notifications</small>
             </div>
+        </div>
+    </div>
+</div>
         </div>
     </div>
     
@@ -181,67 +136,121 @@ $total_admin_notifs = $unread_messages + $pending_appointments + $pending_orders
 </div>
 
 <script>
-    function toggleNotifications(event) {
-        event.stopPropagation();
-        const dropdown = document.getElementById('notif-dropdown');
-        dropdown.classList.toggle('active');
-    }
+function toggleNotifications(event) {
+    event.stopPropagation();
+    document.getElementById('notif-dropdown')?.classList.toggle('active');
+}
 
-    window.onclick = function(event) {
-        if (!event.target.matches('.bell-icon')) {
-            const dropdowns = document.getElementsByClassName("notif-dropdown");
-            for (let i = 0; i < dropdowns.length; i++) {
-                let openDropdown = dropdowns[i];
-                if (openDropdown.classList.contains('active')) {
-                    openDropdown.classList.remove('active');
-                }
+document.addEventListener('click', function(event) {
+    if (!event.target.closest('.notif-wrapper')) {
+        document.getElementById('notif-dropdown')?.classList.remove('active');
+    }
+});
+
+function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, function(match) {
+        return {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        }[match];
+    });
+}
+
+function timeAgo(dateString) {
+    if (!dateString) return '';
+
+    const date = new Date(dateString.replace(' ', 'T'));
+    const now = new Date();
+    const diff = Math.floor((now - date) / 1000);
+
+    if (diff < 60) return 'Just now';
+
+    const mins = Math.floor(diff / 60);
+    if (mins < 60) return mins + ' min' + (mins > 1 ? 's' : '') + ' ago';
+
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return hours + ' hour' + (hours > 1 ? 's' : '') + ' ago';
+
+    const days = Math.floor(hours / 24);
+    if (days < 30) return days + ' day' + (days > 1 ? 's' : '') + ' ago';
+
+    return '30+ days ago';
+}
+
+function markAdminNotif(type, id, link, lastId) {
+    fetch('admin_notifications.php?action=mark_read', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `type=${encodeURIComponent(type)}&id=${encodeURIComponent(id)}&last_id=${encodeURIComponent(lastId || id)}`
+    }).finally(() => {
+        window.location.href = link;
+    });
+}
+
+function loadAdminNotifications() {
+    fetch('admin_notifications.php?action=list')
+        .then(res => res.json())
+        .then(data => {
+            const badge = document.getElementById('adminNotifBadge');
+            const list = document.getElementById('adminNotifList');
+
+            if (!data.success) return;
+
+            if (data.total > 0) {
+                badge.textContent = data.total > 99 ? '99+' : data.total;
+                badge.style.display = 'inline-flex';
+            } else {
+                badge.textContent = '0';
+                badge.style.display = 'none';
             }
-        }
-    };
 
-    
-    function loadAdminNotifications() {
-        fetch('admin_notifications.php')
-            .then(res => res.json())
-            .then(data => {
+            if (!data.items || data.items.length === 0) {
+                list.innerHTML = `
+                    <div class="notif-item">
+                        <strong>No new notifications</strong><br>
+                        <small>Everything is up to date</small>
+                    </div>
+                `;
+                return;
+            }
 
-    const badge = document.querySelector('.notif-badge');
-    const wrapper = document.querySelector('.notif-wrapper');
-    const messageRow = document.getElementById('messageNotifRow');
+            list.innerHTML = data.items.map(item => `
+                <div class="notif-item ${item.is_read == 1 ? 'read' : 'unread'}"
+                    onclick="markAdminNotif('${escapeHtml(item.type)}', '${escapeHtml(item.id)}', '${escapeHtml(item.link)}', '${escapeHtml(item.last_id)}')">
+                    <strong>${escapeHtml(item.title)}</strong><br>
+                    <small>${escapeHtml(item.text)}</small>
+                    <span class="notif-time">${timeAgo(item.time)}</span>
+                </div>
+            `).join('');
+        })
+        .catch(err => console.log(err));
+}
 
-    if (data.total > 0) {
-        if (badge) {
-            badge.textContent = data.total;
-        } else {
-            const span = document.createElement('span');
-            span.className = 'notif-badge';
-            span.textContent = data.total;
-            wrapper.appendChild(span);
-        }
-    } else {
-        if (badge) badge.remove();
+const sidebarMenu = document.querySelector('.sidebar-menu');
+
+if (sidebarMenu) {
+    const savedSidebarScroll = sessionStorage.getItem('sidebarMenuScroll');
+
+    if (savedSidebarScroll !== null) {
+        sidebarMenu.scrollTop = parseInt(savedSidebarScroll, 10);
     }
 
-    const unreadMessages = parseInt(data.unread_messages ?? data.messages ?? 0);
+    sidebarMenu.addEventListener('scroll', function () {
+        sessionStorage.setItem('sidebarMenuScroll', sidebarMenu.scrollTop);
+    });
 
-    if (messageRow) {
-        if (unreadMessages > 0) {
-            messageRow.innerHTML = `
-                <a href="messages.php" class="notif-item" style="display:block; text-decoration:none; color:inherit;">
-                    <strong>New customer messages</strong><br>
-                    <small>${unreadMessages} unread customer message${unreadMessages > 1 ? 's' : ''} waiting for response</small>
-                </a>
-            `;
-        } else {
-            messageRow.innerHTML = '';
-        }
-    }
+    document.querySelectorAll('.sidebar-menu .menu-link').forEach(link => {
+        link.addEventListener('click', function () {
+            sessionStorage.setItem('sidebarMenuScroll', sidebarMenu.scrollTop);
+        });
+    });
+}
 
-})
-            .catch(err => console.log(err));
-    }
-
-    setInterval(loadAdminNotifications, 5000);
-
-    loadAdminNotifications();
+loadAdminNotifications();
+setInterval(loadAdminNotifications, 5000);
 </script>

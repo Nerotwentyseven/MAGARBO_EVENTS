@@ -40,8 +40,10 @@ $pendingResult = mysqli_query($conn, $pendingSql);
 $pendingData = mysqli_fetch_assoc($pendingResult);
 $totalPending = $pendingData['total_pending'] ?? 0;
 
-$recentSql = "SELECT b.*, 
-              CONCAT(u.firstname, ' ', u.lastname) AS full_name
+$recentSql = "SELECT 
+              b.*, 
+              CONCAT(u.firstname, ' ', u.lastname) AS full_name,
+              COALESCE(NULLIF(b.display_order_id, ''), CONCAT('ORD-', b.id)) AS dashboard_order_id
               FROM bookings b
               JOIN users u ON b.user_id = u.id
               WHERE b.booking_status = 'Pending'
@@ -267,7 +269,7 @@ if ($calendarResult && mysqli_num_rows($calendarResult) > 0) {
                                 while ($row = mysqli_fetch_assoc($recentResult)) {
                             ?>
                                 <tr>
-                                    <td>ORD-<?php echo $row['id']; ?></td>
+                                    <td><?php echo htmlspecialchars($row['dashboard_order_id']); ?></td>
                                     <td><?php echo $row['full_name']; ?></td>
                                     <td><?php echo $row['event_type']; ?></td>
                                     <td><?php echo date("m/d/Y", strtotime($row['event_date'])); ?></td>
