@@ -280,13 +280,20 @@ date_default_timezone_set('Asia/Manila');
 
 <script>
 function openTab(evt, tabName) {
+    localStorage.setItem('adminSettingsActiveTab', tabName);
+
     let i, content, links;
     content = document.getElementsByClassName("tab-content");
     for (i = 0; i < content.length; i++) content[i].classList.remove("active");
+
     links = document.getElementsByClassName("tab-link");
     for (i = 0; i < links.length; i++) links[i].classList.remove("active");
+
     document.getElementById(tabName).classList.add("active");
-    evt.currentTarget.classList.add("active");
+
+    if (evt && evt.currentTarget) {
+        evt.currentTarget.classList.add("active");
+    }
 }
 
 function previewImage(event) {
@@ -305,6 +312,18 @@ function applyTheme() {
     if (val === 'Dark Mode') document.body.classList.add('dark-mode');
     else document.body.classList.remove('dark-mode');
 }
+
+window.addEventListener('load', function () {
+    const savedSettingsTab = localStorage.getItem('adminSettingsActiveTab') || 'profile';
+
+    const savedSettingsBtn = document.querySelector(
+        `.tab-link[onclick*="'${savedSettingsTab}'"]`
+    );
+
+    if (savedSettingsBtn && document.getElementById(savedSettingsTab)) {
+        openTab({ currentTarget: savedSettingsBtn }, savedSettingsTab);
+    }
+});
 </script>
 </body>
 </html>

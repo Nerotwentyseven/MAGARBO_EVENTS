@@ -329,6 +329,9 @@ let confirmTargetUrl = '';
 function filterTable(status, btn = null) {
     currentAppointmentFilter = status;
 
+    // I-save ang current tab
+    localStorage.setItem('appointmentsActiveTab', status);
+
     if (btn) {
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
@@ -480,6 +483,19 @@ window.onload = function() {
     });
 
     refreshAdminAppointments();
+
+    const savedTab = localStorage.getItem('appointmentsActiveTab') || 'all';
+
+    const savedBtn = document.querySelector(
+        `.filter-btn[onclick*="'${savedTab}'"]`
+    );
+
+    if (savedBtn) {
+        filterTable(savedTab, savedBtn);
+    } else {
+        filterTable('all', document.querySelector('.filter-btn'));
+    }
+
     startAdminAppointmentsPolling();
 };
 </script>

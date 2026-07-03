@@ -430,6 +430,8 @@ let currentDateTo = '';
 function filterTable(status, btn = null) {
     currentReviewFilter = status;
 
+    localStorage.setItem('reviewsActiveTab', status);
+
     if (btn) {
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
@@ -617,6 +619,19 @@ function closeModal() {
 
 window.onload = function() {
     refreshAdminReviews();
+
+    const savedReviewTab = localStorage.getItem('reviewsActiveTab') || 'all';
+
+    const savedReviewBtn = document.querySelector(
+        `.filter-btn[onclick*="'${savedReviewTab}'"]`
+    );
+
+    if (savedReviewBtn) {
+        filterTable(savedReviewTab, savedReviewBtn);
+    } else {
+        filterTable('all', document.querySelector('.filter-btn'));
+    }
+
     startReviewsPolling();
 
     const links = document.querySelectorAll('.menu-link');

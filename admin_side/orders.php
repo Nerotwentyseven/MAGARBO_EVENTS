@@ -629,6 +629,8 @@ let currentDateTo = '';
 function filterOrders(status, btn = null) {
     currentOrderFilter = status;
 
+    localStorage.setItem('ordersActiveTab', status);
+
     if (btn) {
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
@@ -705,6 +707,19 @@ window.onload = function() {
 
 
     refreshAdminOrders();
+
+    const savedOrderTab = localStorage.getItem('ordersActiveTab') || 'all';
+
+    const savedOrderBtn = document.querySelector(
+        `.filter-btn[onclick*="'${savedOrderTab}'"]`
+    );
+
+    if (savedOrderBtn) {
+        filterOrders(savedOrderTab, savedOrderBtn);
+    } else {
+        filterOrders('all', document.querySelector('.filter-btn'));
+    }
+
     startOrdersPolling();
 };
 </script>

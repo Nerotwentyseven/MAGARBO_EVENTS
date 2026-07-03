@@ -430,8 +430,13 @@ let currentDateTo = '';
 function filterPayments(status, el) {
     currentBillingFilter = status;
 
+    localStorage.setItem('billingActiveTab', status);
+
     document.querySelectorAll('.filter-item').forEach(i => i.classList.remove('active'));
-    el.classList.add('active');
+
+    if (el) {
+        el.classList.add('active');
+    }
 
     applyAllBillingFilters();
 }
@@ -500,6 +505,20 @@ document.addEventListener('click', function (e) {
     if (wrap && !wrap.contains(e.target) && dropdown && btn) {
         dropdown.classList.remove('show');
         btn.classList.remove('active');
+    }
+});
+
+window.addEventListener('load', function () {
+    const savedBillingTab = localStorage.getItem('billingActiveTab') || 'all';
+
+    const savedBillingBtn = document.querySelector(
+        `.filter-item[onclick*="'${savedBillingTab}'"]`
+    );
+
+    if (savedBillingBtn) {
+        filterPayments(savedBillingTab, savedBillingBtn);
+    } else {
+        filterPayments('all', document.querySelector('.filter-item'));
     }
 });
 </script>

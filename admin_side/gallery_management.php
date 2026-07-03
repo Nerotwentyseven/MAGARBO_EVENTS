@@ -399,6 +399,8 @@ if ($themeQuery && mysqli_num_rows($themeQuery) > 0) {
         }
 
         function switchTab(type) {
+            localStorage.setItem('galleryActiveTab', type);
+
             document.querySelectorAll('.pill-tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.gallery-content').forEach(content => content.classList.remove('active'));
 
@@ -1175,6 +1177,14 @@ if ($themeQuery && mysqli_num_rows($themeQuery) > 0) {
         }
 
         loadGallery();
+
+        const savedGalleryTab = localStorage.getItem('galleryActiveTab') || 'albums';
+
+        if (document.getElementById('btn-' + savedGalleryTab) && document.getElementById(savedGalleryTab + '-view')) {
+            switchTab(savedGalleryTab);
+        } else {
+            switchTab('albums');
+        }
     </script>
 </body>
 </html>

@@ -377,6 +377,8 @@ document.addEventListener('DOMContentLoaded', function () {
 function filterTable(status, btn = null) {
     currentUserFilter = status;
 
+    localStorage.setItem('usersActiveTab', status);
+
     if (btn) {
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
@@ -417,6 +419,18 @@ function closeModal() {
 }
 
 window.onload = function() {
+    const savedUserTab = localStorage.getItem('usersActiveTab') || 'all';
+
+    const savedUserBtn = document.querySelector(
+        `.filter-btn[onclick*="'${savedUserTab}'"]`
+    );
+
+    if (savedUserBtn) {
+        filterTable(savedUserTab, savedUserBtn);
+    } else {
+        filterTable('all', document.querySelector('.filter-btn'));
+    }
+
     const links = document.querySelectorAll('.menu-link');
     links.forEach(link => {
         link.classList.remove('active');

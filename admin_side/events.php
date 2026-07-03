@@ -1123,7 +1123,11 @@ function changeMenuQty(inputId, change) {
             btn.addEventListener('click', function () {
                 document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
+
                 activeEventStatus = this.dataset.status || 'all';
+
+                localStorage.setItem('eventsActiveTab', activeEventStatus);
+
                 applyEventFilters();
             });
         });
@@ -1208,6 +1212,16 @@ function changeMenuQty(inputId, change) {
 
             handleAdminEventType();
             handleServiceTypeChange();
+
+            const savedEventTab = localStorage.getItem('eventsActiveTab') || 'all';
+            const savedEventBtn = document.querySelector(`.tab-item[data-status="${savedEventTab}"]`);
+
+            if (savedEventBtn) {
+                document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+                savedEventBtn.classList.add('active');
+                activeEventStatus = savedEventTab;
+            }
+
             applyEventFilters();
             });
 
