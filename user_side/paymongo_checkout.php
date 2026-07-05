@@ -33,14 +33,19 @@ if (!in_array($selected_method, ['gcash', 'maya'], true)) {
 $paymongo_method = ($selected_method === 'maya') ? 'paymaya' : 'gcash';
 
 $baseAmount = (float)($payment['amount'] ?? 0);
-$processingFee = (float)($payment['processing_fee'] ?? 0);
-$amountCharged = (float)($payment['amount_charged'] ?? 0);
 
-$amount = $amountCharged > 0 ? $amountCharged : ($baseAmount + $processingFee);
+$FEE_RATE = 0.025;
+$VAT_RATE = 0.12;
 
-if ($amount <= 0) {
-    $amount = $baseAmount;
-}
+$feeMultiplier = $FEE_RATE * (1 + $VAT_RATE);
+
+$amountCharged = $baseAmount / (1 - $feeMultiplier);
+$processingFee = $amountCharged - $baseAmount;
+
+$amountCharged = round($amountCharged, 2);
+$processingFee = round($processingFee, 2);
+
+$amount = $amountCharged;
 
 $booking_reference = trim($payment['booking_reference'] ?? '');
 $payment_attempt_reference = trim($payment['payment_attempt_reference'] ?? '');

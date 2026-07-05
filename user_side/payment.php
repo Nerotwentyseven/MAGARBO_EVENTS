@@ -54,7 +54,7 @@ $downpayment = 2000;
                         <div class="method-info">
                             <div class="icon-box">
                                 <img 
-                                    src="https://cdn.brandfetch.io/id_IE4goUp/theme/dark/logo.svg?c=1bxid64Mup7aczewSAYMX&t=1765437091118" 
+                                    src="https://business.inquirer.net/files/2024/02/maya-featured-image-business.png" 
                                     alt="Maya"
                                     onerror="this.onerror=null;this.src='https://via.placeholder.com/80x80?text=Maya';"
                                 >
