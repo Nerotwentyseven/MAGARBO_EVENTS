@@ -296,34 +296,16 @@ if ($result) {
 
                                     <a href="update_status.php?id=<?php echo $o['id']; ?>&status=Cancelled"
                                     class="btn-action-icon times"
-                                    onclick="return openConfirm(event, this.href, 'Cancel this booking?')">
+                                    onclick="return openRefundConfirm(event, this.href)">
                                         <i class="fas fa-times"></i>
                                     </a>
                                 <?php endif; ?>
-
-                                <?php
-                                $canUndo = false;
-                                if (
-                                    $o['booking_status'] === 'Cancelled' &&
-                                    !empty($o['cancelled_at']) &&
-                                    strtotime($o['cancelled_at']) >= strtotime('-3 days')
-                                ) {
-                                    $canUndo = true;
-                                }
-                                ?>
 
                                 <button class="btn-action-icon eye"
                                         onclick='openDetails(<?php echo $json_data; ?>)'>
                                     <i class="fas fa-eye"></i>
                                 </button>
 
-                                <?php if ($canUndo): ?>
-                                    <a href="update_status.php?id=<?php echo $o['id']; ?>&status=UndoCancel"
-                                    class="btn-action-icon undo"
-                                    onclick="return openConfirm(event, this.href, 'Undo this cancelled order?')">
-                                        <i class="fas fa-rotate-left"></i>
-                                    </a>
-                                <?php endif; ?>
                             </td>
                             </tr>
                     <?php
@@ -562,9 +544,29 @@ function openConfirm(event, url, message) {
     return false;
 }
 
+function openRefundConfirm(event, url) {
+    event.preventDefault();
+    confirmTargetUrl = url;
+
+    document.getElementById('confirmMessage').innerText =
+        'Cancel this booking? The payment will be refunded automatically before the booking is marked as cancelled.';
+
+    const proceedBtn = document.getElementById('confirmProceedBtn');
+    proceedBtn.innerText = 'Refund and Cancel';
+    proceedBtn.classList.add('refund-mode');
+
+    document.getElementById('confirmModal').style.display = 'flex';
+
+    return false;
+}
+
 function closeConfirm() {
     document.getElementById('confirmModal').style.display = 'none';
     confirmTargetUrl = '';
+
+    const proceedBtn = document.getElementById('confirmProceedBtn');
+    proceedBtn.innerText = 'Yes';
+    proceedBtn.classList.remove('refund-mode');
 }
 
 document.addEventListener('DOMContentLoaded', function () {

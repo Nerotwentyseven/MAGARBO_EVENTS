@@ -906,3 +906,8 @@ body {
         right: auto;
     }
 }
+
+.confirm-btn.refund-mode {
+    background: #dc2626;
+    color: #fff;
+}

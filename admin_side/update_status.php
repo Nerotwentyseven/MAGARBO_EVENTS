@@ -3,6 +3,8 @@ session_name('ADMINSESSID');
 session_start();
 require_once '../db_connection.php';
 
+$PAYMONGO_SECRET_KEY = 'sk_test_vjMC8YA7ph3KubZ6D4Pdm5sx';
+
 function normalizePhonePH($phone) {
     $digits = preg_replace('/\D/', '', $phone);
 
@@ -44,11 +46,74 @@ function sendBookingSms($phone, $message) {
     return $response !== false;
 }
 
+function createPayMongoRefund($secretKey, $paymentId, $amount)
+{
+    $amountCentavos = (int) round($amount * 100);
+
+    if ($paymentId === '' || $amountCentavos <= 0) {
+        return [
+            'success' => false,
+            'message' => 'Invalid payment ID or refund amount.'
+        ];
+    }
+
+    $payload = [
+        "data" => [
+            "attributes" => [
+                "amount" => $amountCentavos,
+                "payment_id" => $paymentId,
+                "reason" => "requested_by_customer",
+                "notes" => "Booking cancelled by admin"
+            ]
+        ]
+    ];
+
+    $ch = curl_init("https://api.paymongo.com/v1/refunds");
+
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => json_encode($payload),
+        CURLOPT_HTTPHEADER => [
+            "accept: application/json",
+            "content-type: application/json",
+            "authorization: Basic " . base64_encode($secretKey . ":")
+        ],
+    ]);
+
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curlError = curl_error($ch);
+    curl_close($ch);
+
+    if ($curlError) {
+        return [
+            'success' => false,
+            'message' => $curlError
+        ];
+    }
+
+    $result = json_decode($response, true);
+
+    if ($httpCode < 200 || $httpCode >= 300) {
+        return [
+            'success' => false,
+            'message' => $result['errors'][0]['detail'] ?? 'Refund request failed.'
+        ];
+    }
+
+    return [
+        'success' => true,
+        'refund_id' => $result['data']['id'] ?? '',
+        'refund_status' => $result['data']['attributes']['status'] ?? 'pending'
+    ];
+}
+
 if (isset($_GET['id']) && isset($_GET['status'])) {
     $booking_id = (int) $_GET['id'];
     $status = trim($_GET['status']);
 
-    $allowed_status = ['Approved', 'Cancelled', 'UndoCancel'];
+    $allowed_status = ['Approved', 'Cancelled'];
 
     if (in_array($status, $allowed_status, true)) {
 
@@ -129,34 +194,6 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
 
                     mysqli_stmt_bind_param($stmt, "si", $status, $booking_id);
 
-                } elseif ($status === 'UndoCancel') {
-                    $canUndo = false;
-
-                    if (
-                        $old_status === 'Cancelled' &&
-                        !empty($booking['cancelled_at']) &&
-                        strtotime($booking['cancelled_at']) >= strtotime('-3 days')
-                    ) {
-                        $canUndo = true;
-                    }
-
-                    if (!$canUndo) {
-                        throw new Exception("Undo period expired.");
-                    }
-
-                    $status = 'Pending';
-
-                    $query = "UPDATE bookings
-                              SET booking_status = ?, event_status = NULL, cancelled_at = NULL
-                              WHERE id = ?";
-                    $stmt = mysqli_prepare($conn, $query);
-
-                    if (!$stmt) {
-                        throw new Exception(mysqli_error($conn));
-                    }
-
-                    mysqli_stmt_bind_param($stmt, "si", $status, $booking_id);
-
                 } else {
                     throw new Exception("Invalid status.");
                 }
@@ -211,48 +248,93 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
                     mysqli_stmt_close($markCounted);
                 }
 
-                $paySql = "SELECT id, payment_status
-                           FROM booking_payments
-                           WHERE booking_id = ?
-                           ORDER BY id DESC
-                           LIMIT 1";
-                $payStmt = mysqli_prepare($conn, $paySql);
+                $paySql = "SELECT 
+                id, payment_status, amount, amount_charged,
+                provider_transaction_id, refund_id
+           FROM booking_payments
+           WHERE booking_id = ?
+           ORDER BY id DESC
+           LIMIT 1";
+$payStmt = mysqli_prepare($conn, $paySql);
 
-                if (!$payStmt) {
-                    throw new Exception(mysqli_error($conn));
-                }
+if (!$payStmt) {
+    throw new Exception(mysqli_error($conn));
+}
 
-                mysqli_stmt_bind_param($payStmt, "i", $booking_id);
-                mysqli_stmt_execute($payStmt);
-                $payRes = mysqli_stmt_get_result($payStmt);
-                $paymentRow = mysqli_fetch_assoc($payRes);
-                mysqli_stmt_close($payStmt);
+mysqli_stmt_bind_param($payStmt, "i", $booking_id);
+mysqli_stmt_execute($payStmt);
+$payRes = mysqli_stmt_get_result($payStmt);
+$paymentRow = mysqli_fetch_assoc($payRes);
+mysqli_stmt_close($payStmt);
 
-                if ($paymentRow) {
-                    $payment_row_id = (int)$paymentRow['id'];
-                    $current_payment_status = trim($paymentRow['payment_status'] ?? '');
+if ($paymentRow) {
+    $payment_row_id = (int)$paymentRow['id'];
+    $current_payment_status = trim($paymentRow['payment_status'] ?? '');
+    $paymongoPaymentId = trim($paymentRow['provider_transaction_id'] ?? '');
+    $existingRefundId = trim($paymentRow['refund_id'] ?? '');
 
-                    if ($status === 'Cancelled' && $current_payment_status === 'Paid') {
-                        $updPay = mysqli_prepare(
-                            $conn,
-                            "UPDATE booking_payments
-                             SET payment_status = 'Refund Pending',
-                                 note = CONCAT(IFNULL(note, ''), ' | Admin cancelled booking. Refund pending.')
-                             WHERE id = ?"
-                        );
+    if ($status === 'Cancelled' && $current_payment_status === 'Paid') {
+        if ($existingRefundId !== '') {
+            throw new Exception("Refund already exists for this booking.");
+        }
 
-                        if (!$updPay) {
-                            throw new Exception(mysqli_error($conn));
-                        }
+        if ($paymongoPaymentId === '') {
+            throw new Exception("Missing PayMongo payment ID. Check webhook first.");
+        }
 
-                        mysqli_stmt_bind_param($updPay, "i", $payment_row_id);
+        $refundAmount = (float)($paymentRow['amount_charged'] ?? 0);
 
-                        if (!mysqli_stmt_execute($updPay)) {
-                            throw new Exception(mysqli_stmt_error($updPay));
-                        }
+        if ($refundAmount <= 0) {
+            $refundAmount = (float)($paymentRow['amount'] ?? 0);
+        }
 
-                        mysqli_stmt_close($updPay);
-                    }
+        $refundResult = createPayMongoRefund(
+            $PAYMONGO_SECRET_KEY,
+            $paymongoPaymentId,
+            $refundAmount
+        );
+
+        if (!$refundResult['success']) {
+            throw new Exception("Refund failed: " . $refundResult['message']);
+        }
+
+        $refundId = $refundResult['refund_id'];
+        $refundStatus = $refundResult['refund_status'];
+        $newPaymentStatus = ($refundStatus === 'succeeded') ? 'Refunded' : 'Refund Pending';
+
+        $updPay = mysqli_prepare(
+            $conn,
+            "UPDATE booking_payments
+             SET payment_status = ?,
+                 refund_id = ?,
+                 refund_status = ?,
+                 refund_amount = ?,
+                 refunded_at = IF(? = 'succeeded', NOW(), refunded_at),
+                 note = CONCAT(IFNULL(note, ''), ' | Admin cancelled booking. PayMongo refund created.')
+             WHERE id = ?"
+        );
+
+        if (!$updPay) {
+            throw new Exception(mysqli_error($conn));
+        }
+
+        mysqli_stmt_bind_param(
+            $updPay,
+            "sssdsi",
+            $newPaymentStatus,
+            $refundId,
+            $refundStatus,
+            $refundAmount,
+            $refundStatus,
+            $payment_row_id
+        );
+
+        if (!mysqli_stmt_execute($updPay)) {
+            throw new Exception(mysqli_stmt_error($updPay));
+        }
+
+        mysqli_stmt_close($updPay);
+    }
 
                     if ($status === 'Pending' && $current_payment_status === 'Refund Pending') {
                         $updPay = mysqli_prepare(
@@ -285,13 +367,8 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
                 } elseif ($status === 'Cancelled') {
                     $type = 'booking_cancelled';
                     $title = 'Booking Cancelled';
-                    $message = "Your {$event_type} booking on {$event_date} has been cancelled.";
-                    $smsMessage = "Hi {$customer_name}, your {$event_type} booking on {$event_date} has been rejected/cancelled by Magarbo Events.";
-                } else {
-                    $type = 'booking_restored';
-                    $title = 'Booking Restored';
-                    $message = "Your {$event_type} booking on {$event_date} has been restored to pending.";
-                    $smsMessage = "Hi {$customer_name}, your {$event_type} booking on {$event_date} has been restored to Pending by Magarbo Events.";
+                    $message = "Your {$event_type} booking on {$event_date} has been cancelled. Your payment refund has been processed.";
+                    $smsMessage = "Hi {$customer_name}, your {$event_type} booking on {$event_date} has been cancelled by Magarbo Events. Your refund has been processed.";
                 }
 
                 $link = 'profile.php?view=upcoming';
