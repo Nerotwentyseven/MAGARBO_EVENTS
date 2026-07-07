@@ -177,12 +177,24 @@ $provider_reference = $checkoutSessionId;
 
 $upd = mysqli_prepare($conn, "
     UPDATE booking_payments
-    SET provider = ?, provider_reference = ?
+    SET 
+        provider = ?, 
+        provider_reference = ?,
+        processing_fee = ?,
+        amount_charged = ?
     WHERE id = ?
 ");
 
 if ($upd) {
-    mysqli_stmt_bind_param($upd, "ssi", $provider, $provider_reference, $payment_id);
+    mysqli_stmt_bind_param(
+        $upd,
+        "ssddi",
+        $provider,
+        $provider_reference,
+        $processingFee,
+        $amountCharged,
+        $payment_id
+    );
     mysqli_stmt_execute($upd);
     mysqli_stmt_close($upd);
 }
