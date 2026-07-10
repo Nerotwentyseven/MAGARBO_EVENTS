@@ -1,6 +1,12 @@
 <?php
 session_name('USERSESSID');
 session_start();
+
+if (!empty($_SESSION['user_id'])) {
+    header('Location: index.php');
+    exit();
+}
+
 $alert = $_SESSION['alert'] ?? null;
 unset($_SESSION['alert']);
 ?>

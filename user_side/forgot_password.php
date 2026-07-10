@@ -1,3 +1,13 @@
+<?php
+session_name('USERSESSID');
+session_start();
+
+if (!empty($_SESSION['user_id'])) {
+    header('Location: index.php');
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
